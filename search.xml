@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>es 踩坑记录</title>
+    <url>/2019/10/16/es-%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<h2 id="解决es数据表某一字段重复出现的一系列问题（es7-1-1"><a href="#解决es数据表某一字段重复出现的一系列问题（es7-1-1" class="headerlink" title="解决es数据表某一字段重复出现的一系列问题（es7.1.1)"></a>解决es数据表某一字段重复出现的一系列问题（es7.1.1)</h2><h3 id="index-ip-domain-date-flag-domain去重）"><a href="#index-ip-domain-date-flag-domain去重）" class="headerlink" title="index: ip domain date flag (domain去重）"></a>index: ip domain date flag (domain去重）</h3><h3 id="方法：通过es聚合，使用字段聚合-top-hits聚合方式"><a href="#方法：通过es聚合，使用字段聚合-top-hits聚合方式" class="headerlink" title="方法：通过es聚合，使用字段聚合+top_hits聚合方式"></a>方法：通过es聚合，使用字段聚合+top_hits聚合方式</h3><h4 id="es中聚合API调用格式："><a href="#es中聚合API调用格式：" class="headerlink" title="es中聚合API调用格式："></a>es中聚合API调用格式：</h4><pre><code>&quot;aggregations&quot; : {                  // 表示聚合操作，可以使用aggs替代
+    &quot;&lt;aggregation_name&gt;&quot; : {        // 聚合名，可以是任意的字符串。用做响应的key，便于快速取得正确的响应数据。
+        &quot;&lt;aggregation_type&gt;&quot; : {    // 聚合类别，就是各种类型的聚合，如min等
+            &lt;aggregation_body&gt;      // 聚合体，不同的聚合有不同的body
+        }
+        [,&quot;aggregations&quot; : { [&lt;sub_aggregation&gt;]+ } ]? // 嵌套的子聚合，可以有0或多个
+    }
+    [,&quot;&lt;aggregation_name_2&gt;&quot; : { ... } ]* // 另外的聚合，可以有0或多个
+}</code></pre><h3 id="配置："><a href="#配置：" class="headerlink" title="配置："></a>配置：</h3><h4 id="scroll"><a href="#scroll" class="headerlink" title="scroll"></a>scroll</h4><p>虽然搜索请求返回一个结果“页面”，但是滚动API可以用于从一个搜索请求检索大量结果(甚至所有结果)，这与在传统数据库上使用游标的方法非常相似。</p>
+<p>滚动不是为实时用户请求而设计的，而是为处理大量数据而设计的，例如，为了将一个索引的内容重新编入具有不同配置的新索引中。</p>
+<p>注意:滚动请求返回的结果反映了发出初始搜索请求时索引的状态，就像时间快照一样。文档的后续更改(索引、更新或删除)只会影响以后的搜索请求。</p>
+<p>为了使用滚动，初始搜索请求应该在查询字符串中指定滚动参数，该参数告诉Elasticsearch应该保持“搜索上下文”活动多长时间(参见保持搜索上下文活动)，例如?scroll=1m。</p>
+<p>修改最大滚动数： （默认500）</p>
+<pre><code>curl -X PUT http://192.168.1.182:9200/_cluster/settings -H &apos;Content-Type: application/json&apos; -d&apos;{
+    &quot;persistent&quot; : {
+        &quot;search.max_open_scroll_context&quot;: 10000
+    },
+    &quot;transient&quot;: {
+        &quot;search.max_open_scroll_context&quot;: 10000
+    }
+}
+&apos;</code></pre><h4 id="bucketing（桶）聚合：划分不同的“桶”，将数据分配到不同的“桶”里。"><a href="#bucketing（桶）聚合：划分不同的“桶”，将数据分配到不同的“桶”里。" class="headerlink" title="bucketing（桶）聚合：划分不同的“桶”，将数据分配到不同的“桶”里。"></a>bucketing（桶）聚合：划分不同的“桶”，将数据分配到不同的“桶”里。</h4><p>修改桶：(默认值10000）</p>
+<pre><code>curl -X PUT http://192.168.1.182:9200/_cluster/settings -H &apos;Content-Type: application/json&apos; -d&apos;{
+    &quot;persistent&quot; : {
+        &quot;search.max_buckets&quot;: 10000000
+    },
+    &quot;transient&quot;: {
+        &quot;search.max_buckets&quot;: 10000000
+    }
+}
+&apos;</code></pre><h4 id="设置最大返回条数："><a href="#设置最大返回条数：" class="headerlink" title="设置最大返回条数："></a>设置最大返回条数：</h4><pre><code>PUT /ips-domains/_settings
+{
+  &quot;index&quot;:{
+    &quot;max_result_window&quot;:2147483647,
+    &quot;max_inner_result_window&quot;:5200000,
+  }
+}</code></pre><h2 id="聚合："><a href="#聚合：" class="headerlink" title="聚合："></a>聚合：</h2><pre><code>dsl2= {
+    &quot;query&quot;: {
+        &quot;match_all&quot;: {}
+    },
+    &quot;aggs&quot;: {
+        &quot;distinct_domains&quot;: {
+            &quot;terms&quot;: {
+                &quot;field&quot;: &quot;domain&quot;,
+                &quot;size&quot;: 5210000,
+                &quot;order&quot;: {
+                  &quot;_count&quot;: &quot;desc&quot;
+                },
+                &quot;min_doc_count&quot;: 2 //最小重复数
+              }
+    }
+    },
+    &quot;size&quot;: 0
+}</code></pre><p><a href="https://www.cnblogs.com/primadonna/p/11358440.html#%E8%AE%BE%E7%BD%AEcluster_cluster" target="_blank" rel="noopener">聚合教程</a></p>
+<p><a href="https://blog.csdn.net/ZYC88888/article/details/83023143" target="_blank" rel="noopener">es字段折叠详解</a></p>
+]]></content>
+      <categories>
+        <category>ES</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>first page</title>
+    <url>/2019/10/15/first-page/</url>
+    <content><![CDATA[<p>##Hello<br>###my first test</p>
+<pre><code>childurl_dict = {}
+layer=1
+sub_childurl = []
+main_url = &apos;&apos;
+domain = &apos;&apos;</code></pre>]]></content>
+  </entry>
+</search>
