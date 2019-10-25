@@ -17,7 +17,7 @@
 
 <link rel="stylesheet" href="/css/main.css?v=7.4.1">
 
-<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|[object Object]:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas, Monda:300,300italic,400,400italic,700,700italic|Consolas, Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
 
 
@@ -29,7 +29,7 @@
     version: '7.4.1',
     exturl: false,
     sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
-    copycode: {"enable":false,"show_result":false,"style":null},
+    copycode: {"enable":true,"show_result":false,"style":null},
     back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
     bookmark: {"enable":false,"color":"#222","save":"auto"},
     fancybox: false,
@@ -56,13 +56,14 @@
 </script>
 
   <meta name="description" content="解决es数据表某一字段重复出现的一系列问题（es7.1.1)index: ip domain date flag (domain去重）方法：通过es聚合，使用字段聚合+top_hits聚合方式es中聚合API调用格式：&amp;quot;aggregations&amp;quot; : {                  // 表示聚合操作，可以使用aggs替代     &amp;quot;&amp;lt;aggregatio">
+<meta name="keywords" content="config">
 <meta property="og:type" content="article">
 <meta property="og:title" content="es 踩坑记录">
 <meta property="og:url" content="http://yoursite.com/2019/10/16/es-踩坑记录/index.html">
 <meta property="og:site_name" content="ALWAYS">
 <meta property="og:description" content="解决es数据表某一字段重复出现的一系列问题（es7.1.1)index: ip domain date flag (domain去重）方法：通过es聚合，使用字段聚合+top_hits聚合方式es中聚合API调用格式：&amp;quot;aggregations&amp;quot; : {                  // 表示聚合操作，可以使用aggs替代     &amp;quot;&amp;lt;aggregatio">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-10-16T12:44:43.727Z">
+<meta property="og:updated_time" content="2019-10-17T02:11:05.816Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="es 踩坑记录">
 <meta name="twitter:description" content="解决es数据表某一字段重复出现的一系列问题（es7.1.1)index: ip domain date flag (domain去重）方法：通过es聚合，使用字段聚合+top_hits聚合方式es中聚合API调用格式：&amp;quot;aggregations&amp;quot; : {                  // 表示聚合操作，可以使用aggs替代     &amp;quot;&amp;lt;aggregatio">
@@ -294,11 +295,19 @@
                 
               
 
-              <time title="Erstellt: 2019-10-16 15:58:47 / Geändert am: 20:44:43" itemprop="dateCreated datePublished" datetime="2019-10-16T15:58:47+08:00">2019-10-16</time>
+              <time title="Erstellt: 2019-10-16 15:58:47" itemprop="dateCreated datePublished" datetime="2019-10-16T15:58:47+08:00">2019-10-16</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Bearbeitet am</span>
+                <time title="Geändert am: 2019-10-17 10:11:05" itemprop="dateModified" datetime="2019-10-17T10:11:05+08:00">2019-10-17</time>
+              </span>
             
           
             <span class="post-meta-item">
@@ -395,21 +404,30 @@
       
 
       <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/config/" rel="tag"># config</a>
+            
+          </div>
+        
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/10/15/first-page/" rel="next" title="first page">
-                  <i class="fa fa-chevron-left"></i> first page
-                </a>
-              
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/17/scrapy-es-config/" rel="prev" title="scrapy-es_config">
+                  scrapy-es_config <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -471,7 +489,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">Artikel</span>
         </a>
       </div>
@@ -484,8 +502,21 @@
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">Kategorien</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">schlagwörter</span>
         </a>
       </div>
     

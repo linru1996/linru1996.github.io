@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas, Monda:300,300italic,400,400italic,700,700italic|Consolas, Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Kopieren',
+      copy_success: 'Kopiert',
+      copy_failure: 'Kopieren fehlgeschlagen'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="[Redis] redis-cli 命令总结原文链接 Redis提供了丰富的命令（command）对数据库和各种数据类型进行操作，这些command可以在Linux终端使用。在编程时，比如使用Redis 的Java语言包，这些命令都有对应的方法。下面将Redis提供的命令做一总结。  官网命令列表：http://redis.io/commands （英文）  1、连接操作相关的命令 quit：关闭">
+<meta name="keywords" content="command">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis-cli命令">
+<meta property="og:url" content="http://yoursite.com/2019/10/18/redis-cli命令/index.html">
+<meta property="og:site_name" content="ALWAYS">
+<meta property="og:description" content="[Redis] redis-cli 命令总结原文链接 Redis提供了丰富的命令（command）对数据库和各种数据类型进行操作，这些command可以在Linux终端使用。在编程时，比如使用Redis 的Java语言包，这些命令都有对应的方法。下面将Redis提供的命令做一总结。  官网命令列表：http://redis.io/commands （英文）  1、连接操作相关的命令 quit：关闭">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-10-18T03:42:01.322Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis-cli命令">
+<meta name="twitter:description" content="[Redis] redis-cli 命令总结原文链接 Redis提供了丰富的命令（command）对数据库和各种数据类型进行操作，这些command可以在Linux终端使用。在编程时，比如使用Redis 的Java语言包，这些命令都有对应的方法。下面将Redis提供的命令做一总结。  官网命令列表：http://redis.io/commands （英文）  1、连接操作相关的命令 quit：关闭">
+  <link rel="canonical" href="http://yoursite.com/2019/10/18/redis-cli命令/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>redis-cli命令 | ALWAYS</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ALWAYS</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Startseite</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>Über</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Schlagwörter</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Kategorien</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archiv</a>
+
+  </li>
+      
+    
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+          <i class="fa fa-search fa-fw"></i>Suche
+        </a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Suche..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/18/redis-cli命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            redis-cli命令
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Veröffentlicht am</span>
+
+              
+                
+              
+
+              <time title="Erstellt: 2019-10-18 11:29:49 / Geändert am: 11:42:01" itemprop="dateCreated datePublished" datetime="2019-10-18T11:29:49+08:00">2019-10-18</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">in</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Redis-redis-cli-命令总结"><a href="#Redis-redis-cli-命令总结" class="headerlink" title="[Redis] redis-cli 命令总结"></a>[Redis] redis-cli 命令总结</h2><p><a href="https://maoxian.de/2015/08/1342.html" target="_blank" rel="noopener">原文链接</a></p>
+<p>Redis提供了丰富的命令（command）对数据库和各种数据类型进行操作，这些command可以在Linux终端使用。在编程时，比如使用Redis 的Java语言包，这些命令都有对应的方法。下面将Redis提供的命令做一总结。</p>
+<hr>
+<p>官网命令列表：<a href="http://redis.io/commands" target="_blank" rel="noopener">http://redis.io/commands</a> （英文）</p>
+<hr>
+<h3 id="1、连接操作相关的命令"><a href="#1、连接操作相关的命令" class="headerlink" title="1、连接操作相关的命令"></a>1、连接操作相关的命令</h3><ul>
+<li>quit：关闭连接（connection）  </li>
+<li>auth：简单密码认证  </li>
+</ul>
+<h3 id="2、对value操作的命令"><a href="#2、对value操作的命令" class="headerlink" title="2、对value操作的命令"></a>2、对value操作的命令</h3><ul>
+<li>exists(key)：确认一个key是否存在</li>
+<li>del(key)：删除一个key</li>
+<li>type(key)：返回值的类型</li>
+<li>keys(pattern)：返回满足给定pattern的所有key</li>
+<li>randomkey：随机返回key空间的一个key</li>
+<li>rename(oldname, newname)：将key由oldname重命名为newname，若newname存在则删除newname表示的key</li>
+<li>dbsize：返回当前数据库中key的数目</li>
+<li>expire：设定一个key的活动时间（s）</li>
+<li>ttl：获得一个key的活动时间</li>
+<li>select(index)：按索引查询</li>
+<li>move(key, dbindex)：将当前数据库中的key转移到有dbindex索引的数据库</li>
+<li>flushdb：删除当前选择数据库中的所有key</li>
+<li>flushall：删除所有数据库中的所有key </li>
+</ul>
+<h3 id="3、对String操作的命令"><a href="#3、对String操作的命令" class="headerlink" title="3、对String操作的命令"></a>3、对String操作的命令</h3><ul>
+<li>set(key, value)：给数据库中名称为key的string赋予值value</li>
+<li>get(key)：返回数据库中名称为key的string的value</li>
+<li>getset(key, value)：给名称为key的string赋予上一次的value</li>
+<li>mget(key1, key2,…, key N)：返回库中多个string（它们的名称为key1，key2…）的value</li>
+<li>setnx(key, value)：如果不存在名称为key的string，则向库中添加string，名称为key，值为value</li>
+<li>setex(key, time, value)：向库中添加string（名称为key，值为value）同时，设定过期时间time</li>
+<li>mset(key1, value1, key2, value2,…key N, value N)：同时给多个string赋值，名称为key i的string赋值value i</li>
+<li>msetnx(key1, value1, key2, value2,…key N, value N)：如果所有名称为key i的string都不存在，则向库中添加string，名称key i赋值为value i</li>
+<li>incr(key)：名称为key的string增1操作</li>
+<li>incrby(key, integer)：名称为key的string增加integer</li>
+<li>decr(key)：名称为key的string减1操作</li>
+<li>decrby(key, integer)：名称为key的string减少integer</li>
+<li>append(key, value)：名称为key的string的值附加value</li>
+<li>substr(key, start, end)：返回名称为key的string的value的子串  </li>
+</ul>
+<h3 id="4、对List操作的命令"><a href="#4、对List操作的命令" class="headerlink" title="4、对List操作的命令"></a>4、对List操作的命令</h3><ul>
+<li>rpush(key, value)：在名称为key的list尾添加一个值为value的元素</li>
+<li>lpush(key, value)：在名称为key的list头添加一个值为value的 元素</li>
+<li>llen(key)：返回名称为key的list的长度</li>
+<li>lrange(key, start, end)：返回名称为key的list中start至end之间的元素（下标从0开始，下同）</li>
+<li>ltrim(key, start, end)：截取名称为key的list，保留start至end之间的元素</li>
+<li>lindex(key, index)：返回名称为key的list中index位置的元素</li>
+<li>lset(key, index, value)：给名称为key的list中index位置的元素赋值为value</li>
+<li>lrem(key, count, value)：删除count个名称为key的list中值为value的元素。count为0，删除所有值为value的元素，count&gt;0从头至尾删除count个值为value的元素，count&lt;0从尾到头删除|count|个值为value的元素。 lpop(key)：返回并删除名称为key的list中的首元素 rpop(key)：返回并删除名称为key的list中的尾元素 blpop(key1, key2,… key N, timeout)：lpop命令的block版本。即当timeout为0时，若遇到名称为key i的list不存在或该list为空，则命令结束。如果timeout&gt;0，则遇到上述情况时，等待timeout秒，如果问题没有解决，则对keyi+1开始的list执行pop操作。</li>
+<li>brpop(key1, key2,… key N, timeout)：rpop的block版本。参考上一命令。</li>
+<li>rpoplpush(srckey, dstkey)：返回并删除名称为srckey的list的尾元素，并将该元素添加到名称为dstkey的list的头部  </li>
+</ul>
+<h3 id="5、对Set操作的命令"><a href="#5、对Set操作的命令" class="headerlink" title="5、对Set操作的命令"></a>5、对Set操作的命令</h3><ul>
+<li>sadd(key, member)：向名称为key的set中添加元素member</li>
+<li>srem(key, member) ：删除名称为key的set中的元素member</li>
+<li>spop(key) ：随机返回并删除名称为key的set中一个元素</li>
+<li>smove(srckey, dstkey, member) ：将member元素从名称为srckey的集合移到名称为dstkey的集合</li>
+<li>scard(key) ：返回名称为key的set的基数</li>
+<li>sismember(key, member) ：测试member是否是名称为key的set的元素</li>
+<li>sinter(key1, key2,…key N) ：求交集</li>
+<li>sinterstore(dstkey, key1, key2,…key N) ：求交集并将交集保存到dstkey的集合</li>
+<li>sunion(key1, key2,…key N) ：求并集</li>
+<li>sunionstore(dstkey, key1, key2,…key N) ：求并集并将并集保存到dstkey的集合</li>
+<li>sdiff(key1, key2,…key N) ：求差集</li>
+<li>sdiffstore(dstkey, key1, key2,…key N) ：求差集并将差集保存到dstkey的集合</li>
+<li>smembers(key) ：返回名称为key的set的所有元素</li>
+<li>srandmember(key) ：随机返回名称为key的set的一个元素  </li>
+</ul>
+<h3 id="6、对zset（sorted-set）操作的命令"><a href="#6、对zset（sorted-set）操作的命令" class="headerlink" title="6、对zset（sorted set）操作的命令"></a>6、对zset（sorted set）操作的命令</h3><ul>
+<li>zadd(key, score, member)：向名称为key的zset中添加元素member，score用于排序。如果该元素已经存在，则根据score更新该元素的顺序。</li>
+<li>zrem(key, member) ：删除名称为key的zset中的元素member</li>
+<li>zincrby(key, increment, member) ：如果在名称为key的zset中已经存在元素member，则该元素的score增加increment；否则向集合中添加该元素，其score的值为increment</li>
+<li>zrank(key, member) ：返回名称为key的zset（元素已按score从小到大排序）中member元素的rank（即index，从0开始），若没有member元素，返回“nil”</li>
+<li>zrevrank(key, member) ：返回名称为key的zset（元素已按score从大到小排序）中member元素的rank（即index，从0开始），若没有member元素，返回“nil”</li>
+<li>zrange(key, start, end)：返回名称为key的zset（元素已按score从小到大排序）中的index从start到end的所有元素</li>
+<li>zrevrange(key, start, end)：返回名称为key的zset（元素已按score从大到小排序）中的index从start到end的所有元素</li>
+<li>zrangebyscore(key, min, max)：返回名称为key的zset中score &gt;= min且score &lt;= max的所有元素 zcard(key)：返回名称为key的zset的基数 zscore(key, element)：返回名称为key的zset中元素element的score zremrangebyrank(key, min, max)：删除名称为key的zset中rank &gt;= min且rank &lt;= max的所有元素 zremrangebyscore(key, min, max) ：删除名称为key的zset中score &gt;= min且score &lt;= max的所有元素</li>
+<li>zunionstore / zinterstore(dstkeyN, key1,…,keyN, WEIGHTS w1,…wN, AGGREGATE SUM|MIN|MAX)：对N个zset求并集和交集，并将最后的集合保存在dstkeyN中。对于集合中每一个元素的score，在进行AGGREGATE运算前，都要乘以对于的WEIGHT参数。如果没有提供WEIGHT，默认为1。默认的AGGREGATE是SUM，即结果集合中元素的score是所有集合对应元素进行SUM运算的值，而MIN和MAX是指，结果集合中元素的score是所有集合对应元素中最小值和最大值。  </li>
+</ul>
+<h3 id="7、对Hash操作的命令"><a href="#7、对Hash操作的命令" class="headerlink" title="7、对Hash操作的命令"></a>7、对Hash操作的命令</h3><ul>
+<li>hset(key, field, value)：向名称为key的hash中添加元素field&lt;—&gt;value</li>
+<li>hget(key, field)：返回名称为key的hash中field对应的value</li>
+<li>hmget(key, field1, …,field N)：返回名称为key的hash中field i对应的value</li>
+<li>hmset(key, field1, value1,…,field N, value N)：向名称为key的hash中添加元素field i&lt;—&gt;value i</li>
+<li>hincrby(key, field, integer)：将名称为key的hash中field的value增加integer</li>
+<li>hexists(key, field)：名称为key的hash中是否存在键为field的域</li>
+<li>hdel(key, field)：删除名称为key的hash中键为field的域</li>
+<li>hlen(key)：返回名称为key的hash中元素个数</li>
+<li>hkeys(key)：返回名称为key的hash中所有键</li>
+<li>hvals(key)：返回名称为key的hash中所有键对应的value</li>
+<li>hgetall(key)：返回名称为key的hash中所有的键（field）及其对应的value   </li>
+</ul>
+<h3 id="8、持久化"><a href="#8、持久化" class="headerlink" title="8、持久化"></a>8、持久化</h3><ul>
+<li>save：将数据同步保存到磁盘</li>
+<li>bgsave：将数据异步保存到磁盘</li>
+<li>lastsave：返回上次成功将数据保存到磁盘的Unix时戳</li>
+<li>shundown：将数据同步保存到磁盘，然后关闭服务  </li>
+</ul>
+<h3 id="9、远程服务控制"><a href="#9、远程服务控制" class="headerlink" title="9、远程服务控制"></a>9、远程服务控制</h3><ul>
+<li>info：提供服务器的信息和统计</li>
+<li>monitor：实时转储收到的请求</li>
+<li>slaveof：改变复制策略设置</li>
+<li>config：在运行时配置Redis服务器</li>
+</ul>
+<h2 id="Redis高级应用"><a href="#Redis高级应用" class="headerlink" title="Redis高级应用"></a>Redis高级应用</h2><h3 id="1、安全性"><a href="#1、安全性" class="headerlink" title="1、安全性"></a>1、安全性</h3><h3 id="2、主从复制"><a href="#2、主从复制" class="headerlink" title="2、主从复制"></a>2、主从复制</h3><h3 id="3、事务处理"><a href="#3、事务处理" class="headerlink" title="3、事务处理"></a>3、事务处理</h3><h3 id="4、持久化机制"><a href="#4、持久化机制" class="headerlink" title="4、持久化机制"></a>4、持久化机制</h3><p>常用命令：<br>1） 查看keys个数  </p>
+<ul>
+<li>keys * // 查看所有keys  </li>
+<li>keys prefix_* // 查看前缀为”prefix_”的所有keys</li>
+</ul>
+<p>2） 清空数据库  </p>
+<ul>
+<li>flushdb // 清除当前数据库的所有keys  </li>
+<li>flushall // 清除所有数据库的所有keys </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/command/" rel="tag"># command</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/17/linux常用命令/" rel="next" title="linux常用命令">
+                  <i class="fa fa-chevron-left"></i> linux常用命令
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/23/Redis学习22/" rel="prev" title="">
+                   <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Inhaltsverzeichnis
+        </li>
+        <li class="sidebar-nav-overview">
+          Übersicht
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis-redis-cli-命令总结"><span class="nav-number">1.</span> <span class="nav-text">[Redis] redis-cli 命令总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、连接操作相关的命令"><span class="nav-number">1.1.</span> <span class="nav-text">1、连接操作相关的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、对value操作的命令"><span class="nav-number">1.2.</span> <span class="nav-text">2、对value操作的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、对String操作的命令"><span class="nav-number">1.3.</span> <span class="nav-text">3、对String操作的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、对List操作的命令"><span class="nav-number">1.4.</span> <span class="nav-text">4、对List操作的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、对Set操作的命令"><span class="nav-number">1.5.</span> <span class="nav-text">5、对Set操作的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、对zset（sorted-set）操作的命令"><span class="nav-number">1.6.</span> <span class="nav-text">6、对zset（sorted set）操作的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、对Hash操作的命令"><span class="nav-number">1.7.</span> <span class="nav-text">7、对Hash操作的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8、持久化"><span class="nav-number">1.8.</span> <span class="nav-text">8、持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9、远程服务控制"><span class="nav-number">1.9.</span> <span class="nav-text">9、远程服务控制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis高级应用"><span class="nav-number">2.</span> <span class="nav-text">Redis高级应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、安全性"><span class="nav-number">2.1.</span> <span class="nav-text">1、安全性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、主从复制"><span class="nav-number">2.2.</span> <span class="nav-text">2、主从复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、事务处理"><span class="nav-number">2.3.</span> <span class="nav-text">3、事务处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、持久化机制"><span class="nav-number">2.4.</span> <span class="nav-text">4、持久化机制</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Lynn</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">Artikel</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">Kategorien</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">schlagwörter</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lynn</span>
+</div>
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Design – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.1
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/pisces.js?v=7.4.1"></script>
+
+<script src="/js/next-boot.js?v=7.4.1"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.1"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

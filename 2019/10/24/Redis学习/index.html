@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas, Monda:300,300italic,400,400italic,700,700italic|Consolas, Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Kopieren',
+      copy_success: 'Kopiert',
+      copy_failure: 'Kopieren fehlgeschlagen'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Redis命令参考一、redis客户端1. 客户端通信协议客户端与服务器的通信在TCP协议上构建；Redis制定了RESP序列化协议实现交互   2. Java客户端Jedis第三方开发包   Jedis jedis = new Jedis(&amp;quot;127.0.0.1&amp;quot;,6379); jedis.set(&amp;quot;hello&amp;quot;,&amp;quot;world&amp;quot;); St">
+<meta name="keywords" content="study">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis学习">
+<meta property="og:url" content="http://yoursite.com/2019/10/24/Redis学习/index.html">
+<meta property="og:site_name" content="ALWAYS">
+<meta property="og:description" content="Redis命令参考一、redis客户端1. 客户端通信协议客户端与服务器的通信在TCP协议上构建；Redis制定了RESP序列化协议实现交互   2. Java客户端Jedis第三方开发包   Jedis jedis = new Jedis(&amp;quot;127.0.0.1&amp;quot;,6379); jedis.set(&amp;quot;hello&amp;quot;,&amp;quot;world&amp;quot;); St">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/lfswNDZ.png">
+<meta property="og:updated_time" content="2019-10-25T02:22:56.455Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis学习">
+<meta name="twitter:description" content="Redis命令参考一、redis客户端1. 客户端通信协议客户端与服务器的通信在TCP协议上构建；Redis制定了RESP序列化协议实现交互   2. Java客户端Jedis第三方开发包   Jedis jedis = new Jedis(&amp;quot;127.0.0.1&amp;quot;,6379); jedis.set(&amp;quot;hello&amp;quot;,&amp;quot;world&amp;quot;); St">
+<meta name="twitter:image" content="https://i.imgur.com/lfswNDZ.png">
+  <link rel="canonical" href="http://yoursite.com/2019/10/24/Redis学习/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Redis学习 | ALWAYS</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ALWAYS</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Startseite</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>Über</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Schlagwörter</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Kategorien</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archiv</a>
+
+  </li>
+      
+    
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+          <i class="fa fa-search fa-fw"></i>Suche
+        </a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Suche..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/24/Redis学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            Redis学习
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Veröffentlicht am</span>
+
+              
+                
+              
+
+              <time title="Erstellt: 2019-10-24 21:37:38" itemprop="dateCreated datePublished" datetime="2019-10-24T21:37:38+08:00">2019-10-24</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Bearbeitet am</span>
+                <time title="Geändert am: 2019-10-25 10:22:56" itemprop="dateModified" datetime="2019-10-25T10:22:56+08:00">2019-10-25</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">in</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Redis命令参考"><a href="#Redis命令参考" class="headerlink" title="Redis命令参考"></a><a href="http://redisdoc.com/index.html" title="Redis命令参考" target="_blank" rel="noopener">Redis命令参考</a></h2><h1 id="一、redis客户端"><a href="#一、redis客户端" class="headerlink" title="一、redis客户端"></a>一、redis客户端</h1><h2 id="1-客户端通信协议"><a href="#1-客户端通信协议" class="headerlink" title="1. 客户端通信协议"></a>1. 客户端通信协议</h2><p>客户端与服务器的通信在TCP协议上构建；<br>Redis制定了RESP序列化协议实现交互  </p>
+<h2 id="2-Java客户端Jedis"><a href="#2-Java客户端Jedis" class="headerlink" title="2. Java客户端Jedis"></a>2. Java客户端Jedis</h2><p>第三方开发包  </p>
+<pre><code>Jedis jedis = new Jedis(&quot;127.0.0.1&quot;,6379);
+jedis.set(&quot;hello&quot;,&quot;world&quot;);
+String value = jedis.get(&quot;hello&quot;)  </code></pre><p>jedis连接池：频繁访问redis时用<br>预先初始化好redis连接<br>JedisPool类  common-pool资源管理工具  </p>
+<h2 id="3-Python客户端redis-py"><a href="#3-Python客户端redis-py" class="headerlink" title="3. Python客户端redis-py"></a>3. Python客户端redis-py</h2><pre><code>import redis  
+client = redis.StrictRedis(host=&quot;127.0.0.1&quot;,port=6379)  
+client.set(key,&quot;python-redis&quot;)  
+client.get(key)   
+
+
+//生成pipeline
+pipeline = client.pipeline(transaction= False)  
+pipeline.set(&quot;hello&quot;,&quot;world&quot;)  
+pipeline.incr(&quot;counter&quot;)  
+result = pipeline.execute()  
+可用pipeline实现mdel（批量删除功能）</code></pre><h2 id="4-客户端管理"><a href="#4-客户端管理" class="headerlink" title="4. 客户端管理"></a>4. 客户端管理</h2><h3 id="客户端API"><a href="#客户端API" class="headerlink" title="客户端API"></a>客户端API</h3><h4 id="1）-client-list-列出所有与服务端相连的客户端信息"><a href="#1）-client-list-列出所有与服务端相连的客户端信息" class="headerlink" title="1） client list  列出所有与服务端相连的客户端信息"></a>1） client list  列出所有与服务端相连的客户端信息</h4><p>参数包含：   </p>
+<h5 id="id-addr-fd-name"><a href="#id-addr-fd-name" class="headerlink" title="id,addr,fd,name"></a>id,addr,fd,name</h5><h5 id="输入缓冲区：qbuf，qbuf-free"><a href="#输入缓冲区：qbuf，qbuf-free" class="headerlink" title="输入缓冲区：qbuf，qbuf-free"></a>输入缓冲区：qbuf，qbuf-free</h5><p>一旦某个客户端的输入缓冲区超过1G，客户端将被关闭（redis的处理速度跟不上输入缓冲区的输入速度）<br>解决： 通过client list命令； 或通过info命令的info clients模块，找到最大的输入缓冲区，设置超过IOM报警    </p>
+<h5 id="输出缓冲区：-obl（固定缓冲区数组长度）-oll（动态缓冲区列表长度）-omem（使用的字节数）"><a href="#输出缓冲区：-obl（固定缓冲区数组长度）-oll（动态缓冲区列表长度）-omem（使用的字节数）" class="headerlink" title="输出缓冲区： obl（固定缓冲区数组长度）,oll（动态缓冲区列表长度）,omem（使用的字节数）"></a>输出缓冲区： obl（固定缓冲区数组长度）,oll（动态缓冲区列表长度）,omem（使用的字节数）</h5><p>保存命令执行的结果返回给客户端<br>可通过client-outlut-buffer-limit来设置<br>客户端：普通客户端、发布订阅客户端、slave客户端（用于复制）<br>缓冲区分为固定缓冲区和动态缓冲区<br>监控方法：  </p>
+<ul>
+<li>定期执行client list命令；  </li>
+<li>通过info命令的info clients模块，找到输出缓冲区的列表最大对象数client_longest_output_list  </li>
+</ul>
+<p>预防方法：  </p>
+<ul>
+<li>监控设置阈值；  </li>
+<li>限制普通客户端的输入缓冲区的hard limit,soft limit,soft seconds；  </li>
+<li>适当增大slave客户端的hard limit,soft limit,soft seconds；   </li>
+<li>限制容易让输出缓冲区增大的命令；  </li>
+<li>及时监控内存。</li>
+</ul>
+<h5 id="客户端的存活状态：-age-idle"><a href="#客户端的存活状态：-age-idle" class="headerlink" title="客户端的存活状态： age idle"></a>客户端的存活状态： age idle</h5><h5 id="客户端的限制：-maxclients（限制最大客户端连接数），timeout（限制连接的最大空闲时间）-（通过info-clients查询）"><a href="#客户端的限制：-maxclients（限制最大客户端连接数），timeout（限制连接的最大空闲时间）-（通过info-clients查询）" class="headerlink" title="客户端的限制： maxclients（限制最大客户端连接数），timeout（限制连接的最大空闲时间） （通过info clients查询）"></a>客户端的限制： maxclients（限制最大客户端连接数），timeout（限制连接的最大空闲时间） （通过info clients查询）</h5><h4 id="2）-client-setName和client-getName"><a href="#2）-client-setName和client-getName" class="headerlink" title="2） client setName和client getName"></a>2） client setName和client getName</h4><p>设置名字  </p>
+<h4 id="3）-client-kill"><a href="#3）-client-kill" class="headerlink" title="3） client kill"></a>3） client kill</h4><p>杀掉指定ip和端口的客户端  </p>
+<h4 id="4）-client-pause"><a href="#4）-client-pause" class="headerlink" title="4） client pause"></a>4） client pause</h4><p>阻塞客户端timeout毫秒数  </p>
+<h4 id="5）-monitor"><a href="#5）-monitor" class="headerlink" title="5） monitor"></a>5） monitor</h4><p>监控Redis正在执行的命令  </p>
+<h3 id="客户端相关配置"><a href="#客户端相关配置" class="headerlink" title="客户端相关配置"></a>客户端相关配置</h3><p>timeout maxclients tcp-keepalive  tcp-backlog  </p>
+<h3 id="客户端统计片段"><a href="#客户端统计片段" class="headerlink" title="客户端统计片段"></a>客户端统计片段</h3><p>info clients命令    </p>
+<h3 id="客户端常见异常"><a href="#客户端常见异常" class="headerlink" title="客户端常见异常"></a>客户端常见异常</h3><ul>
+<li>无法从连接池获取连接；  </li>
+<li>客户端读写超时；  </li>
+<li>客户端连接超时；  </li>
+<li>客户端缓冲区异常；  </li>
+<li>Lua脚本正在执行；  </li>
+<li>Redis正在加持持久化文件；  </li>
+<li>Redis使用的内存超过maxmemory配置；  </li>
+<li>客户端连接数过大。  </li>
+</ul>
+<hr>
+<h1 id="二、持久化"><a href="#二、持久化" class="headerlink" title="二、持久化"></a>二、持久化</h1><p>避免因进程退出造成的数据丢失，当下次重启时利用之前持久化的文件可实现数据恢复。<br>RDB和AOF  </p>
+<h2 id="1-RDB"><a href="#1-RDB" class="headerlink" title="1. RDB"></a>1. RDB</h2><p>RDB持久化是把当前进程数据生成快照保存到硬盘的过程。分为手动触发和自动触发。  </p>
+<p>触发机制  </p>
+<h3 id="1）手动触发：save和bgsave"><a href="#1）手动触发：save和bgsave" class="headerlink" title="1）手动触发：save和bgsave"></a>1）手动触发：save和bgsave</h3><p>save: 阻塞当前redis服务器，知道RDB过程完成；<br>bgsave：redis进程执行fork操作创建子进程，RDB持久化过程由子进程负责，完成后自动结束。阻塞只发生在fork阶段。  </p>
+<h3 id="2）自动触发："><a href="#2）自动触发：" class="headerlink" title="2）自动触发："></a>2）自动触发：</h3><ul>
+<li>使用save相关配置，save m n：m秒内数据集存在n次修改时自动触发bgsave；  </li>
+<li>如果从节点执行全量复制操作，主节点自动执行bgsave生成RDB文件并发送给从节点；  </li>
+<li>执行debug-reload命令重新加载Redis时，也会自动触发；  </li>
+<li>默认情况下执行shutdown命令时，如果没有开启AOF持久化功能则自动执行bgsave。  </li>
+</ul>
+<h4 id="bgsave流程："><a href="#bgsave流程：" class="headerlink" title="bgsave流程："></a>bgsave流程：</h4><ul>
+<li>执行bgsave命令，父进程判断当前是否有正在执行的子进程，如果有，直接返回；  </li>
+<li>父进程执行fork操作创建子进程，fork过程父进程会阻塞；  </li>
+<li>父进程fork完成后，bgsave命令返回信息并不再阻塞；  </li>
+<li>子进程创建RDB文件，根据父进程内存生成临时快照文件，完成后对原有文件进行原子替换；  </li>
+<li>进程发送信号给父进程表示完成。  </li>
+</ul>
+<h4 id="RDB文件的处理："><a href="#RDB文件的处理：" class="headerlink" title="RDB文件的处理："></a>RDB文件的处理：</h4><ul>
+<li>保存：dir配置指定的目录下；  </li>
+<li>压缩：默认采用LZF算法压缩处理，压缩以后的文件远远小于内存大小，默认开启。  </li>
+</ul>
+<h4 id="RBS的优缺点："><a href="#RBS的优缺点：" class="headerlink" title="RBS的优缺点："></a>RBS的优缺点：</h4><p>优点：  </p>
+<pre><code>RDB时一个紧凑压缩的二进制文件，代表Redis在某个时间点上的数据快照。非常适合用于备份，全量复制等场景。  
+Redis加载RDB恢复数据远远快于AOF方式。  </code></pre><p>缺点：  </p>
+<pre><code>RDB方式数据没办法做到实施持久化/秒级持久化。因为bgsave每次运行时都要执行fork操作创建子进程，属于重量级操作，频繁操作成本过高。  
+RDB文件使用特定二进制格式保存，Redis版本演进过程中有多个格式的RDB版本，存在无法兼容问题。  </code></pre><h2 id="2-AOF"><a href="#2-AOF" class="headerlink" title="2. AOF"></a>2. AOF</h2><p>以独立日志的方式记录每次写命令，重启时重新执行AOF文件中的命令达到数据恢复的目的。<br><span style="color:red;">解决了数据持久化的实时性，目前是Redis持久化的主流方式。 </span>  </p>
+<p>使用AOF<br>设置配置：appendonly yes  </p>
+<ul>
+<li>保存：dir配置指定的目录下；  </li>
+<li>压缩：默认采用LZF算法压缩处理，压缩以后的文件远远小于内存大小，默认开启。  </li>
+</ul>
+<h4 id="RBS的优缺点：-1"><a href="#RBS的优缺点：-1" class="headerlink" title="RBS的优缺点："></a>RBS的优缺点：</h4><p>优点：  </p>
+<pre><code>RDB时一个紧凑压缩的二进制文件，代表Redis在某个时间点上的数据快照。非常适合用于备份，全量复制等场景。  
+Redis加载RDB恢复数据远远快于AOF方式。  </code></pre><p>缺点：  </p>
+<pre><code>RDB方式数据没办法做到实施持久化/秒级持久化。因为bgsave每次运行时都要执行fork操作创建子进程，属于重量级操作，频繁操作成本过高。  
+RDB文件使用特定二进制格式保存，Redis版本演进过程中有多个格式的RDB版本，存在无法兼容问题。  </code></pre><h2 id="2-AOF-1"><a href="#2-AOF-1" class="headerlink" title="2. AOF"></a>2. AOF</h2><p>以独立日志的方式记录每次写命令，重启时重新执行AOF文件中的命令达到数据恢复的目的。<br><span style="color:red;">工作流程：  命令写入（append）、文件同步（sync）、文件重写（rewrite）、重新加载（load）。</span>  </p>
+<h3 id="流程："><a href="#流程：" class="headerlink" title="流程："></a>流程：</h3><ul>
+<li>所有的写入命令会追加到aof_buf（缓冲区）中；  </li>
+<li>AOF缓冲区根据对应的策略想硬盘做数据同步；  </li>
+<li>随着AOF文件越来越大，需要定期对AOF文件进行重写，达到压缩的目的；  </li>
+<li>当Redis服务器重启的时候，可以加载AOF文件进行数据恢复。   </li>
+</ul>
+<h3 id="1-命令写入"><a href="#1-命令写入" class="headerlink" title="1)命令写入"></a>1)命令写入</h3><p>文本协议格式：具有很好的兼容性；追加操作避免二次开销；具有可读性，方便修改处理。<br>把命令追加到缓冲区中：Redis只用单线程响应命令，如果每次写AOF命令都直接追加到硬盘，那么性能完全取决于硬盘负载。写到缓冲区中还可以有多种缓冲区同步硬盘的策略。  </p>
+<h3 id="2-文件同步"><a href="#2-文件同步" class="headerlink" title="2)文件同步"></a>2)文件同步</h3><p>appendfsync控制同步文件策略<br>系统调用write和fsync<br>默认配置everysec，命令写入aof_buf后调用系统write操作，write完成后线程返回。fsync同步文件操作由专门线程每秒调用一次。理论上只有在突然宕机的情况下丢失一秒数据。  </p>
+<h3 id="3-重写机制"><a href="#3-重写机制" class="headerlink" title="3)重写机制"></a>3)重写机制</h3><p>随着命令不断写入AOF，文件会越来越大，Redis引入重写机制压缩文件体积。<br>把Redis进程内的数据转化为写命令同步到新的AOF文件。<br>多条写命令可以合并为一个；<br>进程内已经超时的数据不再写入文件；<br>旧的AOF文件含有无效命令，新的AOF文件只保留最终数据的写入命令。  </p>
+<p>手动触发和自动触发。  </p>
+<h4 id="AOF重写流程："><a href="#AOF重写流程：" class="headerlink" title="AOF重写流程："></a>AOF重写流程：</h4><ul>
+<li>执行AOF重写请求。  </li>
+<li>如果当前进程正在进行AOF重写，请求不执行；如果当前进程正在执行bgsave操作，重写命令延迟到bgsave完成后再执行。  </li>
+<li>父进程执行fork创建子进程，开销等于bgsave过程。  </li>
+<li>主进程fork完成后，继续响应其他命令。所有修改命令依然写入AOF缓冲区名根据appendsync策略同步到硬盘；  </li>
+<li>由于fork操作运用写时复制技术，子进程只能共享fork操作时的内存数据。由于父进程依然响应命令，Redis使用AOF重写缓冲区来保存这部分新数据，防止AOF文件生成期间丢失这部分数据。  </li>
+<li>子进程根据进程快照，按照命令合并规则写入到新的文件。  </li>
+<li>新的AOF文件写入完成后，子进程发送信号给父进程。  </li>
+<li>父进程把AOF重写缓冲区的数据写入到新的AOF文件。  </li>
+<li>使用新的AOF文件替换老文件，完成AOF重写。  </li>
+</ul>
+<h3 id="4-重启加载"><a href="#4-重启加载" class="headerlink" title="4)重启加载"></a>4)重启加载</h3><p>服务器重启时数据恢复。<br>AOF持久化开启且存在AOF文件时，优先加载AOF文件。<br>AOF关闭时加载RDB文件。<br>加载AOF/RDB文件成功后，Redis启动成功。  </p>
+<h4 id="文件校验"><a href="#文件校验" class="headerlink" title="文件校验"></a>文件校验</h4><p>加载损坏的AOF文件时会拒绝启动。   </p>
+<h2 id="3-问题定位与优化"><a href="#3-问题定位与优化" class="headerlink" title="3. 问题定位与优化"></a>3. 问题定位与优化</h2><h3 id="1-fork操作"><a href="#1-fork操作" class="headerlink" title="1) fork操作"></a>1) fork操作</h3><p>Redis做RDB和AOF重写要执行fork操作创建子进程，fork操作是个重量级操作。<br>fork创建的子进程不需要拷贝父进程的物理内粗空间，但会复制父进程的空间内存页表。<br>fork操作耗时跟进程总内存量息息相关。  </p>
+<h4 id="fork耗时问题定位："><a href="#fork耗时问题定位：" class="headerlink" title="fork耗时问题定位："></a>fork耗时问题定位：</h4><p>fork操作耗时再秒级会拖慢Redis几万条命令执行，对线上应用延迟影响非常明显。<br>正常情况下fork操作应该是每GB消耗20毫秒左右。  </p>
+<h4 id="改善fork操作耗时："><a href="#改善fork操作耗时：" class="headerlink" title="改善fork操作耗时："></a>改善fork操作耗时：</h4><p>优先使用物理机或者高效支持fork操作的虚拟化技术，避免使用Xen虚拟机。<br>控制Redis实例最大可用内存，fork耗时跟内存量成正比，线上建议每个Redis实例内存控制在10GB以内。<br>合理配置Linux内存分配策略，避免物理内存不足导致fork失败。<br>降低fork操作的频率。    </p>
+<h3 id="2-子进程开销监控和优化"><a href="#2-子进程开销监控和优化" class="headerlink" title="2) 子进程开销监控和优化"></a>2) 子进程开销监控和优化</h3><p>子进程负责AOF或者RDB的重写，运行过程主要涉及CPU、内存、硬盘三部分的消耗。  </p>
+<h4 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h4><p>CPU开销：子进程负责把进程内的数据分批写入文件，这个过程属于CPU密集操作，通常子进程对单核CPU利用率接近90%。<br>CPU消耗优化：不要和其他CPU密集型服务部署在一起，造成CPU过度竞争；如果部署多个Redis实例，尽量保证同一时刻也只有一个子进程执行重写操作。  </p>
+<h4 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h4><p>内存消耗：子进程通过fork操作产生，占用内存大小等于父进程，理论山需要两倍的内存来完成持久化操作。<br>消耗优化：如果部署多个Redis实例，尽量保证同一时刻也只有一个子进程执行重写操作；避免在大量写入时做子进程重写操作，这样将导致父进程维护大量页副本，造成内存消耗，  </p>
+<h4 id="硬盘"><a href="#硬盘" class="headerlink" title="硬盘"></a>硬盘</h4><p>硬盘开销：子进程主要职责把AOF或RDB文件写入硬盘持久化。<br>开销优化：不要和其他高硬盘负载的服务器部署在一起；AOF重写期间不做fsync操作；对于单机配置多个Redis实例情况，可配置不同实例分盘存储AOF文件。  </p>
+<h3 id="3-AOF追加阻塞"><a href="#3-AOF追加阻塞" class="headerlink" title="3) AOF追加阻塞"></a>3) AOF追加阻塞</h3><p>当开启AOF持久化时，常用同步硬盘策略everysec，Redis使用另一条线程每秒执行fsync同步硬盘。当系统硬盘资源繁忙时，会造成Redis主线程阻塞。<br>阻塞流程：  </p>
+<ul>
+<li>主线程负责写入AOF缓冲区；  </li>
+<li>AOF线程负责每秒执行一次同步硬盘操作，并记录最近一次同步时间。  </li>
+<li>主线程负责对比上次AOF同步时间：<br> 如果据上次同步成功时间在2秒以内，主线程直接返回；<br> 如果据上次同步成功时间超过2秒，主线程将会阻塞，直到同步操作完成。   </li>
+</ul>
+<p>everysec配置最多可能丢失2秒数据，不是1秒。<br>如果fsync缓慢，将会导致Redis主线程阻塞影响效率。  </p>
+<h3 id="4-多实例部署"><a href="#4-多实例部署" class="headerlink" title="4) 多实例部署"></a>4) 多实例部署</h3><p>Redis单线程架构导致无法充分利用CPU多核特性。</p>
+<hr>
+<h1 id="三、复制"><a href="#三、复制" class="headerlink" title="三、复制"></a>三、复制</h1><p>相同数据的多个Redis副本。<br>复制功能是高可用Redis的基础。  </p>
+<h2 id="1-配置"><a href="#1-配置" class="headerlink" title="1. 配置"></a>1. 配置</h2><h3 id="1）建立复制："><a href="#1）建立复制：" class="headerlink" title="1）建立复制："></a>1）建立复制：</h3><p>复制的数据流是单项的，只能从主节点复制到从节点。<br>一个从节点只能有一个主节点，一个主节点可以有多个从节点。<br>slaveof命令复制<br>slaveof配置是在从节点发起。<br>6380：slaveof 127.0.0.1 6379<br>针对主节点6379的任何修改都会同步到从节点6380.<br>slaveof本身是异步命令   </p>
+<h3 id="2）断开复制"><a href="#2）断开复制" class="headerlink" title="2）断开复制"></a>2）断开复制</h3><p>在从节点执行slaveof no one<br>断开与主节点复制关系；从节点晋升为主节点。（不会抛弃原有数据）  </p>
+<h4 id="切主操作：把当前从节点对主节点的复制切换到另一个主节点。"><a href="#切主操作：把当前从节点对主节点的复制切换到另一个主节点。" class="headerlink" title="切主操作：把当前从节点对主节点的复制切换到另一个主节点。"></a>切主操作：把当前从节点对主节点的复制切换到另一个主节点。</h4><p>切主操作流程：  </p>
+<ul>
+<li>断开与旧主节点复制关系；<br>与新主节点建立复制关系；<br>删除从节点当前所有数据；<br>对新主节点进行复制。  </li>
+</ul>
+<h3 id="3）安全性：设置参数进行密码验证。"><a href="#3）安全性：设置参数进行密码验证。" class="headerlink" title="3）安全性：设置参数进行密码验证。"></a>3）安全性：设置参数进行密码验证。</h3><h3 id="4）只读：默认从节点只读。对从节点的修改不会同步到主节点。"><a href="#4）只读：默认从节点只读。对从节点的修改不会同步到主节点。" class="headerlink" title="4）只读：默认从节点只读。对从节点的修改不会同步到主节点。"></a>4）只读：默认从节点只读。对从节点的修改不会同步到主节点。</h3><h3 id="5）传输延迟：repl-disable-tcp-nodelay控制是否关闭延迟。"><a href="#5）传输延迟：repl-disable-tcp-nodelay控制是否关闭延迟。" class="headerlink" title="5）传输延迟：repl-disable-tcp-nodelay控制是否关闭延迟。"></a>5）传输延迟：repl-disable-tcp-nodelay控制是否关闭延迟。</h3><h2 id="2-拓扑"><a href="#2-拓扑" class="headerlink" title="2. 拓扑"></a>2. 拓扑</h2><p>一主一从、一主多从、树状主从结构。  </p>
+<h3 id="1）一主一从结构"><a href="#1）一主一从结构" class="headerlink" title="1）一主一从结构"></a>1）一主一从结构</h3><p>主节点出现宕机时从节点提供故障转移支持。当应用写命令并发量较高且需要持久化时，可以只在从节点上开启AOF，保证数据安全性也避免了持久化对主节点的性能干扰。<br>当主节点关闭持久化时，如果主节点脱机套避免自动重启操作。（因为主节点没有开启持久化重启后数据集为空，从节点继续复制主节点会导致从节点数据清空。）应在从节点上执行slaveof no one断开与主节点的复制关系，再重启主节点。  </p>
+<h3 id="2）一主多从结构"><a href="#2）一主多从结构" class="headerlink" title="2）一主多从结构"></a>2）一主多从结构</h3><p>应用端可以利用多个从节点实现读写分离。<br>对于读占比较大的场景，可以把都命令发送到从节点来分担主节点压力。如果要执行比较耗时的都命令，可以在一台从节点上进行，防止阻塞。<br>对于写并发量较高的场景，多个从节点会导致主节点写命令的多次发送而过渡消耗网络带宽，同时也加重了主节点的负载。  </p>
+<h3 id="3）树状主从结构"><a href="#3）树状主从结构" class="headerlink" title="3）树状主从结构"></a>3）树状主从结构</h3><p>从节点不断可以复制主节点的数据，同时可以作为其他从节点的主节点继续向下复制。<br>通过引用复制中间层，可以有效地降低主节点负载和需要传送给从节点的数据量。   </p>
+<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2. 原理"></a>2. 原理</h2><h3 id="1）复制过程"><a href="#1）复制过程" class="headerlink" title="1）复制过程"></a>1）复制过程</h3><p><img src="https://i.imgur.com/lfswNDZ.png" alt="主从复制">  </p>
+<p>保存主节点信息；（地址信息）    </p>
+<ul>
+<li>主从建立socket连接；  </li>
+<li>发送ping命令；  </li>
+<li>权限验证；  </li>
+<li>同步数据集；  </li>
+<li>命令持续复制。  </li>
+</ul>
+<h3 id="2）数据同步"><a href="#2）数据同步" class="headerlink" title="2）数据同步"></a>2）数据同步</h3><p>psync命令完成数据同步，全量复制（初次复制）和部分复制（补发丢失数据）<br>psync命令运行需要组件：  </p>
+<ul>
+<li>主从节点各自复制偏移量：主节点在处理完写入命令后，会把命令的字节长度做累加记录，从节点每秒钟会上报自身的复制偏移量给主节点，在收到主节点发送的命令后，也会累加记录自身的偏移量。通过对比主从节点的复制偏移量判断数据是否一致。  </li>
+<li>复制积压缓冲区：是保存在主节点上的一个固定长度的队列，当主节点有连接的从节点时被创建，主节点响应写命令时，会把命令发送给从节点和复制积压缓冲区，实现保存最近已复制数据的功能，用于部分复制和复制命令丢失的数据补救。  </li>
+<li>主节点运行ID：唯一识别Redis节点，Redis关闭再启动，运行ID会改变。  可以通过配置不改变ID重启。  </li>
+</ul>
+<p>psync命令<br><span style="color:red;">psync runID offset</span></p>
+<h4 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h4><p>主从第一次建立复制必须全量  </p>
+<ul>
+<li>从节点发送psync ? -1；  </li>
+<li>主节点解析出全量复制，回复；  </li>
+<li>从节点接收主节点响应数据保存runID和偏移量offset；  </li>
+<li>主节点执行bgsave保存RDB文件到本地；  </li>
+<li>主节点发送RDB文件给从节点，从节点接收所谓数据文件。<br>（针对数据量较大的节点，建议调大repl-timeout参数防止出现全量同步数据超时。）  </li>
+<li>对于从节点开始接收RDB文件快照到接收完成期间，主节点仍然响应读写命令，保存在复制客户端缓冲区内。（为防止主节点复制客户端缓冲区溢出，要调整client-outbut-buffer-limit slave配置  </li>
+<li>从节点接收完主节点传送来的全部数据会清空自身旧数据；  </li>
+<li>清空后加载RDB文件；  </li>
+<li>加载完，如果当前节点开启了AOF持久化，会立即做bgrewriteaof操作，为了保证全量复制后AOF持久化文件立刻使用。  </li>
+</ul>
+<p>复制过程时间开销：  </p>
+<ul>
+<li>主节点bgsave时间；  </li>
+<li>RDB文件网络传输时间；  </li>
+<li>从节点清空数据时间；  </li>
+<li>从节点加载RDB时间；  </li>
+<li>可能的AOF重写时间。   </li>
+</ul>
+<h4 id="部分复制"><a href="#部分复制" class="headerlink" title="部分复制"></a>部分复制</h4><p>psync runID offset<br>当从节点正在复制主节点时，如果出现网络闪断或者命令丢失等异常情况，从节点会问主节点要求补发丢失的命令数据，如果主节点的复制积压缓冲区存在则直接发送。<br>流程：  </p>
+<ul>
+<li>网络中断打印日志；  </li>
+<li>中断期间主节点依然响应命令，写入复制积压缓冲区；  </li>
+<li>网络恢复连接；  </li>
+<li>从节点发送自身runID和偏移量offset；  </li>
+<li>主节点核对查找缓冲区；  </li>
+<li>主节点发送数据。  </li>
+</ul>
+<h3 id="3）心跳：主从节点在建立复制后，他们维护着长连接并彼此发送心跳命令。"><a href="#3）心跳：主从节点在建立复制后，他们维护着长连接并彼此发送心跳命令。" class="headerlink" title="3）心跳：主从节点在建立复制后，他们维护着长连接并彼此发送心跳命令。"></a>3）心跳：主从节点在建立复制后，他们维护着长连接并彼此发送心跳命令。</h3><h3 id="4）异步复制"><a href="#4）异步复制" class="headerlink" title="4）异步复制"></a>4）异步复制</h3><p>主节点数据读写并把写命令同步给从节点，写命令的发送是异步完成。  </p>
+<h2 id="3-开发与运维中的问题"><a href="#3-开发与运维中的问题" class="headerlink" title="3. 开发与运维中的问题"></a>3. 开发与运维中的问题</h2><h3 id="1）读写分离"><a href="#1）读写分离" class="headerlink" title="1）读写分离"></a>1）读写分离</h3><p>对于读占比较高的场景，可以通过把一部分读流量分摊到从节点来减轻主节点压力，但需永远只对主节点执行写操作。<br>从节点响应读请求可能会遇到：<br>复制数据延迟；  </p>
+<ul>
+<li><p>读到过期数据；  </p>
+</li>
+<li><p>主节点惰性删除和定时删除。</p>
+</li>
+<li><p>从节点故障。  </p>
+<h3 id="2）主从配置不一致"><a href="#2）主从配置不一致" class="headerlink" title="2）主从配置不一致"></a>2）主从配置不一致</h3><h3 id="3）规避全量复制"><a href="#3）规避全量复制" class="headerlink" title="3）规避全量复制"></a>3）规避全量复制</h3></li>
+<li><p>第一次建立复制（低峰操作）；  </p>
+</li>
+<li><p>节点运行ID不匹配（主节点重启，ID改变，从节点会全量复制。  应手动提升从节点为主节点，或采用支持故障自动转移的哨兵或集群）  </p>
+</li>
+<li><p>复制积压缓冲区不足：增大。  </p>
+</li>
+</ul>
+<h3 id="4）规避复制风暴"><a href="#4）规避复制风暴" class="headerlink" title="4）规避复制风暴"></a>4）规避复制风暴</h3><h4 id="单主节点复制风暴"><a href="#单主节点复制风暴" class="headerlink" title="单主节点复制风暴"></a>单主节点复制风暴</h4><p>主节点恢复重启，多个从节点全量同步。<br>解决：减少主节点挂载从节点，或者采用树状复制结构。  </p>
+<h4 id="单机器复制风暴"><a href="#单机器复制风暴" class="headerlink" title="单机器复制风暴"></a>单机器复制风暴</h4><p>解决：主节点分散到多台机器上，提供故障转移机制</p>
+<hr>
+<h1 id="四、阻塞"><a href="#四、阻塞" class="headerlink" title="四、阻塞"></a>四、阻塞</h1><ul>
+<li>内在原因：API或数据结构使用不合理（慢查询–转为低算法度，发现大对象）；CPU饱和（判断并发量是否达到极限，集群化水平扩展分摊压力）；持久化相关的阻塞（fork阻塞，AOF刷盘阻塞）。  </li>
+<li>外在原因：CPU竞争；内存交换；网络问题。<br>  CPU竞争：进程竞争（和其他服务竞争）；绑定CPU（Redis绑定在CPU上，父进程创建子进程进行重写，父子进程共享CPU，子进程重写CPU使用率&gt;90%，父子竞争，所以持久化或复制节点不建议绑定CPU）<br>  内存交换：需保证机器充足的可用内存；确保所有实例设置最大可用内存；降低系统使用Swap优先级。<br>  网络问题：连接拒绝；网络延迟；网卡软中断。  </li>
+</ul>
+<hr>
+<h1 id="五、理解内存"><a href="#五、理解内存" class="headerlink" title="五、理解内存"></a>五、理解内存</h1><h2 id="1-内存消耗"><a href="#1-内存消耗" class="headerlink" title="1. 内存消耗"></a>1. 内存消耗</h2><p>内存使用统计：执行info memory命令<br>*<em>内存消耗划分：自身内存（消耗非常少）+对象内存+缓冲内存+内存碎片 *</em><br>对象内存：数据存储<br>缓冲内存：客户端缓冲、复制积压缓冲区、AOF缓冲区<br>客户端缓冲区：输入缓冲无法控制，最大1G，输出缓冲可以控制；<br>复制积压缓冲区可设置较大值；<br>AOF缓冲用户无法控制。<br>内存碎片：存储数据长短差异较大会出现高内存碎片  </p>
+<h3 id="子进程内存消耗"><a href="#子进程内存消耗" class="headerlink" title="子进程内存消耗"></a>子进程内存消耗</h3><p>执行AOF/RDB重写时Redis创建的子进程内存消耗。Redis执行fork操作产生的子进程内存占用量对外表现为与父进程相同，理论上需要一倍的物理内存来完成重写操作。但Linux具有写时复制技术，父子进程会共享相同的物理内存页，当父进程处理写请求时会对需要修改的页复制出一份副本完成写操作，而子进程依然读取fork时整个父进程的内存快照。<br>需要设置sysctl vm.overcommit_memory=1来允许内核可以分配所有的物理内存，防止Redis进程执行fork时因系统剩余内存不足而失败。  </p>
+<h2 id="2-内存管理"><a href="#2-内存管理" class="headerlink" title="2. 内存管理"></a>2. 内存管理</h2><p>设置内存上限<br>Redis使用maxmemory参数限制最大可用内存。（限制的是实际使用的内存量）<br>动态调整内存上限<br>通过config set maxmemory进行动态修改  </p>
+<p><strong>Redis默认无限使用服务器内存</strong>  </p>
+<h2 id="3-内存回收策略"><a href="#3-内存回收策略" class="headerlink" title="3. 内存回收策略"></a>3. 内存回收策略</h2><h3 id="1）删除达到过期时间的键对象（惰性删除、定时任务删除）"><a href="#1）删除达到过期时间的键对象（惰性删除、定时任务删除）" class="headerlink" title="1）删除达到过期时间的键对象（惰性删除、定时任务删除）"></a>1）删除达到过期时间的键对象（惰性删除、定时任务删除）</h3><p>过期删除策略：<br>1、定时删除<br>对于每一个设置了过期时间的key都会创建一个定时器，一旦到达过期时间就立即删除。该策略可以立即清除过期的数据，对内存较友好，但是缺点是占用了大量的CPU资源去处理过期的数据，会影响Redis的吞吐量和响应时间。<br>2、惰性删除<br>当访问一个key时，才判断该key是否过期，过期则删除。该策略能最大限度地节省CPU资源，但是对内存却十分不友好。有一种极端的情况是可能出现大量的过期key没有被再次访问，因此不会被清除，导致占用了大量的内存。<br>在计算机科学中，懒惰删除（英文：lazy deletion）指的是从一个散列表（也称哈希表）中删除元素的一种方法。在这个方法中，删除仅仅是指标记一个元素被删除，而不是整个清除它。被删除的位点在插入时被当作空元素，在搜索之时被当作已占据。<br>3、定期删除<br>每隔一段时间，扫描Redis中过期key字典，并清除部分过期的key。该策略是前两者的一个折中方案，还可以通过调整定时扫描的时间间隔和每次扫描的限定耗时，在不同情况下使得CPU和内存资源达到最优的平衡效果。</p>
+<p><span style="color:red;">在Redis中，同时使用了定期删除和惰性删除。</span>    </p>
+<h3 id="2）内存使用到达maxmemory上限时触发内存溢出控制策略"><a href="#2）内存使用到达maxmemory上限时触发内存溢出控制策略" class="headerlink" title="2）内存使用到达maxmemory上限时触发内存溢出控制策略"></a>2）内存使用到达maxmemory上限时触发内存溢出控制策略</h3><p>内存淘汰策略<br>Redis的内存淘汰策略，是指内存达到maxmemory极限时，使用某种算法来决定清理掉哪些数据，以保证新数据的存入。</p>
+<p>Redis的内存淘汰机制：  </p>
+<ul>
+<li>volatile-lru -&gt; 根据LRU算法生成的过期时间来删除。  </li>
+<li>allkeys-lru -&gt; 根据LRU算法删除任何key。  </li>
+<li>volatile-random -&gt; 根据过期设置来随机删除key。  </li>
+<li>allkeys-random -&gt; 无差别随机删。  </li>
+<li>volatile-ttl -&gt; 根据最近过期时间来删除（辅以TTL）  </li>
+<li>noeviction -&gt; 谁也不删，直接在写操作时返回错误。  </li>
+</ul>
+<p>什么时候会进行淘汰？<br>Redis会在每一次处理命令的时候（processCommand函数调用freeMemoryIfNeeded）判断当前redis是否达到了内存的最大限制，如果达到限制，则使用对应的算法去处理需要删除的key。   </p>
+<h2 id="4-内存优化"><a href="#4-内存优化" class="headerlink" title="4. 内存优化"></a>4. 内存优化</h2><h3 id="1）RedisObject对象"><a href="#1）RedisObject对象" class="headerlink" title="1）RedisObject对象"></a>1）RedisObject对象</h3><p>结构体：type、encoding、lru、refcount、*ptr字段  </p>
+<h3 id="2）缩减键值对象"><a href="#2）缩减键值对象" class="headerlink" title="2）缩减键值对象"></a>2）缩减键值对象</h3><p>降低Redis内存使用最直接的方式就是缩减键（key）和值（value）的长度。<br>key长度：如在设计键时，在完整描述业务情况下，键值越短越好。<br>value长度：值对象缩减比较复杂，常见需求是把业务对象序列化成二进制数组放入Redis。首先应该在业务上精简业务对象，去掉不必要的属性避免存储无效数据。其次在序列化工具选择上，应该选择更高效的序列化工具来降低字节数组大小。以JAVA为例，内置的序列化方式无论从速度还是压缩比都不尽如人意，这时可以选择更高效的序列化工具，如: protostuff，kryo等。  </p>
+<h3 id="3）共享对象池"><a href="#3）共享对象池" class="headerlink" title="3）共享对象池"></a>3）共享对象池</h3><p>对象共享池指Redis内部维护[0-9999]的整数对象池。创建大量的整数类型redisObject存在内存开销，每个redisObject内部结构至少占16字节，甚至超过了整数自身空间消耗。所以Redis内存维护一个[0-9999]的整数对象池，用于节约内存。 除了整数值对象，其他类型如list,hash,set,zset内部元素也可以使用整数对象池。因此开发中在满足需求的前提下，尽量使用整数对象以节省内存。<br>*<em>为什么开启maxmemory和LRU淘汰策略后对象池无效? *</em><br>LRU算法需要获取对象最后被访问时间，以便淘汰最长未访问数据，每个对象最后访问时间存储在redisObject对象的lru字段。对象共享意味着多个引用共享同一个redisObject，这时lru字段也会被共享，导致无法获取每个对象的最后访问时间。如果没有设置maxmemory，直到内存被用尽Redis也不会触发内存回收，所以共享对象池可以正常工作。<br>综上所述，共享对象池与maxmemory+LRU策略冲突，使用时需要注意。 对于ziplist编码的值对象，即使内部数据为整数也无法使用共享对象池，因为ziplist使用压缩且内存连续的结构，对象共享判断成本过高，ziplist编码细节后面内容详细说明。</p>
+<p><strong>为什么只有整数对象池？</strong><br>首先整数对象池复用的几率最大，其次对象共享的一个关键操作就是判断相等性，Redis之所以只有整数对象池，是因为整数比较算法时间复杂度为O(1)，只保留一万个整数为了防止对象池浪费。如果是字符串判断相等性，时间复杂度变为O(n)，特别是长字符串更消耗性能(浮点数在Redis内部使用字符串存储)。对于更复杂的数据结构如hash,list等，相等性判断需要O(n2)。对于单线程的Redis来说，这样的开销显然不合理，因此Redis只保留整数共享对象池。   </p>
+<h3 id="4）字符串优化"><a href="#4）字符串优化" class="headerlink" title="4）字符串优化"></a>4）字符串优化</h3><p>1.字符串结构<br>Redis没有采用原生C语言的字符串类型而是自己实现了字符串结构，内部简单动态字符串(simple dynamic string)，简称SDS。<br>2.预分配机制<br>因为字符串(SDS)存在预分配机制，日常开发中要小心预分配带来的内存浪费，例如下表的测试用例。<br>3.字符串重构<br>字符串重构:指不一定把每份数据作为字符串整体存储，像json这样的数据可以使用hash结构，使用二级结构存储也能帮我们节省内存。同时可以使用hmget,hmset命令支持字段的部分读取修改，而不用每次整体存取。    </p>
+<h3 id="5）编码优化"><a href="#5）编码优化" class="headerlink" title="5）编码优化"></a>5）编码优化</h3><p>*<em>控制编码类型 *</em><br>编码类型转换在Redis写入数据时自动完成，这个转换过程是不可逆的，转换规则只能从小内存编码向大内存编码转换。<br>*<em>ziplist编码 *</em><br>ziplist编码主要目的是为了节约内存，因此所有数据都是采用线性连续的内存结构。ziplist编码是应用范围最广的一种，可以分别作为hash、list、zset类型的底层数据结构实现。首先从ziplist编码结构开始分析，它的内部结构类似这样:&lt;….&gt;。一个ziplist可以包含多个entry(元素)，每个entry保存具体的数据(整数或者字节数组)。<br>*<em>intset编码 *</em><br>intset编码是集合(set)类型编码的一种，内部表现为存储有序，不重复的整数集。当集合只包含整数且长度不超过set-max-intset-entries配置时被启用。  </p>
+<h3 id="6）控制key的数量"><a href="#6）控制key的数量" class="headerlink" title="6）控制key的数量"></a>6）控制key的数量</h3><p>当使用Redis存储大量数据时，通常会存在大量键，过多的键同样会消耗大量内存。Redis本质是一个数据结构服务器，它为我们提供多种数据结构，如hash，list，set，zset 等结构。使用Redis时不要进入一个误区，大量使用get/set这样的API，把Redis当成Memcached使用。对于存储相同的数据内容利用Redis的数据结构降低外层键的数量，也可以节省大量内存。<br>hash结构降低键数量分析：<br>根据键规模在客户端通过分组映射到一组hash对象中，如存在100万个键，可以映射到1000个hash中，每个hash保存1000个元素。<br>hash的field可用于记录原始key字符串，方便哈希查找。<br>hash的value保存原始值对象，确保不要超过hash-max-ziplist-value限制。  </p>
+<hr>
+<p>*<em>内存优化：<br>精简键值对大小，键值字面量精简，使用高效二进制序列化工具。<br>使用对象共享池优化小证书对象。<br>数据优先使用整数，比字符串类型更节省空间。<br>优先字符串使用，避免预分配造成的内存浪费。<br>使用ziplist压缩编码优化hash、list结构，注重效率和空间的平衡。<br>使用intset编码优化整数集合。<br>使用ziplist编码的hash结构降低小对象链规模。  *</em></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/study/" rel="tag"># study</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/23/Redis学习22/" rel="next" title="">
+                  <i class="fa fa-chevron-left"></i> 
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/24/Redis学习-1/" rel="prev" title="Redis学习">
+                  Redis学习 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Inhaltsverzeichnis
+        </li>
+        <li class="sidebar-nav-overview">
+          Übersicht
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis命令参考"><span class="nav-number">1.</span> <span class="nav-text">Redis命令参考</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一、redis客户端"><span class="nav-number"></span> <span class="nav-text">一、redis客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-客户端通信协议"><span class="nav-number">1.</span> <span class="nav-text">1. 客户端通信协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Java客户端Jedis"><span class="nav-number">2.</span> <span class="nav-text">2. Java客户端Jedis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Python客户端redis-py"><span class="nav-number">3.</span> <span class="nav-text">3. Python客户端redis-py</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-客户端管理"><span class="nav-number">4.</span> <span class="nav-text">4. 客户端管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端API"><span class="nav-number">4.1.</span> <span class="nav-text">客户端API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）-client-list-列出所有与服务端相连的客户端信息"><span class="nav-number">4.1.1.</span> <span class="nav-text">1） client list  列出所有与服务端相连的客户端信息</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#id-addr-fd-name"><span class="nav-number">4.1.1.1.</span> <span class="nav-text">id,addr,fd,name</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#输入缓冲区：qbuf，qbuf-free"><span class="nav-number">4.1.1.2.</span> <span class="nav-text">输入缓冲区：qbuf，qbuf-free</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#输出缓冲区：-obl（固定缓冲区数组长度）-oll（动态缓冲区列表长度）-omem（使用的字节数）"><span class="nav-number">4.1.1.3.</span> <span class="nav-text">输出缓冲区： obl（固定缓冲区数组长度）,oll（动态缓冲区列表长度）,omem（使用的字节数）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#客户端的存活状态：-age-idle"><span class="nav-number">4.1.1.4.</span> <span class="nav-text">客户端的存活状态： age idle</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#客户端的限制：-maxclients（限制最大客户端连接数），timeout（限制连接的最大空闲时间）-（通过info-clients查询）"><span class="nav-number">4.1.1.5.</span> <span class="nav-text">客户端的限制： maxclients（限制最大客户端连接数），timeout（限制连接的最大空闲时间） （通过info clients查询）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）-client-setName和client-getName"><span class="nav-number">4.1.2.</span> <span class="nav-text">2） client setName和client getName</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3）-client-kill"><span class="nav-number">4.1.3.</span> <span class="nav-text">3） client kill</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4）-client-pause"><span class="nav-number">4.1.4.</span> <span class="nav-text">4） client pause</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5）-monitor"><span class="nav-number">4.1.5.</span> <span class="nav-text">5） monitor</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端相关配置"><span class="nav-number">4.2.</span> <span class="nav-text">客户端相关配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端统计片段"><span class="nav-number">4.3.</span> <span class="nav-text">客户端统计片段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端常见异常"><span class="nav-number">4.4.</span> <span class="nav-text">客户端常见异常</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、持久化"><span class="nav-number"></span> <span class="nav-text">二、持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-RDB"><span class="nav-number">1.</span> <span class="nav-text">1. RDB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）手动触发：save和bgsave"><span class="nav-number">1.1.</span> <span class="nav-text">1）手动触发：save和bgsave</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）自动触发："><span class="nav-number">1.2.</span> <span class="nav-text">2）自动触发：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#bgsave流程："><span class="nav-number">1.2.1.</span> <span class="nav-text">bgsave流程：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RDB文件的处理："><span class="nav-number">1.2.2.</span> <span class="nav-text">RDB文件的处理：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RBS的优缺点："><span class="nav-number">1.2.3.</span> <span class="nav-text">RBS的优缺点：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-AOF"><span class="nav-number">2.</span> <span class="nav-text">2. AOF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RBS的优缺点：-1"><span class="nav-number">2.0.1.</span> <span class="nav-text">RBS的优缺点：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-AOF-1"><span class="nav-number">3.</span> <span class="nav-text">2. AOF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#流程："><span class="nav-number">3.1.</span> <span class="nav-text">流程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-命令写入"><span class="nav-number">3.2.</span> <span class="nav-text">1)命令写入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-文件同步"><span class="nav-number">3.3.</span> <span class="nav-text">2)文件同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-重写机制"><span class="nav-number">3.4.</span> <span class="nav-text">3)重写机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF重写流程："><span class="nav-number">3.4.1.</span> <span class="nav-text">AOF重写流程：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-重启加载"><span class="nav-number">3.5.</span> <span class="nav-text">4)重启加载</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#文件校验"><span class="nav-number">3.5.1.</span> <span class="nav-text">文件校验</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-问题定位与优化"><span class="nav-number">4.</span> <span class="nav-text">3. 问题定位与优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-fork操作"><span class="nav-number">4.1.</span> <span class="nav-text">1) fork操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#fork耗时问题定位："><span class="nav-number">4.1.1.</span> <span class="nav-text">fork耗时问题定位：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#改善fork操作耗时："><span class="nav-number">4.1.2.</span> <span class="nav-text">改善fork操作耗时：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-子进程开销监控和优化"><span class="nav-number">4.2.</span> <span class="nav-text">2) 子进程开销监控和优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CPU"><span class="nav-number">4.2.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存"><span class="nav-number">4.2.2.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#硬盘"><span class="nav-number">4.2.3.</span> <span class="nav-text">硬盘</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-AOF追加阻塞"><span class="nav-number">4.3.</span> <span class="nav-text">3) AOF追加阻塞</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-多实例部署"><span class="nav-number">4.4.</span> <span class="nav-text">4) 多实例部署</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、复制"><span class="nav-number"></span> <span class="nav-text">三、复制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-配置"><span class="nav-number">1.</span> <span class="nav-text">1. 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）建立复制："><span class="nav-number">1.1.</span> <span class="nav-text">1）建立复制：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）断开复制"><span class="nav-number">1.2.</span> <span class="nav-text">2）断开复制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#切主操作：把当前从节点对主节点的复制切换到另一个主节点。"><span class="nav-number">1.2.1.</span> <span class="nav-text">切主操作：把当前从节点对主节点的复制切换到另一个主节点。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）安全性：设置参数进行密码验证。"><span class="nav-number">1.3.</span> <span class="nav-text">3）安全性：设置参数进行密码验证。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4）只读：默认从节点只读。对从节点的修改不会同步到主节点。"><span class="nav-number">1.4.</span> <span class="nav-text">4）只读：默认从节点只读。对从节点的修改不会同步到主节点。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5）传输延迟：repl-disable-tcp-nodelay控制是否关闭延迟。"><span class="nav-number">1.5.</span> <span class="nav-text">5）传输延迟：repl-disable-tcp-nodelay控制是否关闭延迟。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-拓扑"><span class="nav-number">2.</span> <span class="nav-text">2. 拓扑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）一主一从结构"><span class="nav-number">2.1.</span> <span class="nav-text">1）一主一从结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）一主多从结构"><span class="nav-number">2.2.</span> <span class="nav-text">2）一主多从结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）树状主从结构"><span class="nav-number">2.3.</span> <span class="nav-text">3）树状主从结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-原理"><span class="nav-number">3.</span> <span class="nav-text">2. 原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）复制过程"><span class="nav-number">3.1.</span> <span class="nav-text">1）复制过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）数据同步"><span class="nav-number">3.2.</span> <span class="nav-text">2）数据同步</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#全量复制"><span class="nav-number">3.2.1.</span> <span class="nav-text">全量复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#部分复制"><span class="nav-number">3.2.2.</span> <span class="nav-text">部分复制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）心跳：主从节点在建立复制后，他们维护着长连接并彼此发送心跳命令。"><span class="nav-number">3.3.</span> <span class="nav-text">3）心跳：主从节点在建立复制后，他们维护着长连接并彼此发送心跳命令。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4）异步复制"><span class="nav-number">3.4.</span> <span class="nav-text">4）异步复制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-开发与运维中的问题"><span class="nav-number">4.</span> <span class="nav-text">3. 开发与运维中的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）读写分离"><span class="nav-number">4.1.</span> <span class="nav-text">1）读写分离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）主从配置不一致"><span class="nav-number">4.2.</span> <span class="nav-text">2）主从配置不一致</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）规避全量复制"><span class="nav-number">4.3.</span> <span class="nav-text">3）规避全量复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4）规避复制风暴"><span class="nav-number">4.4.</span> <span class="nav-text">4）规避复制风暴</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单主节点复制风暴"><span class="nav-number">4.4.1.</span> <span class="nav-text">单主节点复制风暴</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单机器复制风暴"><span class="nav-number">4.4.2.</span> <span class="nav-text">单机器复制风暴</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、阻塞"><span class="nav-number"></span> <span class="nav-text">四、阻塞</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、理解内存"><span class="nav-number"></span> <span class="nav-text">五、理解内存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-内存消耗"><span class="nav-number">1.</span> <span class="nav-text">1. 内存消耗</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#子进程内存消耗"><span class="nav-number">1.1.</span> <span class="nav-text">子进程内存消耗</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-内存管理"><span class="nav-number">2.</span> <span class="nav-text">2. 内存管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-内存回收策略"><span class="nav-number">3.</span> <span class="nav-text">3. 内存回收策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）删除达到过期时间的键对象（惰性删除、定时任务删除）"><span class="nav-number">3.1.</span> <span class="nav-text">1）删除达到过期时间的键对象（惰性删除、定时任务删除）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）内存使用到达maxmemory上限时触发内存溢出控制策略"><span class="nav-number">3.2.</span> <span class="nav-text">2）内存使用到达maxmemory上限时触发内存溢出控制策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-内存优化"><span class="nav-number">4.</span> <span class="nav-text">4. 内存优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）RedisObject对象"><span class="nav-number">4.1.</span> <span class="nav-text">1）RedisObject对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）缩减键值对象"><span class="nav-number">4.2.</span> <span class="nav-text">2）缩减键值对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）共享对象池"><span class="nav-number">4.3.</span> <span class="nav-text">3）共享对象池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4）字符串优化"><span class="nav-number">4.4.</span> <span class="nav-text">4）字符串优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5）编码优化"><span class="nav-number">4.5.</span> <span class="nav-text">5）编码优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6）控制key的数量"><span class="nav-number">4.6.</span> <span class="nav-text">6）控制key的数量</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Lynn</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">Artikel</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">Kategorien</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">schlagwörter</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lynn</span>
+</div>
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Design – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.1
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/pisces.js?v=7.4.1"></script>
+
+<script src="/js/next-boot.js?v=7.4.1"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.1"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
