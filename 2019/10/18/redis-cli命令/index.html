@@ -47,26 +47,26 @@
     path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     translation: {
-      copy_button: 'Kopieren',
-      copy_success: 'Kopiert',
-      copy_failure: 'Kopieren fehlgeschlagen'
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
     },
     sidebarPadding: 40
   };
 </script>
 
-  <meta name="description" content="[Redis] redis-cli 命令总结原文链接 Redis提供了丰富的命令（command）对数据库和各种数据类型进行操作，这些command可以在Linux终端使用。在编程时，比如使用Redis 的Java语言包，这些命令都有对应的方法。下面将Redis提供的命令做一总结。  官网命令列表：http://redis.io/commands （英文）  1、连接操作相关的命令 quit：关闭">
+  <meta name="description" content="systemctl start redis.service #启动redis服务器  systemctl stop redis.service #停止redis服务器  systemctl restart redis.service #重新启动redis服务器  systemctl status redis.service #获取redis服务器的运行状态  systemctl enable re">
 <meta name="keywords" content="command">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis-cli命令">
 <meta property="og:url" content="http://yoursite.com/2019/10/18/redis-cli命令/index.html">
 <meta property="og:site_name" content="ALWAYS">
-<meta property="og:description" content="[Redis] redis-cli 命令总结原文链接 Redis提供了丰富的命令（command）对数据库和各种数据类型进行操作，这些command可以在Linux终端使用。在编程时，比如使用Redis 的Java语言包，这些命令都有对应的方法。下面将Redis提供的命令做一总结。  官网命令列表：http://redis.io/commands （英文）  1、连接操作相关的命令 quit：关闭">
+<meta property="og:description" content="systemctl start redis.service #启动redis服务器  systemctl stop redis.service #停止redis服务器  systemctl restart redis.service #重新启动redis服务器  systemctl status redis.service #获取redis服务器的运行状态  systemctl enable re">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-10-18T03:42:01.322Z">
+<meta property="og:updated_time" content="2019-10-31T03:08:44.644Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis-cli命令">
-<meta name="twitter:description" content="[Redis] redis-cli 命令总结原文链接 Redis提供了丰富的命令（command）对数据库和各种数据类型进行操作，这些command可以在Linux终端使用。在编程时，比如使用Redis 的Java语言包，这些命令都有对应的方法。下面将Redis提供的命令做一总结。  官网命令列表：http://redis.io/commands （英文）  1、连接操作相关的命令 quit：关闭">
+<meta name="twitter:description" content="systemctl start redis.service #启动redis服务器  systemctl stop redis.service #停止redis服务器  systemctl restart redis.service #重新启动redis服务器  systemctl status redis.service #获取redis服务器的运行状态  systemctl enable re">
   <link rel="canonical" href="http://yoursite.com/2019/10/18/redis-cli命令/">
 
 
@@ -134,7 +134,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -154,7 +154,7 @@
       
     
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Startseite</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
 
   </li>
       
@@ -167,7 +167,7 @@
       
     
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>Über</a>
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
 
   </li>
       
@@ -180,7 +180,7 @@
       
     
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Schlagwörter</a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
 
   </li>
       
@@ -193,7 +193,7 @@
       
     
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Kategorien</a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
 
   </li>
       
@@ -206,14 +206,14 @@
       
     
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archiv</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
       
     
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger">
-          <i class="fa fa-search fa-fw"></i>Suche
+          <i class="fa fa-search fa-fw"></i>Search
         </a>
       </li>
     
@@ -228,7 +228,7 @@
   </span>
   <div class="search-input-container">
     <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Suche..." spellcheck="false"
+           placeholder="Searching..." spellcheck="false"
            type="text" id="search-input">
   </div>
   <span class="popup-btn-close">
@@ -289,24 +289,32 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">Posted on</span>
 
               
                 
               
 
-              <time title="Erstellt: 2019-10-18 11:29:49 / Geändert am: 11:42:01" itemprop="dateCreated datePublished" datetime="2019-10-18T11:29:49+08:00">2019-10-18</time>
+              <time title="Created: 2019-10-18 11:29:49" itemprop="dateCreated datePublished" datetime="2019-10-18T11:29:49+08:00">2019-10-18</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-10-31 11:08:44" itemprop="dateModified" datetime="2019-10-31T11:08:44+08:00">2019-10-31</time>
+              </span>
             
           
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/Redis/" itemprop="url" rel="index">
@@ -331,7 +339,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Redis-redis-cli-命令总结"><a href="#Redis-redis-cli-命令总结" class="headerlink" title="[Redis] redis-cli 命令总结"></a>[Redis] redis-cli 命令总结</h2><p><a href="https://maoxian.de/2015/08/1342.html" target="_blank" rel="noopener">原文链接</a></p>
+        <pre><code>systemctl start redis.service #启动redis服务器
+
+systemctl stop redis.service #停止redis服务器
+
+systemctl restart redis.service #重新启动redis服务器
+
+systemctl status redis.service #获取redis服务器的运行状态
+
+systemctl enable redis.service #开机启动redis服务器
+
+systemctl disable redis.service #开机禁用redis服务器</code></pre><h2 id="Redis-redis-cli-命令总结"><a href="#Redis-redis-cli-命令总结" class="headerlink" title="[Redis] redis-cli 命令总结"></a>[Redis] redis-cli 命令总结</h2><p><a href="https://maoxian.de/2015/08/1342.html" target="_blank" rel="noopener">原文链接</a></p>
 <p>Redis提供了丰富的命令（command）对数据库和各种数据类型进行操作，这些command可以在Linux终端使用。在编程时，比如使用Redis 的Java语言包，这些命令都有对应的方法。下面将Redis提供的命令做一总结。</p>
 <hr>
 <p>官网命令列表：<a href="http://redis.io/commands" target="_blank" rel="noopener">http://redis.io/commands</a> （英文）</p>
@@ -480,8 +498,8 @@
 
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2019/10/23/Redis学习22/" rel="prev" title="">
-                   <i class="fa fa-chevron-right"></i>
+                <a href="/2019/10/24/Redis学习-1/" rel="prev" title="Redis学习-1（持久化、复制、阻塞、内存）">
+                  Redis学习-1（持久化、复制、阻塞、内存） <i class="fa fa-chevron-right"></i>
                 </a>
               
             </div>
@@ -519,10 +537,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          Table of Contents
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          Overview
         </li>
       </ul>
 
@@ -544,8 +562,8 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
-          <span class="site-state-item-name">Artikel</span>
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
         </a>
       </div>
     
@@ -557,8 +575,8 @@
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">4</span>
-        <span class="site-state-item-name">Kategorien</span>
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span>
         </a>
       </div>
     
@@ -571,7 +589,7 @@
           
         
         <span class="site-state-item-count">3</span>
-        <span class="site-state-item-name">schlagwörter</span>
+        <span class="site-state-item-name">tags</span>
         </a>
       </div>
     
@@ -602,10 +620,10 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Lynn</span>
 </div>
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0
   </div>
   <span class="post-meta-divider">|</span>
-  <div class="theme-info">Design – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.1
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.1
   </div>
 
         

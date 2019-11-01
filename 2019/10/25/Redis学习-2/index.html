@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas, Monda:300,300italic,400,400italic,700,700italic|Consolas, Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="title: Redis学习-2date: 2019-10-25 10:28:00tags: studycategories: Redis    六、哨兵1. Redis的高可用实现方案Redis主从复制模式： 将主节点的数据改变同步给从节点作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证数据尽量不丢失；从节点可以扩展主节点的读能力。    1）主从复制存在问题：1. 一旦主节">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ALWAYS">
+<meta property="og:url" content="http://yoursite.com/2019/10/25/Redis学习-2/index.html">
+<meta property="og:site_name" content="ALWAYS">
+<meta property="og:description" content="title: Redis学习-2date: 2019-10-25 10:28:00tags: studycategories: Redis    六、哨兵1. Redis的高可用实现方案Redis主从复制模式： 将主节点的数据改变同步给从节点作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证数据尽量不丢失；从节点可以扩展主节点的读能力。    1）主从复制存在问题：1. 一旦主节">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-10-31T10:46:52.268Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ALWAYS">
+<meta name="twitter:description" content="title: Redis学习-2date: 2019-10-25 10:28:00tags: studycategories: Redis    六、哨兵1. Redis的高可用实现方案Redis主从复制模式： 将主节点的数据改变同步给从节点作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证数据尽量不丢失；从节点可以扩展主节点的读能力。    1）主从复制存在问题：1. 一旦主节">
+  <link rel="canonical" href="http://yoursite.com/2019/10/25/Redis学习-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title> | ALWAYS</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ALWAYS</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      
+    
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+          <i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/25/Redis学习-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-10-25 10:28:00" itemprop="dateCreated datePublished" datetime="2019-10-25T10:28:00+08:00">2019-10-25</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-10-31 18:46:52" itemprop="dateModified" datetime="2019-10-31T18:46:52+08:00">2019-10-31</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<p>title: Redis学习-2<br>date: 2019-10-25 10:28:00<br>tags: study<br>categories: Redis  </p>
+<hr>
+<h1 id="六、哨兵"><a href="#六、哨兵" class="headerlink" title="六、哨兵"></a>六、哨兵</h1><h2 id="1-Redis的高可用实现方案"><a href="#1-Redis的高可用实现方案" class="headerlink" title="1. Redis的高可用实现方案"></a>1. Redis的高可用实现方案</h2><p>Redis主从复制模式： 将主节点的数据改变同步给从节点<br>作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证数据尽量不丢失；<br>从节点可以扩展主节点的读能力。   </p>
+<h3 id="1）主从复制存在问题："><a href="#1）主从复制存在问题：" class="headerlink" title="1）主从复制存在问题："></a>1）主从复制存在问题：</h3><p>1.<span style="color:red;"> 一旦主节点出现故障，需要手动将一个从节点晋升为主节点，同时需要修改应用方的主节点地址，还需要命令其他从节点去复制新的主节点，整个过程都需要人工干预。——高可用问题—通过哨兵来解决。</span><br>2. 主节点的写能力受到单机的限制。——分布式问题<br>3. 主节点的存储能力受到单机的限制。——-分布式问题   </p>
+<h3 id="2）Redis-Sentinel："><a href="#2）Redis-Sentinel：" class="headerlink" title="2）Redis Sentinel："></a>2）Redis Sentinel：</h3><p>分布式架构—Redis数据节点、Sentinel节点、客户端分布在多个物理节点的架构。<br>包含多个Sentinel节点和Redis数据节点，每个Sentinel节点会对数据节点和其余Sebtinel几点进行监控，当发现节点不可达时，会对节点做下线标识。<br>如果标识的是主节点，还会和其他Sentinel节点进行协商，当大多数Sentinel节点都认为主节点不可达时，会选举出一个Sentinel节点来完成故障转移的工作，同时会将这个变化实时通知给Redis应用方，整个过程自动。  </p>
+<h3 id="3）处理过程："><a href="#3）处理过程：" class="headerlink" title="3）处理过程："></a>3）处理过程：</h3><ul>
+<li>主节点出现故障，从节点与主节点失去连接，主从复制失败；  </li>
+<li>每个Sentinel节点通过定期监控发现主节点出现了故障；  </li>
+<li>多个Sentinel节点最主节点的故障达成一致，选举Sentinel-3节点作为领导者负责故障转移；   </li>
+<li>Sentinel-3节点领导者执行了故障转移。（实现从节点晋升为主节点并维护后续正确的主从关系。  </li>
+</ul>
+<h3 id="4）配置："><a href="#4）配置：" class="headerlink" title="4）配置："></a>4）配置：</h3><p>sentinel monitor mymaster 127.0.0.1 6379 2<br>此sentinel节点需要监控6379这个主节点，2代表判断主节点失败至少需要2个sentinel节点同意。<br>sentinel会找到主节点并发现从节点；<br>sentinel节点能够彼此感知对方，同时能够感知到Redis数据节点。    </p>
+<p>每个sentinel节点需要通过定期发送ping命令来判断Redis数据节点和其余sentinel节点是否可达，如果超过down-after-milliseconds 配置的时间则不可达。<br>parallel-syncs用来限制在一次故障转移之后，每次向新的主节点发起复制操作的从节点的个数。<br>failover-timeout故障转移超时时间，作用于故障转移的各个阶段。</p>
+<h3 id="5）部署技巧："><a href="#5）部署技巧：" class="headerlink" title="5）部署技巧："></a>5）部署技巧：</h3><p>sentinel节点不应该部署在一台物理机器上；<br>部署至少三个且奇数个sentinel节点；<br>sentinel节点集合可以只监控一个主节点，也可以监控多个主节点（维护成本低，但sentinel集合出现异常。可能会对多个数据节点造成影响）。  </p>
+<p>API：Sentinel节点数一个特殊的Redis节点，有自己专属的API。可以显示监控信息等。   </p>
+<h2 id="2-客户端连接"><a href="#2-客户端连接" class="headerlink" title="2. 客户端连接"></a>2. 客户端连接</h2><p>客户端初始化时连接的是sentinel节点集合，不再是具体的Redis节点，但Sentinel只是配置中心不是代理。  </p>
+<h2 id="3-实现原理"><a href="#3-实现原理" class="headerlink" title="3. 实现原理"></a>3. 实现原理</h2><h3 id="1）三个定时监控任务"><a href="#1）三个定时监控任务" class="headerlink" title="1）三个定时监控任务"></a>1）三个定时监控任务</h3><ul>
+<li>每隔10秒，每个sentinel节点会向主节点和从节点发送info命令获取最新的拓扑结构；  </li>
+<li>每隔2秒，sentinel节点回想Redis数据节点的<strong>sentinel</strong>:hello频道发送该sentinel节点对主节点的判断以及当前sentinel节点的信息，同时每个sentinel节点会订阅该频道，了解其他sentinel节点；  </li>
+<li>每隔1秒，每个sentinel节点会向主节点、从节点、其他sentinel节点发送ping命令做心跳检测，确认这些节点是否可达。  </li>
+</ul>
+<h3 id="2）主观下线与客观下线"><a href="#2）主观下线与客观下线" class="headerlink" title="2）主观下线与客观下线"></a>2）主观下线与客观下线</h3><ul>
+<li>主观下线：当前Sentinel节点对节点判定失败，一家之言；  </li>
+<li>客观下线：主观下线的节点是主节点时，该sentinel节点会通过命令向其他sentinel节点询问对主节点的判断，当大部分节点对主节点的下线做了同意的判定，为客观下线。  <h3 id="3）领导者Sentinel节点选举"><a href="#3）领导者Sentinel节点选举" class="headerlink" title="3）领导者Sentinel节点选举"></a>3）领导者Sentinel节点选举</h3><h4 id="Rsft算法："><a href="#Rsft算法：" class="headerlink" title="Rsft算法："></a>Rsft算法：</h4>每个在线的Sentinel节点都有资格称为领导者，当它确认主节点主观下线时，会向其他节点发送命令，要求自己成为领导者；<br>收到命令的Sentinel节点，如果没有同意过其它节点的请求，将同意该请求，否则拒绝。<br>如果该Sentinel节点发现自己的票数已经大于max，将称为领导者。<br>如果此过程没有选举出领导者，将进入下一次选举。   </li>
+</ul>
+<h2 id="4-开发与运维中的问题"><a href="#4-开发与运维中的问题" class="headerlink" title="4. 开发与运维中的问题"></a>4. 开发与运维中的问题</h2><p>七、集群  </p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/24/Redis学习-1/" rel="next" title="Redis学习-1（持久化、复制、阻塞、内存）">
+                  <i class="fa fa-chevron-left"></i> Redis学习-1（持久化、复制、阻塞、内存）
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#六、哨兵"><span class="nav-number">1.</span> <span class="nav-text">六、哨兵</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Redis的高可用实现方案"><span class="nav-number">1.1.</span> <span class="nav-text">1. Redis的高可用实现方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）主从复制存在问题："><span class="nav-number">1.1.1.</span> <span class="nav-text">1）主从复制存在问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）Redis-Sentinel："><span class="nav-number">1.1.2.</span> <span class="nav-text">2）Redis Sentinel：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）处理过程："><span class="nav-number">1.1.3.</span> <span class="nav-text">3）处理过程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4）配置："><span class="nav-number">1.1.4.</span> <span class="nav-text">4）配置：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5）部署技巧："><span class="nav-number">1.1.5.</span> <span class="nav-text">5）部署技巧：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-客户端连接"><span class="nav-number">1.2.</span> <span class="nav-text">2. 客户端连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-实现原理"><span class="nav-number">1.3.</span> <span class="nav-text">3. 实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）三个定时监控任务"><span class="nav-number">1.3.1.</span> <span class="nav-text">1）三个定时监控任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）主观下线与客观下线"><span class="nav-number">1.3.2.</span> <span class="nav-text">2）主观下线与客观下线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）领导者Sentinel节点选举"><span class="nav-number">1.3.3.</span> <span class="nav-text">3）领导者Sentinel节点选举</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Rsft算法："><span class="nav-number">1.3.3.1.</span> <span class="nav-text">Rsft算法：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-开发与运维中的问题"><span class="nav-number">1.4.</span> <span class="nav-text">4. 开发与运维中的问题</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Lynn</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lynn</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.1
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/pisces.js?v=7.4.1"></script>
+
+<script src="/js/next-boot.js?v=7.4.1"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.1"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
