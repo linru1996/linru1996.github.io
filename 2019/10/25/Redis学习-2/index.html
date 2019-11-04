@@ -55,17 +55,20 @@
   };
 </script>
 
-  <meta name="description" content="title: Redis学习-2date: 2019-10-25 10:28:00tags: studycategories: Redis    六、哨兵1. Redis的高可用实现方案Redis主从复制模式： 将主节点的数据改变同步给从节点作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证数据尽量不丢失；从节点可以扩展主节点的读能力。    1）主从复制存在问题：1. 一旦主节">
+  <meta name="description" content="title: Redis学习-2date: 2019-10-25 10:28:00tags: studycategories: Redis    https://www.cnblogs.com/Zzbj/p/10280363.html 六、哨兵1. Redis的高可用实现方案Redis主从复制模式： 将主节点的数据改变同步给从节点作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ALWAYS">
 <meta property="og:url" content="http://yoursite.com/2019/10/25/Redis学习-2/index.html">
 <meta property="og:site_name" content="ALWAYS">
-<meta property="og:description" content="title: Redis学习-2date: 2019-10-25 10:28:00tags: studycategories: Redis    六、哨兵1. Redis的高可用实现方案Redis主从复制模式： 将主节点的数据改变同步给从节点作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证数据尽量不丢失；从节点可以扩展主节点的读能力。    1）主从复制存在问题：1. 一旦主节">
+<meta property="og:description" content="title: Redis学习-2date: 2019-10-25 10:28:00tags: studycategories: Redis    https://www.cnblogs.com/Zzbj/p/10280363.html 六、哨兵1. Redis的高可用实现方案Redis主从复制模式： 将主节点的数据改变同步给从节点作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-10-31T10:46:52.268Z">
+<meta property="og:image" content="http://yoursite.com/.com//redis%E5%93%A8%E5%85%B5.PNG">
+<meta property="og:image" content="http://yoursite.com/.com//%E8%99%9A%E6%8B%9F%E6%A7%BD%E5%88%86%E9%85%8D.PNG">
+<meta property="og:updated_time" content="2019-11-01T10:30:53.420Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ALWAYS">
-<meta name="twitter:description" content="title: Redis学习-2date: 2019-10-25 10:28:00tags: studycategories: Redis    六、哨兵1. Redis的高可用实现方案Redis主从复制模式： 将主节点的数据改变同步给从节点作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证数据尽量不丢失；从节点可以扩展主节点的读能力。    1）主从复制存在问题：1. 一旦主节">
+<meta name="twitter:description" content="title: Redis学习-2date: 2019-10-25 10:28:00tags: studycategories: Redis    https://www.cnblogs.com/Zzbj/p/10280363.html 六、哨兵1. Redis的高可用实现方案Redis主从复制模式： 将主节点的数据改变同步给从节点作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证">
+<meta name="twitter:image" content="http://yoursite.com/.com//redis%E5%93%A8%E5%85%B5.PNG">
   <link rel="canonical" href="http://yoursite.com/2019/10/25/Redis学习-2/">
 
 
@@ -305,7 +308,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2019-10-31 18:46:52" itemprop="dateModified" datetime="2019-10-31T18:46:52+08:00">2019-10-31</time>
+                <time title="Geändert am: 2019-11-01 18:30:53" itemprop="dateModified" datetime="2019-11-01T18:30:53+08:00">2019-11-01</time>
               </span>
             
           
@@ -324,8 +327,10 @@
         <hr>
 <p>title: Redis学习-2<br>date: 2019-10-25 10:28:00<br>tags: study<br>categories: Redis  </p>
 <hr>
+<p><a href="https://www.cnblogs.com/Zzbj/p/10280363.html" title="哨兵+集群" target="_blank" rel="noopener">https://www.cnblogs.com/Zzbj/p/10280363.html</a></p>
 <h1 id="六、哨兵"><a href="#六、哨兵" class="headerlink" title="六、哨兵"></a>六、哨兵</h1><h2 id="1-Redis的高可用实现方案"><a href="#1-Redis的高可用实现方案" class="headerlink" title="1. Redis的高可用实现方案"></a>1. Redis的高可用实现方案</h2><p>Redis主从复制模式： 将主节点的数据改变同步给从节点<br>作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证数据尽量不丢失；<br>从节点可以扩展主节点的读能力。   </p>
 <h3 id="1）主从复制存在问题："><a href="#1）主从复制存在问题：" class="headerlink" title="1）主从复制存在问题："></a>1）主从复制存在问题：</h3><p>1.<span style="color:red;"> 一旦主节点出现故障，需要手动将一个从节点晋升为主节点，同时需要修改应用方的主节点地址，还需要命令其他从节点去复制新的主节点，整个过程都需要人工干预。——高可用问题—通过哨兵来解决。</span><br>2. 主节点的写能力受到单机的限制。——分布式问题<br>3. 主节点的存储能力受到单机的限制。——-分布式问题   </p>
+<p><img src="/.com//redis%E5%93%A8%E5%85%B5.PNG" alt="sentinel"></p>
 <h3 id="2）Redis-Sentinel："><a href="#2）Redis-Sentinel：" class="headerlink" title="2）Redis Sentinel："></a>2）Redis Sentinel：</h3><p>分布式架构—Redis数据节点、Sentinel节点、客户端分布在多个物理节点的架构。<br>包含多个Sentinel节点和Redis数据节点，每个Sentinel节点会对数据节点和其余Sebtinel几点进行监控，当发现节点不可达时，会对节点做下线标识。<br>如果标识的是主节点，还会和其他Sentinel节点进行协商，当大多数Sentinel节点都认为主节点不可达时，会选举出一个Sentinel节点来完成故障转移的工作，同时会将这个变化实时通知给Redis应用方，整个过程自动。  </p>
 <h3 id="3）处理过程："><a href="#3）处理过程：" class="headerlink" title="3）处理过程："></a>3）处理过程：</h3><ul>
 <li>主节点出现故障，从节点与主节点失去连接，主从复制失败；  </li>
@@ -348,6 +353,12 @@
 <li>客观下线：主观下线的节点是主节点时，该sentinel节点会通过命令向其他sentinel节点询问对主节点的判断，当大部分节点对主节点的下线做了同意的判定，为客观下线。  <h3 id="3）领导者Sentinel节点选举"><a href="#3）领导者Sentinel节点选举" class="headerlink" title="3）领导者Sentinel节点选举"></a>3）领导者Sentinel节点选举</h3><h4 id="Rsft算法："><a href="#Rsft算法：" class="headerlink" title="Rsft算法："></a>Rsft算法：</h4>每个在线的Sentinel节点都有资格称为领导者，当它确认主节点主观下线时，会向其他节点发送命令，要求自己成为领导者；<br>收到命令的Sentinel节点，如果没有同意过其它节点的请求，将同意该请求，否则拒绝。<br>如果该Sentinel节点发现自己的票数已经大于max，将称为领导者。<br>如果此过程没有选举出领导者，将进入下一次选举。   </li>
 </ul>
 <h2 id="4-开发与运维中的问题"><a href="#4-开发与运维中的问题" class="headerlink" title="4. 开发与运维中的问题"></a>4. 开发与运维中的问题</h2><p>七、集群  </p>
+<p>Redis分布式解决方案，解决单机内存、并发、流量等问题。  </p>
+<p>数据分布<br>数据分布理论<br>解决把整个数据集按照分区规则映射到多个节点的问题，把数据集划分到多个节点上，每个节点负责整体数据的一个子集。<br>数据分区规则：哈希分区和顺序分区。<br>Redis Cluster采用哈希分区规则。<br>节点取余分区<br>使用特定的数据，如redis的键或用户ID，再根据节点数量N使用公式：hash(key)%N计算出hash值，用来决定数据映射到哪一个节点上。扩容时通常采用翻倍扩容。<br>一致性哈希分区<br>为系统每个节点分配一个token，范围一般在0-2的32次方，构成一个哈希环。数据读写执行节点查找操作时，先根据key计算hash值，然后顺时针找到第一个大于等于该hash值的token节点。<br>存在问题：加减节点会造成哈希环中部分数据无法命中；使用少量节点时，节点变化将大范围影响哈希环中数据映射；普通的一致性哈希分区在增减节点时需要增加一倍或减去一半节点才能保证数据和负载均衡。<br><span style="color:red;"> 虚拟槽分区</span><br>使用分散度良好的hash函数把所有数据映射到一个固定范围的整数集合中，整数定义为槽。槽是集群内数据管理和迁移的基本单位。每个节点负责一定数量的槽。  </p>
+<p>Redis数据分区<br>虚拟槽分区，每一个节点负责维护一部分槽以及槽所映射的键值数据。<br><img src="/.com//%E8%99%9A%E6%8B%9F%E6%A7%BD%E5%88%86%E9%85%8D.PNG" alt="虚拟槽分配"><br>特点：<br>解耦数据和节点的关系，简化了节点扩容和收缩难度。<br>节点自身维护槽的映射关系，不需要客户端或者代理服务维护槽分区元数据。<br>支持节点、槽、键之间的映射查询。  </p>
+<p>搭建集群<br>准备节点<br>集群节点数量至少为6个。<br>节点配置，集群配置。<br>节点握手<br>一批运行在集群模式下的节点通过Gossip协议彼此进行通信。感知对方。<br>cluster meet 127.0.0.1 6378<br>握手状态会通过消息在集群内传播；<br>节点建立握手之后还不能正常工作，这时集群处于下线状态，所有数据读写都被禁止；<br>由于目前所有的槽没有分配节点，因此集群无法完成槽到节点的映射。<br>分配槽<br>Redis集群把所有数据映射到n个槽中，每个key会映射为一个固定的槽，只有当节点分配了槽，才能相应和这些槽关联的键命令。<br>cluster nodes查看节点和槽的分配关系；<br>每个处理槽的节点应该具有从节点，保证当它出现故障时可以自动进行故障转移；<br>首次启动的节点和被分配的槽的节点都是主节点，cluster replicate{nodeID} 命令让一个节点成为从节点（在从节点执行命令）。  </p>
+<p>使用redis-trib.rb搭建集群<br>节点通信  </p>
+<p>Gossip协议信息交换<br>meet:用于通知新节点加入；<br>ping：检测节点是否在线并交换彼此状态信息；<br>pong：作为响应消息回复确认消息正常通信；<br>fail：判断集群节点下线广播fail消息。  </p>
 
     </div>
 
@@ -373,6 +384,10 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/01/Redis学习-2（哨兵-集群）/" rel="prev" title="Redis学习-2（哨兵+集群）">
+                  Redis学习-2（哨兵+集群） <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -434,7 +449,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">Artikel</span>
         </a>
       </div>
