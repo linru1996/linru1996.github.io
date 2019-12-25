@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas, Monda:300,300italic,400,400italic,700,700italic|Consolas, Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="leetcode题解P1：罗马数字转换（罗马数字转换成数字）https://leetcode.com/problems/roman-to-integer/ Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M. Symbol       Value I             1 V">
+<meta name="keywords" content="study">
+<meta property="og:type" content="article">
+<meta property="og:title" content="leetcode题解">
+<meta property="og:url" content="http://yoursite.com/2019/12/13/leetcode题解/index.html">
+<meta property="og:site_name" content="ALWAYS">
+<meta property="og:description" content="leetcode题解P1：罗马数字转换（罗马数字转换成数字）https://leetcode.com/problems/roman-to-integer/ Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M. Symbol       Value I             1 V">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-12-13T14:59:00.222Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="leetcode题解">
+<meta name="twitter:description" content="leetcode题解P1：罗马数字转换（罗马数字转换成数字）https://leetcode.com/problems/roman-to-integer/ Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M. Symbol       Value I             1 V">
+  <link rel="canonical" href="http://yoursite.com/2019/12/13/leetcode题解/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>leetcode题解 | ALWAYS</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ALWAYS</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      
+    
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+          <i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/13/leetcode题解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            leetcode题解
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-12-13 11:29:49 / Modified: 22:59:00" itemprop="dateCreated datePublished" datetime="2019-12-13T11:29:49+08:00">2019-12-13</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithms/" itemprop="url" rel="index">
+                    <span itemprop="name">Algorithms</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="leetcode题解"><a href="#leetcode题解" class="headerlink" title="leetcode题解"></a>leetcode题解</h1><h2 id="P1：罗马数字转换（罗马数字转换成数字）"><a href="#P1：罗马数字转换（罗马数字转换成数字）" class="headerlink" title="P1：罗马数字转换（罗马数字转换成数字）"></a>P1：罗马数字转换（罗马数字转换成数字）</h2><p><a href="https://leetcode.com/problems/roman-to-integer/" target="_blank" rel="noopener">https://leetcode.com/problems/roman-to-integer/</a></p>
+<p>Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.</p>
+<pre><code>Symbol       Value
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+
+I can be placed before V (5) and X (10) to make 4 and 9. 
+X can be placed before L (50) and C (100) to make 40 and 90. 
+C can be placed before D (500) and M (1000) to make 400 and 900.  </code></pre><p>Example 5:      </p>
+<pre><code>Input: &quot;MCMXCIV&quot;
+Output: 1994
+Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.</code></pre><h3 id="题解1：（switch）"><a href="#题解1：（switch）" class="headerlink" title="题解1：（switch）"></a>题解1：（switch）</h3><pre><code>class Solution {
+    public int romanToInt(String s) {
+        char[] roman = s.toCharArray();
+        int number = 0, len = roman.length;
+
+        for(int i = 0; i &lt; len; i++){
+            switch(roman[i]){ // Check which roman numeral appears
+                case &apos;M&apos;: // if M add 1000
+                    number += 1000;
+                    break;
+
+                case &apos;D&apos;: // if D add 500
+                    number += 500;
+                    break;
+
+                case &apos;C&apos;: //If C check if there is an M or D after it
+                    if(i != len - 1){ // if no more characters then its 100
+                        switch(roman[i + 1]){ //check next character
+                            case &apos;M&apos;: // if M then it&apos;s CM so you add 900
+                                number += 900;
+                                i++; // move your pointer because CM counts as 1
+                                break;
+
+                            case &apos;D&apos;: // if D then it&apos;s CD so you add 400
+                                number += 400;
+                                i++; // move your pointer because CD counts as 1
+                                break;
+
+                            default: // if next character is not a D or M then add 100
+                                number += 100; 
+                                break;
+                        }
+                    } else{
+                        number += 100;
+                    }
+                    break;
+
+                case &apos;L&apos;: // if L add 50
+                    number += 50;
+                    break;
+
+                case &apos;X&apos;: //If X check if there is an C or L after it
+                    if(i != len - 1){ // if no more characters then its 10
+                        switch(roman[i + 1]){ //check next character
+                            case &apos;C&apos;:// if C then its XC so you add 90
+                                number += 90;
+                                i++; // move your pointer because XC counts as 1
+                                break;
+
+                            case &apos;L&apos;: // if L then it&apos;s XL so you add 40
+                                number += 40;
+                                i++; // move your pointer because XL=L counts as 1
+                                break;
+
+                            default: //if next character is not a L or C then add 10
+                                number += 10;
+                                break;
+                        }
+                    } else{
+                        number += 10;
+                    }
+                    break;
+
+                case &apos;V&apos;: // If V add 5
+                    number += 5;
+                    break;
+
+                case &apos;I&apos;: //if I check if there is a V or X after it
+                    if(i != len - 1){ //If no more characters then its 1
+                        switch(roman[i + 1]){ // check next character
+                            case &apos;X&apos;: // if X then its IX so you add 9
+                                number += 9;
+                                i++; // move your pointer because IX counts as 1
+                                break;
+
+                            case &apos;V&apos;: // if V then its IV so you add 4
+                                number += 4;
+                                i++; // move your pointer because IV counts as 1
+                                break;
+
+                            default: // if next character is not V or X then add 1
+                                number += 1;
+                                break;
+                        }
+                    } else{
+                        number += 1;
+                    }
+                    break;
+            }
+        }
+        return number;
+    }
+}</code></pre><h3 id="题解2：（Map）"><a href="#题解2：（Map）" class="headerlink" title="题解2：（Map）"></a>题解2：（Map）</h3><pre><code>public int romanToInt(String s) {
+        Map&lt;Character,Integer&gt; map = new HashMap();
+        map.put(&apos;I&apos;,1);
+        map.put(&apos;V&apos;,5);
+        map.put(&apos;X&apos;,10);
+        map.put(&apos;L&apos;,50);
+        map.put(&apos;C&apos;,100);
+        map.put(&apos;D&apos;,500);
+        map.put(&apos;M&apos;,1000);
+        int res = 0;
+        for (int i = 0; i &lt; s.length(); i++) {
+            if (i == s.length() - 1) {
+                res += map.get(s.charAt(i));
+                break;
+            }
+            res += map.get(s.charAt(i)) &lt; map.get(s.charAt(i + 1)) ? -1 * map.get(s.charAt(i)) : map.get(s.charAt(i));
+        }
+        return res;
+    }</code></pre><h2 id="P1：数字转换为罗马"><a href="#P1：数字转换为罗马" class="headerlink" title="P1：数字转换为罗马"></a>P1：数字转换为罗马</h2><p><a href="https://leetcode.com/problems/integer-to-roman/" target="_blank" rel="noopener">https://leetcode.com/problems/integer-to-roman/</a></p>
+<h3 id="题解1："><a href="#题解1：" class="headerlink" title="题解1："></a>题解1：</h3><pre><code>class Solution {
+    public String intToRoman(int num) {
+        StringBuilder result = new StringBuilder();
+        int[] div = {1000, 900, 500, 400, 100, 90, 
+                     50, 40, 10, 9, 5, 4, 1};
+        String[] roman = {&quot;M&quot;, &quot;CM&quot;, &quot;D&quot;, &quot;CD&quot;, &quot;C&quot;, &quot;XC&quot;, 
+                          &quot;L&quot;, &quot;XL&quot;, &quot;X&quot;, &quot;IX&quot;, &quot;V&quot;, &quot;IV&quot;, &quot;I&quot;};
+        for (int i = 0; i &lt; div.length;) {
+            if (num &gt;= div[i]) {
+                result.append(roman[i]);
+                num -= div[i];
+            } else {
+                i++;
+            }
+        }
+
+        return result.toString();
+    }
+}  </code></pre><h2 id="P2：Count-and-Say"><a href="#P2：Count-and-Say" class="headerlink" title="P2：Count and Say"></a>P2：Count and Say</h2><p><a href="https://leetcode.com/problems/count-and-say/" target="_blank" rel="noopener">https://leetcode.com/problems/count-and-say/</a><br>The count-and-say sequence is the sequence of integers with the first five terms as following:</p>
+<pre><code>1.     1
+2.     11
+3.     21
+4.     1211
+5.     111221
+1 is read off as &quot;one 1&quot; or 11.
+11 is read off as &quot;two 1s&quot; or 21.
+21 is read off as &quot;one 2, then one 1&quot; or 1211.</code></pre><p>Given an integer n where 1 ≤ n ≤ 30, generate the nth term of the count-and-say sequence. You can do so recursively, in other words from the previous member read off the digits, counting the number of digits in groups of the same digit.   </p>
+<p>Example 1:</p>
+<pre><code>Input: 1
+Output: &quot;1&quot;
+Explanation: This is the base case.</code></pre><h3 id="解决1："><a href="#解决1：" class="headerlink" title="解决1："></a>解决1：</h3><pre><code>public class Solution {
+    public String countAndSay(int n) {
+        String ans = &quot;1&quot;;
+        while (--n &gt; 0) {
+            StringBuilder sb = new StringBuilder();
+            char[] ansChars = ans.toCharArray();
+            for (int i = 0; i &lt; ansChars.length; i++) {
+                int count = 1;
+                while (i + 1 &lt; ansChars.length &amp;&amp; ansChars[i] == ansChars[i + 1]) {
+                    i++;count++;
+                }
+                sb.append(String.valueOf(count) + String.valueOf(ansChars[i]));
+            }
+            ans = sb.toString();
+        }
+        return ans;
+    }
+}</code></pre><h3 id="解决2："><a href="#解决2：" class="headerlink" title="解决2："></a>解决2：</h3><pre><code> public String countAndSay(int n) {
+    String result = &quot;1&quot;;
+
+    while (n &gt; 1) {
+        result = nextSay(result);
+        n--;
+    }
+
+    return result;
+}
+
+private String nextSay(String input) {
+    int windowStart = 0, windowEnd = 0;
+    StringBuilder sb = new StringBuilder();
+
+    for(; windowEnd &lt; input.length(); windowEnd++) {
+
+        if (input.charAt(windowStart) != input.charAt(windowEnd)) {
+
+            sb.append(windowEnd - windowStart);
+            sb.append(input.charAt(windowStart));
+
+            windowStart = windowEnd;
+        }
+    }
+
+    sb.append(windowEnd - windowStart);
+    sb.append(input.charAt(windowStart));
+
+    return sb.toString();
+}  </code></pre><h2 id="P3："><a href="#P3：" class="headerlink" title="P3："></a>P3：</h2><h3 id="二分法查找中位数："><a href="#二分法查找中位数：" class="headerlink" title="二分法查找中位数："></a>二分法查找中位数：</h3><pre><code>public class TestBinarySearch {
+    public static void main(String[] args) {
+        int[] arr= {30,20,50,10,80,9,7,12,100,40,8};
+        Arrays.sort(arr);
+        System.out.println(Arrays.toString(arr));
+        System.out.println(myBinarySearch(arr,40));
+        }
+
+    public static int myBinarySearch(int[] arr,int value) {
+        int low=0;
+        int high=arr.length-1;
+        while(low&lt;=high) {
+            int mid=(low+high)/2;
+            if(value==arr[mid]) {
+                return mid;
+                }
+            if(value&gt;arr[mid]) {
+                low=mid+1;    
+            }
+            if(value&lt;arr[mid]) {
+                high=mid-1;
+            }
+
+        }
+        return -1;//没有找到返回-1
+    }</code></pre><h2 id="P4："><a href="#P4：" class="headerlink" title="P4："></a>P4：</h2><h3 id="题解1：-1"><a href="#题解1：-1" class="headerlink" title="题解1："></a>题解1：</h3><pre><code>class Solution {
+    public int[] twoSum(int[] nums, int target) {
+
+        Map&lt;Integer,Integer&gt; map = new HashMap&lt;&gt;();
+        for (int i = 0;i&lt;nums.length;i++)
+        {
+            if(!map.containsKey(nums[i])) map.put(nums[i],i);
+            int  b= target - nums[i];
+            if(map.containsKey(b)&amp;&amp;map.get(b)!=i){
+                return new int[]{map.get(b),i};
+            }
+        }
+        throw new IllegalArgumentException(&quot;a&quot;);
+    }
+}</code></pre><h3 id="题解2："><a href="#题解2：" class="headerlink" title="题解2："></a>题解2：</h3><pre><code>class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        HashMap&lt;Integer, Integer&gt; numsMap = new HashMap&lt;&gt;();
+        int[] result = new int[2];
+
+        for (int i = 0; i &lt; nums.length; i++) {
+            numsMap.put(nums[i], i);    
+        }
+
+        int diff;
+        for (int i = 0; i &lt; nums.length; i++) {
+            diff = target-nums[i];
+            if (numsMap.containsKey(diff) &amp;&amp; numsMap.get(diff) != i) {
+                result[0] = numsMap.get(diff);
+                result[1] = i;
+                break;
+            }
+        }
+
+        return result; 
+    }
+}</code></pre><h2 id="P5：字符串数组最长子序列"><a href="#P5：字符串数组最长子序列" class="headerlink" title="P5：字符串数组最长子序列"></a>P5：字符串数组最长子序列</h2><h3 id="题解1：-2"><a href="#题解1：-2" class="headerlink" title="题解1："></a>题解1：</h3><pre><code>class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        int len = strs.length;//数组长度
+        if (len == 0) {
+            return &quot;&quot;;
+        }
+        if (len == 1) {
+            return strs[0];
+        }
+        char[] prefix = strs[0].toCharArray(); //数组1转换为字符数组
+        int ei = prefix.length - 1;
+        for (int i = 1; i &lt; len; i++) {  
+            if (ei &lt; 0) {
+                return &quot;&quot;;
+            }
+            char[] next = strs[i].toCharArray();//数组i转换为字符数组
+            for (int j = 0; j &lt;= ei; j++) {
+                if (j &gt;= next.length) {
+                    ei = j - 1;
+                    break;
+                }
+                if (prefix[j] != next[j]) {
+                    ei = j - 1;
+                    break;
+                }
+            }
+        }
+        if (ei &lt; 0) {
+            return &quot;&quot;;
+        }
+        return new String(prefix, 0, ei + 1);
+    }
+ }</code></pre><h2 id="P6：查找数组最大连续子序列"><a href="#P6：查找数组最大连续子序列" class="headerlink" title="P6：查找数组最大连续子序列"></a>P6：查找数组最大连续子序列</h2><p><a href="https://leetcode.com/problems/maximum-subarray/" target="_blank" rel="noopener">https://leetcode.com/problems/maximum-subarray/</a>  </p>
+<h3 id="题解1：-3"><a href="#题解1：-3" class="headerlink" title="题解1："></a>题解1：</h3><p>1)If currentNumber is greater than the current running sum(sumSoFar) then we can drop all the values we have seen before and reset the sumSoFar to currentNumber.<br>2）Check max at each step.  </p>
+<pre><code>public int maxSubArray(int[] nums) {
+        if(nums==null || nums.length==0) return 0;
+        int sumSoFar = 0;
+        int max = Integer.MIN_VALUE;
+        for(int num:nums){
+            sumSoFar+=num;
+            if(num&gt;sumSoFar){
+                sumSoFar = num;
+            }
+            max = Math.max(max,sumSoFar);
+        }
+        return max;
+    }</code></pre><h2 id="P7：加一"><a href="#P7：加一" class="headerlink" title="P7：加一"></a>P7：加一</h2><p><a href="https://leetcode.com/problems/plus-one/" target="_blank" rel="noopener">https://leetcode.com/problems/plus-one/</a></p>
+<h3 id="题解1：-4"><a href="#题解1：-4" class="headerlink" title="题解1："></a>题解1：</h3><pre><code>public int[] plusOne(int[] digits) {
+        if(digits == null || digits.length==0) return digits;
+        int carryOver = 0;
+        for(int i=digits.length-1; i&gt;=0; i--) {
+            int currentNum = digits[i];
+
+            if(currentNum &lt; 9) {
+                digits[i] = ++currentNum;
+                break;
+            } else {
+                carryOver = 1;
+                digits[i]=0;
+                continue;
+            }
+        }
+        if(digits[0]==0 &amp;&amp; carryOver == 1) {
+            int[] result = new int[digits.length+1];
+            result[0] = 1;
+            for(int i=0; i&lt;digits.length; i++) {
+                result[i+1] = digits[i];
+            }
+            digits=result;
+        }
+        return digits;
+    }</code></pre><h2 id="P8-查找短字符串在长字符串中的位置"><a href="#P8-查找短字符串在长字符串中的位置" class="headerlink" title="P8:查找短字符串在长字符串中的位置"></a>P8:查找短字符串在长字符串中的位置</h2><h3 id="解法1："><a href="#解法1：" class="headerlink" title="解法1："></a>解法1：</h3><pre><code>class Solution {
+    public int strStr(String haystack, String needle) {
+        if(needle.length()&gt;haystack.length())
+            return -1;
+        if(needle.length()==0)
+            return 0;
+        try {
+            return haystack.indexOf(needle);
+        }
+        catch (Exception e)
+        {
+            return -1;
+        }
+    }
+}</code></pre><h3 id="解法2："><a href="#解法2：" class="headerlink" title="解法2："></a>解法2：</h3><pre><code>class Solution {
+    public int strStr(String haystack, String needle) {
+        if(needle.isEmpty() || haystack.equals(needle)){
+            return 0;
+        }
+        int n = needle.length();
+        String str;
+        for(int i=0;i&lt;(haystack.length()-n+1);i++){
+            str = haystack.substring(i,i+n);
+            if(str.equals(needle)){
+                return i;
+            }
+        }
+        return -1;
+    }
+}</code></pre><h2 id="P9：寻找两个有序数组的中位数（二分查找）"><a href="#P9：寻找两个有序数组的中位数（二分查找）" class="headerlink" title="P9：寻找两个有序数组的中位数（二分查找）"></a>P9：寻找两个有序数组的中位数（二分查找）</h2><p><a href="https://leetcode-cn.com/problems/median-of-two-sorted-arrays/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/median-of-two-sorted-arrays/</a></p>
+<h3 id="解法1：（二分法）"><a href="#解法1：（二分法）" class="headerlink" title="解法1：（二分法）"></a>解法1：（二分法）</h3><p> /*<br>    * 1.首先，让我们在任一位置 i 将 A(长度为m) 划分成两个部分：<br>    *            leftA            |                rightA<br>    *   A[0],A[1],…      A[i-1] |  A[i],A[i+1],…A[m - 1]<br>    *<br>    * 由于A有m个元素，所以有m + 1中划分方式(i = 0 ~ m)<br>    *<br>    * 我们知道len(leftA) = i, len(rightA) = m - i;<br>    * 注意：当i = 0时，leftA是空集，而当i = m时，rightA为空集。<br>    *<br>    * 2.采用同样的方式，将B也划分为两部分：<br>    *            leftB            |                rightB<br>    *   B[0],B[1],…      B[j-1] |   B[j],B[j+1],…B[n - 1]<br>    *  我们知道len(leftA) = j, len(rightA) = n - j;<br>    *<br>    *  将leftA和leftB放入一个集合，将rightA和rightB放入一个集合。再把这两个集合分别命名为leftPart和rightPart。<br>    *<br>    *            leftPart         |                rightPart<br>    *   A[0],A[1],…      A[i-1] |  A[i],A[i+1],…A[m - 1]<br>    *   B[0],B[1],…      B[j-1] |  B[j],B[j+1],…B[n - 1]<br>    *<br>    *   如果我们可以确认：<br>    *   1.len(leftPart) = len(rightPart); =====&gt; 该条件在m+n为奇数时，该推理不成立<br>    *   2.max(leftPart) &lt;= min(rightPart);<br>    *<br>    *   median = (max(leftPart) + min(rightPart)) / 2;  目标结果<br>    *<br>    *   要确保这两个条件满足：<br>    *   1.i + j = m - i + n - j(或m - i + n - j + 1)  如果n &gt;= m。只需要使i = 0 ~ m，j = (m+n+1)/2-i =====&gt; 该条件在m+n为奇数/偶数时，该推理都成立<br>    *   2.B[j] &gt;= A[i-1] 并且 A[i] &gt;= B[j-1]<br>    *<br>    *   注意:<br>    *   1.临界条件：i=0,j=0,i=m,j=n。需要考虑<br>    *   2.为什么n &gt;= m ? 由于0 &lt;= i &lt;= m且j = (m+n+1)/2-i,必须确保j不能为负数。<br>    *<br>    *   按照以下步骤进行二叉树搜索<br>    *   1.设imin = 0,imax = m，然后开始在[imin,imax]中进行搜索<br>    *   2.令i = (imin+imax) / 2, j = (m+n+1)/2-i<br>    *   3.现在我们有len(leftPart) = len(rightPart)。而我们只会遇到三种情况：<br>    *<br>    *      ①.B[j] &gt;= A[i-1] 并且 A[i] &gt;= B[j-1]  满足条件<br>    *      ②.B[j-1] &gt; A[i]。此时应该把i增大。 即imin = i + 1;<br>    *      ③.A[i-1] &gt; B[j]。此时应该把i减小。 即imax = i - 1;<br>    *<br>    * */  </p>
+<pre><code>public double findMedianSortedArrays(int[] A, int[] B) {
+    int m = A.length;
+    int n = B.length;
+    if (m &gt; n) { // to ensure m&lt;=n
+        int[] temp = A; A = B; B = temp;
+        int tmp = m; m = n; n = tmp;
+    }
+    int iMin = 0, iMax = m, halfLen = (m + n + 1) / 2;
+    while (iMin &lt;= iMax) {
+        int i = (iMin + iMax) / 2;
+        int j = halfLen - i;
+        if (i &lt; iMax &amp;&amp; B[j - 1] &gt; A[i]) {
+            iMin = i + 1; // i is too small
+        } else if (i &gt; iMin &amp;&amp; A[i - 1] &gt; B[j]) {
+            iMax = i - 1; // i is too big
+        } else { // i is perfect
+            int maxLeft;
+            if (i == 0) {//A分成的leftA(空集) 和 rightA(A的全部)  所以leftPart = leftA(空集) + leftB,故maxLeft = B[j-1]。
+                maxLeft = B[j - 1];
+            } else if (j == 0) { //B分成的leftB(空集) 和 rightB(B的全部)  所以leftPart = leftA + leftB(空集),故maxLeft = A[i-1]。
+                maxLeft = A[i - 1];
+            } else { //排除上述两种特殊情况，正常比较
+                maxLeft = Math.max(A[i - 1], B[j - 1]);
+            }
+            if ((m + n) % 2 == 1) { //奇数，中位数正好是maxLeft
+                return maxLeft;
+            }
+            //偶数
+            int minRight;
+            if (i == m) {//A分成的leftA(A的全部) 和 rightA(空集)  所以rightPart = rightA(空集) + rightB,故minRight = B[j]。
+                minRight = B[j];
+            } else if (j == n) {//B分成的leftB(B的全部) 和 rightB(空集)  所以rightPart = rightA + rightB(空集),故minRight = A[i]。
+                minRight = A[i];
+            } else {//排除上述两种特殊情况，正常比较
+                minRight = Math.min(B[j], A[i]);
+            }
+
+            return (maxLeft + minRight) / 2.0;
+        }
+    }
+    return 0.0;
+}</code></pre><p>这道题二分查找不难想，但边界条件处理很难搞，我觉得要把众多条件分清三个层次，第一个层次，首先因为是二分查找，所以循环本身必须符合二分查找的条件，下界小于等于上界，因为中位数必然存在，所以循环必然能够返回，循环外无需任何处理，在这个层次上我们不需要分析i与j如何如何，然后第二个层次，循环内第一步要分析的是分割出来的子数组是否完美，所以这个层次也无需细致考虑i和j的边界。最后第三个层次，就是子数组已经完美，我们只要考虑i和j的边界条件，因为i和j不可能同时为0，两者等级并列，因为n和m有可能为0，所以接下来才考虑n和m，同理，i和j也不可能同时为m和n，所以两者也并列，大致如此，感觉还是要在纸上分析过。</p>
+<h3 id="解法2：（归并排序）（时间复杂度不符合）"><a href="#解法2：（归并排序）（时间复杂度不符合）" class="headerlink" title="解法2：（归并排序）（时间复杂度不符合）"></a>解法2：（归并排序）（时间复杂度不符合）</h3><pre><code>class Solution {  
+        public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int l1 = nums1.length;
+        int l2 = nums2.length;
+        int l = l1+l2;
+        if((l&amp;0x01)==0){//中位数为两数之平均数的情况
+            int index1 = l/2;
+            int index2 = l/2-1;
+            int sum1=0;
+            int sum2=0;
+            int i=0;
+            int j=0;
+            int x=0;
+            while(i&lt;l1||j&lt;l2){
+                if(i&gt;=l1){
+                    if(x==index1)sum1=nums2[j];
+                    if(x==index2)sum2=nums2[j];
+                    j++;
+                }else if(j&gt;=l2){
+                    if(x==index1)sum1=nums1[i];
+                    if(x==index2)sum2=nums1[i];
+                    i++;
+                }
+                else if(nums1[i]&lt;nums2[j]){
+                    if(x==index1)sum1=nums1[i];
+                    if(x==index2)sum2=nums1[i];
+                    i++;
+                }
+                else {
+                    if(x==index1)sum1=nums2[j];
+                    if(x==index2)sum2=nums2[j];
+                    j++;
+                }
+                x++;
+            }
+            return (sum1+sum2)/2.0;
+        }else{中位数为一个数的情况
+            int index = l/2;
+            int sum=0;
+            int i=0;
+            int j=0;
+            int x=0;
+            while(i&lt;l1||j&lt;l2){
+                if(i&gt;=l1){
+
+                    if(x==index){
+                        sum=nums2[j];
+                        break;
+                    }
+                    j++;
+
+                }else if(j&gt;=l2){
+                    if(x==index){
+                        sum = nums1[i];
+                        break;
+                    }
+                    i++;
+                }
+                else if(nums1[i]&lt;nums2[j]){
+
+                    if(x==index){
+                        sum = nums1[i];
+                        break;
+                    }
+                    i++;
+
+                }
+                else {
+
+                    if(x==index){
+                        sum=nums2[j];
+                        break;
+                    }
+                    j++;
+
+                }
+                x++;
+            }
+            return sum;
+
+        }
+    }
+}</code></pre>
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/study/" rel="tag"># study</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/12/04/java/" rel="next" title="">
+                  <i class="fa fa-chevron-left"></i> 
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/12/19/数据结构/" rel="prev" title="">
+                   <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#leetcode题解"><span class="nav-number">1.</span> <span class="nav-text">leetcode题解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#P1：罗马数字转换（罗马数字转换成数字）"><span class="nav-number">1.1.</span> <span class="nav-text">P1：罗马数字转换（罗马数字转换成数字）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题解1：（switch）"><span class="nav-number">1.1.1.</span> <span class="nav-text">题解1：（switch）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#题解2：（Map）"><span class="nav-number">1.1.2.</span> <span class="nav-text">题解2：（Map）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P1：数字转换为罗马"><span class="nav-number">1.2.</span> <span class="nav-text">P1：数字转换为罗马</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题解1："><span class="nav-number">1.2.1.</span> <span class="nav-text">题解1：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P2：Count-and-Say"><span class="nav-number">1.3.</span> <span class="nav-text">P2：Count and Say</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解决1："><span class="nav-number">1.3.1.</span> <span class="nav-text">解决1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决2："><span class="nav-number">1.3.2.</span> <span class="nav-text">解决2：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P3："><span class="nav-number">1.4.</span> <span class="nav-text">P3：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二分法查找中位数："><span class="nav-number">1.4.1.</span> <span class="nav-text">二分法查找中位数：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P4："><span class="nav-number">1.5.</span> <span class="nav-text">P4：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题解1：-1"><span class="nav-number">1.5.1.</span> <span class="nav-text">题解1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#题解2："><span class="nav-number">1.5.2.</span> <span class="nav-text">题解2：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P5：字符串数组最长子序列"><span class="nav-number">1.6.</span> <span class="nav-text">P5：字符串数组最长子序列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题解1：-2"><span class="nav-number">1.6.1.</span> <span class="nav-text">题解1：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P6：查找数组最大连续子序列"><span class="nav-number">1.7.</span> <span class="nav-text">P6：查找数组最大连续子序列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题解1：-3"><span class="nav-number">1.7.1.</span> <span class="nav-text">题解1：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P7：加一"><span class="nav-number">1.8.</span> <span class="nav-text">P7：加一</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题解1：-4"><span class="nav-number">1.8.1.</span> <span class="nav-text">题解1：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P8-查找短字符串在长字符串中的位置"><span class="nav-number">1.9.</span> <span class="nav-text">P8:查找短字符串在长字符串中的位置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解法1："><span class="nav-number">1.9.1.</span> <span class="nav-text">解法1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解法2："><span class="nav-number">1.9.2.</span> <span class="nav-text">解法2：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P9：寻找两个有序数组的中位数（二分查找）"><span class="nav-number">1.10.</span> <span class="nav-text">P9：寻找两个有序数组的中位数（二分查找）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解法1：（二分法）"><span class="nav-number">1.10.1.</span> <span class="nav-text">解法1：（二分法）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解法2：（归并排序）（时间复杂度不符合）"><span class="nav-number">1.10.2.</span> <span class="nav-text">解法2：（归并排序）（时间复杂度不符合）</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Lynn</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lynn</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.1
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/pisces.js?v=7.4.1"></script>
+
+<script src="/js/next-boot.js?v=7.4.1"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.1"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

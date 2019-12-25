@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Consolas, Monda:300,300italic,400,400italic,700,700italic|Consolas, Roboto Slab:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="一、SQL语句执行 基本架构Server层+存储引擎层Server层：连接器、查询缓存、分析器、优化器、执行器等  以及内置函数，所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。存储引擎层：数据的存储和提取，架构模式是插件式的。支持InnoDB、MyISAM、Memory等多个存储引擎。  engine=memory不同的存储引擎共用一个Server层    连接器：负责和客户端">
+<meta name="keywords" content="study">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql学习-1（架构、日志、事务、索引）">
+<meta property="og:url" content="http://yoursite.com/2019/12/24/Mysql学习-1（架构、日志、事务、索引）/index.html">
+<meta property="og:site_name" content="ALWAYS">
+<meta property="og:description" content="一、SQL语句执行 基本架构Server层+存储引擎层Server层：连接器、查询缓存、分析器、优化器、执行器等  以及内置函数，所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。存储引擎层：数据的存储和提取，架构模式是插件式的。支持InnoDB、MyISAM、Memory等多个存储引擎。  engine=memory不同的存储引擎共用一个Server层    连接器：负责和客户端">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-12-25T08:30:08.589Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql学习-1（架构、日志、事务、索引）">
+<meta name="twitter:description" content="一、SQL语句执行 基本架构Server层+存储引擎层Server层：连接器、查询缓存、分析器、优化器、执行器等  以及内置函数，所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。存储引擎层：数据的存储和提取，架构模式是插件式的。支持InnoDB、MyISAM、Memory等多个存储引擎。  engine=memory不同的存储引擎共用一个Server层    连接器：负责和客户端">
+  <link rel="canonical" href="http://yoursite.com/2019/12/24/Mysql学习-1（架构、日志、事务、索引）/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Mysql学习-1（架构、日志、事务、索引） | ALWAYS</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ALWAYS</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      
+    
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+          <i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/24/Mysql学习-1（架构、日志、事务、索引）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            Mysql学习-1（架构、日志、事务、索引）
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-12-24 21:37:38" itemprop="dateCreated datePublished" datetime="2019-12-24T21:37:38+08:00">2019-12-24</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-12-25 16:30:08" itemprop="dateModified" datetime="2019-12-25T16:30:08+08:00">2019-12-25</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="一、SQL语句执行-基本架构"><a href="#一、SQL语句执行-基本架构" class="headerlink" title="一、SQL语句执行 基本架构"></a>一、SQL语句执行 基本架构</h1><p><span style="color:red;">Server层+存储引擎层</span><br><span style="color:red;">Server层：连接器、查询缓存、分析器、优化器、执行器等  以及内置函数，所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。</span><br>存储引擎层：数据的存储和提取，架构模式是插件式的。支持InnoDB、MyISAM、Memory等多个存储引擎。  engine=memory<br>不同的存储引擎共用一个Server层   </p>
+<p>连接器：负责和客户端建立连接、获取权限、维持和管理连接<br>长连接可能导致内存占用过大  </p>
+<p>查询缓存：mysql拿到查询请求后会先查看查询缓存，如果语句不在查询缓存中会继续后面的执行阶段，执行结果会存入查询缓存中。<br>建议不要使用查询缓存，mysql8.0开始没有查询缓存功能。 在一个表上有更新的时候，跟这个表有关的查询缓存会失效。   </p>
+<p>分析器：词法分析+语法分析  </p>
+<p>优化器：在表里有多个索引的时候，决定使用哪个索引；或者在一个语句有多表关联的时候，决定各表的连接顺序。  </p>
+<p>执行器：开始执行的时候，要先判断一下对这个表有没有执行查询的权限，如果有，继续执行。使用引擎提供的接口。   </p>
+<h1 id="二、日志"><a href="#二、日志" class="headerlink" title="二、日志"></a>二、日志</h1><h2 id="WAL-技术"><a href="#WAL-技术" class="headerlink" title="WAL 技术"></a>WAL 技术</h2><p>WAL 的全称是 Write-Ahead Logging，它的关键点就是先写日志，再写磁盘。  </p>
+<p>日志模块：redo log（重做日志）和binlog（归档日志）先写日志，再写磁盘。<br>语句更新会生成undo log（回滚日志）   </p>
+<h2 id="redo-log（crash-safe能力）InnoDB特有"><a href="#redo-log（crash-safe能力）InnoDB特有" class="headerlink" title="redo log（crash-safe能力）InnoDB特有"></a>redo log（crash-safe能力）InnoDB特有</h2><p>当有一条记录需要更新的时候，InnoDB引擎会先把记录写到redo log中，并更新缓存，会在适当时候更新磁盘。<br>InnoDB的redo log大小固定，从头写到末尾。write pos当前记录位置，checkpoint当前擦出位置。往后推移并循环，擦除记录前要把记录更新到数据文件。  </p>
+<h2 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h2><p>Server层日志，没有crash-safe能力。  </p>
+<h2 id="区别："><a href="#区别：" class="headerlink" title="区别："></a>区别：</h2><p>redo log是InnoDB特有，binlog在Mysql的server层实现，所有引擎都可以使用；<br>redo log是物理日志，记录的是“在摸个数据页上做了什么修改”，binlog是逻辑日志，记录的是语句的原始逻辑，比如“给ID=2这一行的c字段加一”；<br>redo log循环写，空间固定会用完；binlog是可以追加写入，写到一定大小会切换到下一个，不会覆盖。  </p>
+<h2 id="执行update流程："><a href="#执行update流程：" class="headerlink" title="执行update流程："></a>执行update流程：</h2><ol>
+<li>执行器先找引擎取 ID=2 这一行。ID 是主键，引擎直接用树搜索找到这一行。如果ID=2 这一行所在的数据页本来就在内存中，就直接返回给执行器；否则，需要先从磁盘读入内存，然后再返回。  </li>
+<li>执行器拿到引擎给的行数据，把这个值加上 1，比如原来是 N，现在就是 N+1，得到新的一行数据，再调用引擎接口写入这行新数据。</li>
+<li>引擎将这行新数据更新到内存中，同时将这个更新操作记录到 redo log 里面，此时redo log 处于 prepare 状态。然后告知执行器执行完成了，随时可以提交事务。  </li>
+<li>执行器生成这个操作的 binlog，并把 binlog 写入磁盘。  </li>
+<li>执行器调用引擎的提交事务接口，引擎把刚刚写入的 redo log 改成提交（commit）状态，更新完成。  </li>
+</ol>
+<p>redo log拆成prepare和commit，<span style="color:red;">两阶段提交</span>，保证日志恢复出来的库的状态和原库一致。   </p>
+<p>让数据库恢复到半个月内任意一秒的状态：找到全量备份，从备份的时间点开始取出binlog  </p>
+<p>redo log 用于保证 <span style="color:red;">crash-safe</span> 能力。innodb_flush_log_at_trx_commit 这个参数设置成1 的时候，表示每次事务的 redo log 都直接持久化到磁盘。这个参数建议设置成 1，这样可以保证 MySQL 异常重启之后数据不丢失。<br>sync_binlog 这个参数设置成 1 的时候，表示每次事务的 binlog 都持久化到磁盘。这个参数也建议设置成 1，这样可以保证 MySQL 异常重启之后 binlog 不丢失。</p>
+<h1 id="三、事务隔离"><a href="#三、事务隔离" class="headerlink" title="三、事务隔离"></a>三、事务隔离</h1><h3 id="ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）"><a href="#ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）" class="headerlink" title="ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）"></a>ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）</h3><h3 id="脏读（dirty-read）、不可重复读（non-repeatable-read）、幻读（phantom-read）"><a href="#脏读（dirty-read）、不可重复读（non-repeatable-read）、幻读（phantom-read）" class="headerlink" title="脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）"></a>脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）</h3><h2 id="SQL标准的事务隔离级别："><a href="#SQL标准的事务隔离级别：" class="headerlink" title="SQL标准的事务隔离级别："></a>SQL标准的事务隔离级别：</h2><p>读未提交是指，一个事务还没提交时，它做的变更就能被别的事务看到。<br>读提交是指，一个事务提交之后，它做的变更才会被其他事务看到。<br>可重复读是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。<br>串行化，顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当<br>出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  </p>
+<p>视图概念<br>将启动参数 transaction-isolation 的值设置成 READ-COMMITTED   </p>
+<h2 id="Mysql的事务启动方式："><a href="#Mysql的事务启动方式：" class="headerlink" title="Mysql的事务启动方式："></a>Mysql的事务启动方式：</h2><ol>
+<li>显式启动事务语句， begin 或 start transaction。配套的提交语句是 commit，回滚语句是 rollback。   </li>
+<li>set autocommit=0，这个命令会将这个线程的自动提交关掉。意味着如果你只执行一个 select 语句，这个事务就启动了，而且并不会自动提交。这个事务持续存在直到你主动执行 commit 或 rollback 语句，或者断开连接。<br>有些客户端连接框架会默认连接成功后先执行一个 set autocommit=0 的命令。这就导致接下来的查询都在事务中，如果是长连接，就导致了意外的长事务。<br>建议总是使用 set autocommit=1, 通过显式语句的方式来启动事务。  ？？？？？？？存疑<br>在 autocommit 为 1 的情况下，用 begin 显式启动的事务，如果执行 commit 则提交事务。如果执行 commit work and chain，则是提交事务并自动启动下一个事务，这样也省去了再次执行 begin 语句的开销。同时带来的好处是从程序开发的角度明确地知道每个语句是否处于事务中。   </li>
+</ol>
+<h1 id="四、索引"><a href="#四、索引" class="headerlink" title="四、索引"></a>四、索引</h1><p>提高数据的查询效率  </p>
+<h2 id="常见模型：哈希表、有序数组和搜索树。"><a href="#常见模型：哈希表、有序数组和搜索树。" class="headerlink" title="常见模型：哈希表、有序数组和搜索树。"></a>常见模型：哈希表、有序数组和搜索树。</h2><p>哈希表适用于只有等值查询的场景；<br>有序数组在等值查询和范围查询场景性能都可以，但只适应于静态存储引擎；<br>平衡二叉树：搜索时间复杂度O(log(n)),更新的时间复杂度 O(log(n))   </p>
+<h3 id="InnoDB使用B-树模型，减少单次查询的磁盘访问次数。"><a href="#InnoDB使用B-树模型，减少单次查询的磁盘访问次数。" class="headerlink" title="InnoDB使用B+树模型，减少单次查询的磁盘访问次数。"></a>InnoDB使用B+树模型，减少单次查询的磁盘访问次数。</h3><p>主键索引和非主键索引<br><span style="color:red;"><br>主键索引的叶子节点存的是整行数据。在 InnoDB 里，主键索引也被称为聚簇索引（clustered index）。<br>非主键索引的叶子节点内容是主键的值。在 InnoDB 里，非主键索引也被称为二级索引（secondary index）。<br></span>    </p>
+<h3 id="索引维护："><a href="#索引维护：" class="headerlink" title="索引维护："></a>索引维护：</h3><p>新插入数据记录。索引需要移动甚至会页分裂，页合并<br>自增主键：<br>覆盖索引：查询不需要回表，减少树的搜索次数，性能优化手段。<br>前缀索引：</p>
+<h3 id="联合索引：安排索引内的字段顺序"><a href="#联合索引：安排索引内的字段顺序" class="headerlink" title="联合索引：安排索引内的字段顺序"></a>联合索引：安排索引内的字段顺序</h3><p>第一原则是，如果通过调整顺序，可以少维护一个索引，那么这个顺序往往就是需要优先考虑采用的。<br>索引下推优化    </p>
+<h1 id="五、全局锁、表锁、行锁"><a href="#五、全局锁、表锁、行锁" class="headerlink" title="五、全局锁、表锁、行锁"></a>五、全局锁、表锁、行锁</h1><h2 id="1、全局锁"><a href="#1、全局锁" class="headerlink" title="1、全局锁"></a>1、全局锁</h2><p>全局锁的典型使用场景是，做全库逻辑备份。<br>全局锁主要用在逻辑备份过程中。对于全部是 InnoDB 引擎的库，建议选择使用–<br>single-transaction 参数，对应用会更友好。   </p>
+<h2 id="2、表级锁"><a href="#2、表级锁" class="headerlink" title="2、表级锁"></a>2、表级锁</h2><p>表级锁：表锁、元数据锁（MDL）  </p>
+<h3 id="1）表锁"><a href="#1）表锁" class="headerlink" title="1）表锁"></a>1）表锁</h3><p>表锁的语法：lock tables…read/write<br>表锁一般是在数据库引擎不支持行锁的时候才会被用到的。如果你发现你的应用程序里有lock tables 这样的语句，你需要追查一下，比较可能的情况是：<br>要么是你的系统现在还在用 MyISAM 这类不支持事务的引擎，那要安排升级换引擎；<br>要么是你的引擎升级了，但是代码还没升级。这样的情况，最后业务开发就是把<br>lock tables 和 unlock tables 改成 begin 和 commit，问题就解决了。   </p>
+<h3 id="2）元数据锁"><a href="#2）元数据锁" class="headerlink" title="2）元数据锁"></a>2）元数据锁</h3><p>MDL 不需要显式只用，在访问一个表的时候会被自动加上，保证读写的正确性。<br>因此，在 MySQL 5.5 版本中引入了 MDL，当对一个表做增删改查操作的时候，加 MDL读锁；当要对表做结构变更操作的时候，加 MDL 写锁。<br>MDL会直到事务提交才释放，在做表结构变更的时候，你一定要小心不要导致锁住线上查询和更新。   </p>
+<h2 id="3、行锁"><a href="#3、行锁" class="headerlink" title="3、行锁"></a>3、行锁</h2><h3 id="引擎层由各个引擎自己实现，不是所有引擎都支持。InnoDB支持。"><a href="#引擎层由各个引擎自己实现，不是所有引擎都支持。InnoDB支持。" class="headerlink" title="引擎层由各个引擎自己实现，不是所有引擎都支持。InnoDB支持。"></a>引擎层由各个引擎自己实现，不是所有引擎都支持。InnoDB支持。</h3><p><span style="color:red;">在 InnoDB 事务中，行锁是在需要的时候才加上的，但并不是不需要了就立刻释放，而是要等到事务结束时才释放。这个就是两阶段锁协议。 </span>     </p>
+<p>如果你的事务中需要锁多个行，要把最可能造成锁冲突、最可能影响并发度的锁尽量往后放。<br>但是，调整语句顺序并不能完全避免死锁。引入了死锁和死锁检测的概念，以及提供了三个方案，来减少死锁对数据库的影响。减少死锁的主要方向，就是控制访问相同资源的并发事务量。    </p>
+<h3 id="死锁：事务A等待事务B释放行锁，事务B等待事务A释放行锁。"><a href="#死锁：事务A等待事务B释放行锁，事务B等待事务A释放行锁。" class="headerlink" title="死锁：事务A等待事务B释放行锁，事务B等待事务A释放行锁。"></a>死锁：事务A等待事务B释放行锁，事务B等待事务A释放行锁。</h3><h3 id="解决策略："><a href="#解决策略：" class="headerlink" title="解决策略："></a>解决策略：</h3><ul>
+<li>直接进入等待，直至超时。这个超时时间可以通过参数innodb_lock_wait_timeout 来设置。 InnoDB默认50s，过于长；    </li>
+<li>发起死锁检测，发现死锁后，主动回滚死锁链条中的某一个事务，让其他事务得以继续执行。将参数 innodb_deadlock_detect 设置为 on，表示开启这个逻辑。InnoDB默认值为0。  <h3 id="但死锁检测存在问题：并发量大导致CPU资源耗费。"><a href="#但死锁检测存在问题：并发量大导致CPU资源耗费。" class="headerlink" title="但死锁检测存在问题：并发量大导致CPU资源耗费。"></a>但死锁检测存在问题：并发量大导致CPU资源耗费。</h3><h3 id="解决由这种热点行更新导致的性能问题："><a href="#解决由这种热点行更新导致的性能问题：" class="headerlink" title="解决由这种热点行更新导致的性能问题："></a>解决由这种热点行更新导致的性能问题：</h3>一种头痛医头的方法，就是如果你能确保这个业务一定不会出现死锁，可以临时把死锁检测关掉；另一个思路是控制并发度，并发控制做在数据库服务端，可以考虑在中间件实现，或在Mysql里面，基本思路是，对于相同行的更新，在进入引擎之前排队。<br>或者，可以考虑通过将一行改成逻辑上的多行来减少锁冲突。  </li>
+</ul>
+<h1 id="六、事务隔离"><a href="#六、事务隔离" class="headerlink" title="六、事务隔离"></a>六、事务隔离</h1><p>一个数据版本，对于一个事务视图来说，除了自己的更新总是可见以外，有三种情况：   </p>
+<ol>
+<li>版本未提交，不可见；  </li>
+<li>版本已提交，但是是在视图创建后提交的，不可见；  </li>
+<li>版本已提交，而且是在视图创建前提交的，可见。  </li>
+</ol>
+<p>更新数据都是先读后写的，而这个读，只能读当前的值，称为“当前读”（current read）。  </p>
+<p>InnoDB 的行数据有多个版本，每个数据版本有自己的 row trx_id，每个事务或者语句有自己的一致性视图。普通查询语句是一致性读，一致性读会根据 row trx_id 和一致性视图确定数据版本的可见性。<br>对于可重复读，查询只承认在事务启动前就已经提交完成的数据；<br>对于读提交，查询只承认在语句启动前就已经提交完成的数据；<br>而当前读，总是读取已经提交完成的最新版本。   </p>
+<h1 id="七、普通索引和唯一索引"><a href="#七、普通索引和唯一索引" class="headerlink" title="七、普通索引和唯一索引"></a>七、普通索引和唯一索引</h1><p>这两类索引在查询能力上是没差别的，主要考虑的是对更新性能的影响。<br>由于唯一索引用不上 change buffer 的优化机制，因此如果业务可以接受，从性能角度出发建议优先考虑非唯一索引。 </p>
+<h3 id="1-change-buffer："><a href="#1-change-buffer：" class="headerlink" title="1.change buffer："></a>1.change buffer：</h3><p>当需要更新一个数据页时，如果数据页在内存中就直接更新，而如果这个数据页还没有在内存中的话，在不影响数据一致性的前提下，InooDB 会将这些更新操作缓存在 changebuffer 中，这样就不需要从磁盘中读入这个数据页了。在下次查询需要访问这个数据页的时候，将数据页读入内存，然后执行 change buffer 中与这个页有关的操作。通过这种方式就能保证这个数据逻辑的正确性。change buffer会持久化到磁盘。  </p>
+<p><span style="color:red;">唯一索引需要首先保证唯一性，因此必须将数据读到内存查看，所以唯一索引的更新就不能使用 change buffer，实际上也只有普通索引可以使用。</span>      </p>
+<h3 id="2-merge："><a href="#2-merge：" class="headerlink" title="2.merge："></a>2.merge：</h3><p>将 change buffer 中的操作应用到原数据页。。除了访问这个数据页会触发 merge 外，系统有后台线程会定期 merge。在数据库正常关闭<br>（shutdown）的过程中，也会执行 merge 操作。  </p>
+<h3 id="3-change-buffer-的使用场景"><a href="#3-change-buffer-的使用场景" class="headerlink" title="3.change buffer 的使用场景"></a>3.change buffer 的使用场景</h3><p>change buffer 只限于用在普通索引的场景下，而不适用于唯一索引。那么，现在有一个问题就是：普通索引的所有场景，使用 change buffer 都可以起到加速作用吗？  </p>
+<p>因为 merge 的时候是真正进行数据更新的时刻，而 change buffer 的主要目的就是将记录的变更动作缓存下来，所以在一个数据页做 merge 之前，change buffer 记录的变更越多（也就是这个页面上要更新的次数越多），收益就越大。  </p>
+<p>因此，对于写多读少的业务来说，页面在写完以后马上被访问到的概率比较小，此时<br>change buffer 的使用效果最好。这种业务模型常见的就是账单类、日志类的系统。  </p>
+<p>反过来，假设一个业务的更新模式是写入之后马上会做查询，那么即使满足了条件，将更新先记录在 change buffer，但之后由于马上要访问这个数据页，会立即触发 merge 过程。这样随机访问 IO 的次数不会减少，反而增加了 change buffer 的维护代价。所以，对于这种业务模式来说，change buffer 反而起到了副作用。    </p>
+<p>如果所有的更新后面，都马上伴随着对这个记录的查询，那么应该关闭 change buffer。而在其他情况下，change buffer 都能提升更新性能。  </p>
+<p>在实际使用中，你会发现，普通索引和 change buffer 的配合使用，对于数据量大的表的更新优化还是很明显的。  </p>
+<h3 id="4-change-buffer-和-redo-log"><a href="#4-change-buffer-和-redo-log" class="headerlink" title="4.change buffer 和 redo log"></a>4.change buffer 和 redo log</h3><p>简单地对比这两个机制在提升更新性能上的收益的话，redo log 主要节省的是随机写磁盘的 IO 消耗（转成顺序写），而 change buffer 主要节省的则是随机读磁盘<br>的 IO 消耗。</p>
+<pre><code>1. Page 1 在内存中，直接更新内存；
+2. Page 2 没有在内存中，就在内存的 change buffer 区域，记录下“我要往 Page 2 插入一行”这个信息。
+3. 将上述两个动作记入 redo log 中。</code></pre><h1 id="八、MySQL选择索引"><a href="#八、MySQL选择索引" class="headerlink" title="八、MySQL选择索引"></a>八、MySQL选择索引</h1><p>优化器存在选错索引的可能性   </p>
+<p>而优化器选择索引的目的，是找到一个最优的执行方案，并用最小的代价去执行语句。在数据库里面，扫描行数是影响执行代价的因素之一。扫描的行数越少，意味着访问磁盘数据的次数越少，消耗的 CPU 资源越少。当然，扫描行数并不是唯一的判断标准，优化器还会结合是否使用临时表、是否排序等因素进行综合判断。  </p>
+<p>对于由于索引统计信息不准确导致的问题，可以用 analyze table t（重新统计索引信息） 来解决。<br>而对于其他优化器误判的情况，你可以在应用端用 force index 来强行指定索引，也可以通过修改语句来引导优化器，还可以通过增加或者删除索引来绕过这个问题。   </p>
+<h2 id="索引选择异常和处理"><a href="#索引选择异常和处理" class="headerlink" title="索引选择异常和处理"></a>索引选择异常和处理</h2><pre><code>1.采用 force index 强行选择一个索引。  
+2.可以考虑修改语句，引导 MySQL 使用期望的索引。  
+3.在有些场景下，我们可以新建一个更合适的索引，来提供给优化器做选择，或删掉误用的索引。  </code></pre><h1 id="九、字符串字段加索引"><a href="#九、字符串字段加索引" class="headerlink" title="九、字符串字段加索引"></a>九、字符串字段加索引</h1><h2 id="1-前缀索引"><a href="#1-前缀索引" class="headerlink" title="1.前缀索引"></a>1.前缀索引</h2><p>MySQL 是支持前缀索引的，也就是说，你可以定义字符串的一部分作为索引。 使用前缀索引后，可能会导致查询语句读数据的次数变多。<br>alter table SUser add index index2(email(6));   </p>
+<p><span style="color:red;">使用前缀索引，定义好长度，就可以做到既节省空间，又不用额外增加太多的查询成本。</span><br>select count(distinct email) as L from SUser;查看此列有多少个不同的值  </p>
+<h2 id="2-前缀索引对覆盖索引的影响"><a href="#2-前缀索引对覆盖索引的影响" class="headerlink" title="2.前缀索引对覆盖索引的影响"></a>2.前缀索引对覆盖索引的影响</h2><p>使用前缀索引就用不上覆盖索引对查询性能的优化了  </p>
+<h2 id="3-倒序存储和Hash字段索引："><a href="#3-倒序存储和Hash字段索引：" class="headerlink" title="3.倒序存储和Hash字段索引："></a>3.倒序存储和Hash字段索引：</h2><p>使用倒序存储：身份证索引<br>使用 hash 字段   </p>
+<h3 id="相同点："><a href="#相同点：" class="headerlink" title="相同点："></a>相同点：</h3><pre><code>都不支持范围查询，只支持等值查询；   </code></pre><h3 id="区别：-1"><a href="#区别：-1" class="headerlink" title="区别："></a>区别：</h3><pre><code>1. 从占用的额外空间来看，倒序存储方式在主键索引上，不会消耗额外的存储空间，而hash 字段方法需要增加一个字段。当然，倒序存储方式使用 4 个字节的前缀长度应该是不够的，如果再长一点，这个消耗跟额外这个 hash 字段也差不多抵消了。   
+
+2. 在 CPU 消耗方面，倒序方式每次写和读的时候，都需要额外调用一次 reverse 函数，而 hash 字段的方式需要额外调用一次 crc32() 函数。如果只从这两个函数的计算复杂度来看的话，reverse 函数额外消耗的 CPU 资源会更小些。   
+
+3. 从查询效率上看，使用 hash 字段方式的查询性能相对更稳定一些。因为 crc32 算出来的值虽然有冲突的概率，但是概率非常小，可以认为每次查询的平均扫描行数接近 1。而倒序存储方式毕竟还是用的前缀索引的方式，也就是说还是会增加扫描行数。</code></pre><p>总结：<br>    1. 直接创建完整索引，这样可能比较占用空间；<br>    2. 创建前缀索引，节省空间，但会增加查询扫描次数，并且不能使用覆盖索引；<br>    3. 倒序存储，再创建前缀索引，用于绕过字符串本身前缀的区分度不够的问题；<br>    4. 创建 hash 字段索引，查询性能稳定，有额外的存储和计算消耗，跟第三种方式一样，都不支持范围扫描。   </p>
+<h1 id="十、SQL语句偶尔变慢的原因"><a href="#十、SQL语句偶尔变慢的原因" class="headerlink" title="十、SQL语句偶尔变慢的原因"></a>十、SQL语句偶尔变慢的原因</h1><p>当内存数据页跟磁盘数据页内容不一致的时候，我们称这个内存页为“脏页”。内存数据<br>写入到磁盘后，内存和磁盘上的数据页的内容就一致了，称为“干净页”。   </p>
+<p>MySQL 偶尔“抖”一下的那个瞬间，可能就是在刷脏页（flush）。  </p>
+<p>flush场景：  </p>
+<pre><code>- InnoDB 的 redo log 写满了。这时候系统会停止所有更新操作，把 checkpoint 往前推进，redo log 留出空间可以继续写。（nnoDB 要尽量避免）   
+- 系统内存不足。当需要新的内存页，而内存不够用的时候，就要淘汰一些数据页，空出内存给别的数据页使用。如果淘汰的是“脏页”，就要先将脏页写到磁盘。
+- MySQL 认为系统“空闲”的时候。
+- MySQL 正常关闭的情况。   </code></pre><p>刷脏页虽然是常态，但是出现以下这两种情况，都是会明显影响性能的：  </p>
+<pre><code>1. 一个查询要淘汰的脏页个数太多，会导致查询的响应时间明显变长；
+2. 日志写满，更新全部堵住，写性能跌为 0，这种情况对敏感业务来说，是不能接受的。</code></pre><p>所以，InnoDB 需要有控制脏页比例的机制，来尽量避免上面的这两种情况。  </p>
+<h2 id="InnoDB-刷脏页的控制策略"><a href="#InnoDB-刷脏页的控制策略" class="headerlink" title="InnoDB 刷脏页的控制策略"></a>InnoDB 刷脏页的控制策略</h2><p>正确地告诉 InnoDB 所在主机的 IO 能力，这样 InnoDB 才能知道需要全力刷脏页的时候，可以刷多快。innodb_io_capacity 这个参数，它会告诉 InnoDB 你的磁盘能力。这个值建议设置成磁盘的 IOPS。  </p>
+<h2 id="设计策略控制刷脏页的速度，会参考因素："><a href="#设计策略控制刷脏页的速度，会参考因素：" class="headerlink" title="设计策略控制刷脏页的速度，会参考因素："></a>设计策略控制刷脏页的速度，会参考因素：</h2><p>一个是脏页比例，一个是 redo log 写盘速度。<br>参数 innodb_max_dirty_pages_pct 是脏页比例上限，默认值是 75%。<br>合理地设置 innodb_io_capacity 的值，并且平时要多关注脏页比例，不要让它经常接近 75%。    </p>
+<h3 id="找“邻居”"><a href="#找“邻居”" class="headerlink" title="找“邻居”"></a>找“邻居”</h3><p>而 MySQL 中的一个机制，可能让你的查询会更慢：在准备刷一个脏页的时候，如果<br>这个数据页旁边的数据页刚好是脏页，就会把这个“邻居”也带着一起刷掉；而且这个<br>把“邻居”拖下水的逻辑还可以继续蔓延，也就是对于每个邻居数据页，如果跟它相邻的数据页也还是脏页的话，也会被放到一起刷。<br>在 InnoDB 中，innodb_flush_neighbors 参数就是用来控制这个行为的，值为 1 的时候会有上述的“连坐”机制，值为 0 时表示不找邻居，自己刷自己的。  </p>
+<h1 id="十一、数据库表的空间回收"><a href="#十一、数据库表的空间回收" class="headerlink" title="十一、数据库表的空间回收"></a>十一、数据库表的空间回收</h1><p>表删掉一半，但表文件大小还是没变  </p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/study/" rel="tag"># study</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/12/19/mysql-1/" rel="next" title="mysql-1">
+                  <i class="fa fa-chevron-left"></i> mysql-1
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、SQL语句执行-基本架构"><span class="nav-number">1.</span> <span class="nav-text">一、SQL语句执行 基本架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、日志"><span class="nav-number">2.</span> <span class="nav-text">二、日志</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WAL-技术"><span class="nav-number">2.1.</span> <span class="nav-text">WAL 技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redo-log（crash-safe能力）InnoDB特有"><span class="nav-number">2.2.</span> <span class="nav-text">redo log（crash-safe能力）InnoDB特有</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binlog"><span class="nav-number">2.3.</span> <span class="nav-text">binlog</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#区别："><span class="nav-number">2.4.</span> <span class="nav-text">区别：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行update流程："><span class="nav-number">2.5.</span> <span class="nav-text">执行update流程：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、事务隔离"><span class="nav-number">3.</span> <span class="nav-text">三、事务隔离</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）"><span class="nav-number">3.0.1.</span> <span class="nav-text">ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脏读（dirty-read）、不可重复读（non-repeatable-read）、幻读（phantom-read）"><span class="nav-number">3.0.2.</span> <span class="nav-text">脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL标准的事务隔离级别："><span class="nav-number">3.1.</span> <span class="nav-text">SQL标准的事务隔离级别：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql的事务启动方式："><span class="nav-number">3.2.</span> <span class="nav-text">Mysql的事务启动方式：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、索引"><span class="nav-number">4.</span> <span class="nav-text">四、索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#常见模型：哈希表、有序数组和搜索树。"><span class="nav-number">4.1.</span> <span class="nav-text">常见模型：哈希表、有序数组和搜索树。</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB使用B-树模型，减少单次查询的磁盘访问次数。"><span class="nav-number">4.1.1.</span> <span class="nav-text">InnoDB使用B+树模型，减少单次查询的磁盘访问次数。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引维护："><span class="nav-number">4.1.2.</span> <span class="nav-text">索引维护：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#联合索引：安排索引内的字段顺序"><span class="nav-number">4.1.3.</span> <span class="nav-text">联合索引：安排索引内的字段顺序</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、全局锁、表锁、行锁"><span class="nav-number">5.</span> <span class="nav-text">五、全局锁、表锁、行锁</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、全局锁"><span class="nav-number">5.1.</span> <span class="nav-text">1、全局锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、表级锁"><span class="nav-number">5.2.</span> <span class="nav-text">2、表级锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）表锁"><span class="nav-number">5.2.1.</span> <span class="nav-text">1）表锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）元数据锁"><span class="nav-number">5.2.2.</span> <span class="nav-text">2）元数据锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、行锁"><span class="nav-number">5.3.</span> <span class="nav-text">3、行锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引擎层由各个引擎自己实现，不是所有引擎都支持。InnoDB支持。"><span class="nav-number">5.3.1.</span> <span class="nav-text">引擎层由各个引擎自己实现，不是所有引擎都支持。InnoDB支持。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#死锁：事务A等待事务B释放行锁，事务B等待事务A释放行锁。"><span class="nav-number">5.3.2.</span> <span class="nav-text">死锁：事务A等待事务B释放行锁，事务B等待事务A释放行锁。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决策略："><span class="nav-number">5.3.3.</span> <span class="nav-text">解决策略：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#但死锁检测存在问题：并发量大导致CPU资源耗费。"><span class="nav-number">5.3.4.</span> <span class="nav-text">但死锁检测存在问题：并发量大导致CPU资源耗费。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决由这种热点行更新导致的性能问题："><span class="nav-number">5.3.5.</span> <span class="nav-text">解决由这种热点行更新导致的性能问题：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六、事务隔离"><span class="nav-number">6.</span> <span class="nav-text">六、事务隔离</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#七、普通索引和唯一索引"><span class="nav-number">7.</span> <span class="nav-text">七、普通索引和唯一索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-change-buffer："><span class="nav-number">7.0.1.</span> <span class="nav-text">1.change buffer：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-merge："><span class="nav-number">7.0.2.</span> <span class="nav-text">2.merge：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-change-buffer-的使用场景"><span class="nav-number">7.0.3.</span> <span class="nav-text">3.change buffer 的使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-change-buffer-和-redo-log"><span class="nav-number">7.0.4.</span> <span class="nav-text">4.change buffer 和 redo log</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#八、MySQL选择索引"><span class="nav-number">8.</span> <span class="nav-text">八、MySQL选择索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#索引选择异常和处理"><span class="nav-number">8.1.</span> <span class="nav-text">索引选择异常和处理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#九、字符串字段加索引"><span class="nav-number">9.</span> <span class="nav-text">九、字符串字段加索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-前缀索引"><span class="nav-number">9.1.</span> <span class="nav-text">1.前缀索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-前缀索引对覆盖索引的影响"><span class="nav-number">9.2.</span> <span class="nav-text">2.前缀索引对覆盖索引的影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-倒序存储和Hash字段索引："><span class="nav-number">9.3.</span> <span class="nav-text">3.倒序存储和Hash字段索引：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#相同点："><span class="nav-number">9.3.1.</span> <span class="nav-text">相同点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#区别：-1"><span class="nav-number">9.3.2.</span> <span class="nav-text">区别：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十、SQL语句偶尔变慢的原因"><span class="nav-number">10.</span> <span class="nav-text">十、SQL语句偶尔变慢的原因</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#InnoDB-刷脏页的控制策略"><span class="nav-number">10.1.</span> <span class="nav-text">InnoDB 刷脏页的控制策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计策略控制刷脏页的速度，会参考因素："><span class="nav-number">10.2.</span> <span class="nav-text">设计策略控制刷脏页的速度，会参考因素：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#找“邻居”"><span class="nav-number">10.2.1.</span> <span class="nav-text">找“邻居”</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十一、数据库表的空间回收"><span class="nav-number">11.</span> <span class="nav-text">十一、数据库表的空间回收</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Lynn</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lynn</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.1
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/pisces.js?v=7.4.1"></script>
+
+<script src="/js/next-boot.js?v=7.4.1"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.1"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

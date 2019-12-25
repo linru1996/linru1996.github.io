@@ -47,9 +47,9 @@
     path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     translation: {
-      copy_button: 'Kopieren',
-      copy_success: 'Kopiert',
-      copy_failure: 'Kopieren fehlgeschlagen'
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
     },
     sidebarPadding: 40
   };
@@ -129,7 +129,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -149,7 +149,7 @@
       
     
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Startseite</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
 
   </li>
       
@@ -162,7 +162,7 @@
       
     
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>Über</a>
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
 
   </li>
       
@@ -175,7 +175,7 @@
       
     
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Schlagwörter</a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
 
   </li>
       
@@ -188,7 +188,7 @@
       
     
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Kategorien</a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
 
   </li>
       
@@ -201,14 +201,14 @@
       
     
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archiv</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
       
     
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger">
-          <i class="fa fa-search fa-fw"></i>Suche
+          <i class="fa fa-search fa-fw"></i>Search
         </a>
       </li>
     
@@ -223,7 +223,7 @@
   </span>
   <div class="search-input-container">
     <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Suche..." spellcheck="false"
+           placeholder="Searching..." spellcheck="false"
            type="text" id="search-input">
   </div>
   <span class="popup-btn-close">
@@ -259,6 +259,1125 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/24/Mysql学习-1（架构、日志、事务、索引）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            
+            <a href="/2019/12/24/Mysql学习-1（架构、日志、事务、索引）/" class="post-title-link" itemprop="url">Mysql学习-1（架构、日志、事务、索引）</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-12-24 21:37:38" itemprop="dateCreated datePublished" datetime="2019-12-24T21:37:38+08:00">2019-12-24</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-12-25 16:30:08" itemprop="dateModified" datetime="2019-12-25T16:30:08+08:00">2019-12-25</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="一、SQL语句执行-基本架构"><a href="#一、SQL语句执行-基本架构" class="headerlink" title="一、SQL语句执行 基本架构"></a>一、SQL语句执行 基本架构</h1><p><span style="color:red;">Server层+存储引擎层</span><br><span style="color:red;">Server层：连接器、查询缓存、分析器、优化器、执行器等  以及内置函数，所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。</span><br>存储引擎层：数据的存储和提取，架构模式是插件式的。支持InnoDB、MyISAM、Memory等多个存储引擎。  engine=memory<br>不同的存储引擎共用一个Server层   </p>
+<p>连接器：负责和客户端建立连接、获取权限、维持和管理连接<br>长连接可能导致内存占用过大  </p>
+<p>查询缓存：mysql拿到查询请求后会先查看查询缓存，如果语句不在查询缓存中会继续后面的执行阶段，执行结果会存入查询缓存中。<br>建议不要使用查询缓存，mysql8.0开始没有查询缓存功能。 在一个表上有更新的时候，跟这个表有关的查询缓存会失效。   </p>
+<p>分析器：词法分析+语法分析  </p>
+<p>优化器：在表里有多个索引的时候，决定使用哪个索引；或者在一个语句有多表关联的时候，决定各表的连接顺序。  </p>
+<p>执行器：开始执行的时候，要先判断一下对这个表有没有执行查询的权限，如果有，继续执行。使用引擎提供的接口。   </p>
+<h1 id="二、日志"><a href="#二、日志" class="headerlink" title="二、日志"></a>二、日志</h1><h2 id="WAL-技术"><a href="#WAL-技术" class="headerlink" title="WAL 技术"></a>WAL 技术</h2><p>WAL 的全称是 Write-Ahead Logging，它的关键点就是先写日志，再写磁盘。  </p>
+<p>日志模块：redo log（重做日志）和binlog（归档日志）先写日志，再写磁盘。<br>语句更新会生成undo log（回滚日志）   </p>
+<h2 id="redo-log（crash-safe能力）InnoDB特有"><a href="#redo-log（crash-safe能力）InnoDB特有" class="headerlink" title="redo log（crash-safe能力）InnoDB特有"></a>redo log（crash-safe能力）InnoDB特有</h2><p>当有一条记录需要更新的时候，InnoDB引擎会先把记录写到redo log中，并更新缓存，会在适当时候更新磁盘。<br>InnoDB的redo log大小固定，从头写到末尾。write pos当前记录位置，checkpoint当前擦出位置。往后推移并循环，擦除记录前要把记录更新到数据文件。  </p>
+<h2 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h2><p>Server层日志，没有crash-safe能力。  </p>
+<h2 id="区别："><a href="#区别：" class="headerlink" title="区别："></a>区别：</h2><p>redo log是InnoDB特有，binlog在Mysql的server层实现，所有引擎都可以使用；<br>redo log是物理日志，记录的是“在摸个数据页上做了什么修改”，binlog是逻辑日志，记录的是语句的原始逻辑，比如“给ID=2这一行的c字段加一”；<br>redo log循环写，空间固定会用完；binlog是可以追加写入，写到一定大小会切换到下一个，不会覆盖。  </p>
+<h2 id="执行update流程："><a href="#执行update流程：" class="headerlink" title="执行update流程："></a>执行update流程：</h2><ol>
+<li>执行器先找引擎取 ID=2 这一行。ID 是主键，引擎直接用树搜索找到这一行。如果ID=2 这一行所在的数据页本来就在内存中，就直接返回给执行器；否则，需要先从磁盘读入内存，然后再返回。  </li>
+<li>执行器拿到引擎给的行数据，把这个值加上 1，比如原来是 N，现在就是 N+1，得到新的一行数据，再调用引擎接口写入这行新数据。</li>
+<li>引擎将这行新数据更新到内存中，同时将这个更新操作记录到 redo log 里面，此时redo log 处于 prepare 状态。然后告知执行器执行完成了，随时可以提交事务。  </li>
+<li>执行器生成这个操作的 binlog，并把 binlog 写入磁盘。  </li>
+<li>执行器调用引擎的提交事务接口，引擎把刚刚写入的 redo log 改成提交（commit）状态，更新完成。  </li>
+</ol>
+<p>redo log拆成prepare和commit，<span style="color:red;">两阶段提交</span>，保证日志恢复出来的库的状态和原库一致。   </p>
+<p>让数据库恢复到半个月内任意一秒的状态：找到全量备份，从备份的时间点开始取出binlog  </p>
+<p>redo log 用于保证 <span style="color:red;">crash-safe</span> 能力。innodb_flush_log_at_trx_commit 这个参数设置成1 的时候，表示每次事务的 redo log 都直接持久化到磁盘。这个参数建议设置成 1，这样可以保证 MySQL 异常重启之后数据不丢失。<br>sync_binlog 这个参数设置成 1 的时候，表示每次事务的 binlog 都持久化到磁盘。这个参数也建议设置成 1，这样可以保证 MySQL 异常重启之后 binlog 不丢失。</p>
+<h1 id="三、事务隔离"><a href="#三、事务隔离" class="headerlink" title="三、事务隔离"></a>三、事务隔离</h1><h3 id="ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）"><a href="#ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）" class="headerlink" title="ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）"></a>ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性）</h3><h3 id="脏读（dirty-read）、不可重复读（non-repeatable-read）、幻读（phantom-read）"><a href="#脏读（dirty-read）、不可重复读（non-repeatable-read）、幻读（phantom-read）" class="headerlink" title="脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）"></a>脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）</h3><h2 id="SQL标准的事务隔离级别："><a href="#SQL标准的事务隔离级别：" class="headerlink" title="SQL标准的事务隔离级别："></a>SQL标准的事务隔离级别：</h2><p>读未提交是指，一个事务还没提交时，它做的变更就能被别的事务看到。<br>读提交是指，一个事务提交之后，它做的变更才会被其他事务看到。<br>可重复读是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。<br>串行化，顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当<br>出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。  </p>
+<p>视图概念<br>将启动参数 transaction-isolation 的值设置成 READ-COMMITTED   </p>
+<h2 id="Mysql的事务启动方式："><a href="#Mysql的事务启动方式：" class="headerlink" title="Mysql的事务启动方式："></a>Mysql的事务启动方式：</h2><ol>
+<li>显式启动事务语句， begin 或 start transaction。配套的提交语句是 commit，回滚语句是 rollback。   </li>
+<li>set autocommit=0，这个命令会将这个线程的自动提交关掉。意味着如果你只执行一个 select 语句，这个事务就启动了，而且并不会自动提交。这个事务持续存在直到你主动执行 commit 或 rollback 语句，或者断开连接。<br>有些客户端连接框架会默认连接成功后先执行一个 set autocommit=0 的命令。这就导致接下来的查询都在事务中，如果是长连接，就导致了意外的长事务。<br>建议总是使用 set autocommit=1, 通过显式语句的方式来启动事务。  ？？？？？？？存疑<br>在 autocommit 为 1 的情况下，用 begin 显式启动的事务，如果执行 commit 则提交事务。如果执行 commit work and chain，则是提交事务并自动启动下一个事务，这样也省去了再次执行 begin 语句的开销。同时带来的好处是从程序开发的角度明确地知道每个语句是否处于事务中。   </li>
+</ol>
+<h1 id="四、索引"><a href="#四、索引" class="headerlink" title="四、索引"></a>四、索引</h1><p>提高数据的查询效率  </p>
+<h2 id="常见模型：哈希表、有序数组和搜索树。"><a href="#常见模型：哈希表、有序数组和搜索树。" class="headerlink" title="常见模型：哈希表、有序数组和搜索树。"></a>常见模型：哈希表、有序数组和搜索树。</h2><p>哈希表适用于只有等值查询的场景；<br>有序数组在等值查询和范围查询场景性能都可以，但只适应于静态存储引擎；<br>平衡二叉树：搜索时间复杂度O(log(n)),更新的时间复杂度 O(log(n))   </p>
+<h3 id="InnoDB使用B-树模型，减少单次查询的磁盘访问次数。"><a href="#InnoDB使用B-树模型，减少单次查询的磁盘访问次数。" class="headerlink" title="InnoDB使用B+树模型，减少单次查询的磁盘访问次数。"></a>InnoDB使用B+树模型，减少单次查询的磁盘访问次数。</h3><p>主键索引和非主键索引<br><span style="color:red;"><br>主键索引的叶子节点存的是整行数据。在 InnoDB 里，主键索引也被称为聚簇索引（clustered index）。<br>非主键索引的叶子节点内容是主键的值。在 InnoDB 里，非主键索引也被称为二级索引（secondary index）。<br></span>    </p>
+<h3 id="索引维护："><a href="#索引维护：" class="headerlink" title="索引维护："></a>索引维护：</h3><p>新插入数据记录。索引需要移动甚至会页分裂，页合并<br>自增主键：<br>覆盖索引：查询不需要回表，减少树的搜索次数，性能优化手段。<br>前缀索引：</p>
+<h3 id="联合索引：安排索引内的字段顺序"><a href="#联合索引：安排索引内的字段顺序" class="headerlink" title="联合索引：安排索引内的字段顺序"></a>联合索引：安排索引内的字段顺序</h3><p>第一原则是，如果通过调整顺序，可以少维护一个索引，那么这个顺序往往就是需要优先考虑采用的。<br>索引下推优化    </p>
+<h1 id="五、全局锁、表锁、行锁"><a href="#五、全局锁、表锁、行锁" class="headerlink" title="五、全局锁、表锁、行锁"></a>五、全局锁、表锁、行锁</h1><h2 id="1、全局锁"><a href="#1、全局锁" class="headerlink" title="1、全局锁"></a>1、全局锁</h2><p>全局锁的典型使用场景是，做全库逻辑备份。<br>全局锁主要用在逻辑备份过程中。对于全部是 InnoDB 引擎的库，建议选择使用–<br>single-transaction 参数，对应用会更友好。   </p>
+<h2 id="2、表级锁"><a href="#2、表级锁" class="headerlink" title="2、表级锁"></a>2、表级锁</h2><p>表级锁：表锁、元数据锁（MDL）  </p>
+<h3 id="1）表锁"><a href="#1）表锁" class="headerlink" title="1）表锁"></a>1）表锁</h3><p>表锁的语法：lock tables…read/write<br>表锁一般是在数据库引擎不支持行锁的时候才会被用到的。如果你发现你的应用程序里有lock tables 这样的语句，你需要追查一下，比较可能的情况是：<br>要么是你的系统现在还在用 MyISAM 这类不支持事务的引擎，那要安排升级换引擎；<br>要么是你的引擎升级了，但是代码还没升级。这样的情况，最后业务开发就是把<br>lock tables 和 unlock tables 改成 begin 和 commit，问题就解决了。   </p>
+<h3 id="2）元数据锁"><a href="#2）元数据锁" class="headerlink" title="2）元数据锁"></a>2）元数据锁</h3><p>MDL 不需要显式只用，在访问一个表的时候会被自动加上，保证读写的正确性。<br>因此，在 MySQL 5.5 版本中引入了 MDL，当对一个表做增删改查操作的时候，加 MDL读锁；当要对表做结构变更操作的时候，加 MDL 写锁。<br>MDL会直到事务提交才释放，在做表结构变更的时候，你一定要小心不要导致锁住线上查询和更新。   </p>
+<h2 id="3、行锁"><a href="#3、行锁" class="headerlink" title="3、行锁"></a>3、行锁</h2><h3 id="引擎层由各个引擎自己实现，不是所有引擎都支持。InnoDB支持。"><a href="#引擎层由各个引擎自己实现，不是所有引擎都支持。InnoDB支持。" class="headerlink" title="引擎层由各个引擎自己实现，不是所有引擎都支持。InnoDB支持。"></a>引擎层由各个引擎自己实现，不是所有引擎都支持。InnoDB支持。</h3><p><span style="color:red;">在 InnoDB 事务中，行锁是在需要的时候才加上的，但并不是不需要了就立刻释放，而是要等到事务结束时才释放。这个就是两阶段锁协议。 </span>     </p>
+<p>如果你的事务中需要锁多个行，要把最可能造成锁冲突、最可能影响并发度的锁尽量往后放。<br>但是，调整语句顺序并不能完全避免死锁。引入了死锁和死锁检测的概念，以及提供了三个方案，来减少死锁对数据库的影响。减少死锁的主要方向，就是控制访问相同资源的并发事务量。    </p>
+<h3 id="死锁：事务A等待事务B释放行锁，事务B等待事务A释放行锁。"><a href="#死锁：事务A等待事务B释放行锁，事务B等待事务A释放行锁。" class="headerlink" title="死锁：事务A等待事务B释放行锁，事务B等待事务A释放行锁。"></a>死锁：事务A等待事务B释放行锁，事务B等待事务A释放行锁。</h3><h3 id="解决策略："><a href="#解决策略：" class="headerlink" title="解决策略："></a>解决策略：</h3><ul>
+<li>直接进入等待，直至超时。这个超时时间可以通过参数innodb_lock_wait_timeout 来设置。 InnoDB默认50s，过于长；    </li>
+<li>发起死锁检测，发现死锁后，主动回滚死锁链条中的某一个事务，让其他事务得以继续执行。将参数 innodb_deadlock_detect 设置为 on，表示开启这个逻辑。InnoDB默认值为0。  <h3 id="但死锁检测存在问题：并发量大导致CPU资源耗费。"><a href="#但死锁检测存在问题：并发量大导致CPU资源耗费。" class="headerlink" title="但死锁检测存在问题：并发量大导致CPU资源耗费。"></a>但死锁检测存在问题：并发量大导致CPU资源耗费。</h3><h3 id="解决由这种热点行更新导致的性能问题："><a href="#解决由这种热点行更新导致的性能问题：" class="headerlink" title="解决由这种热点行更新导致的性能问题："></a>解决由这种热点行更新导致的性能问题：</h3>一种头痛医头的方法，就是如果你能确保这个业务一定不会出现死锁，可以临时把死锁检测关掉；另一个思路是控制并发度，并发控制做在数据库服务端，可以考虑在中间件实现，或在Mysql里面，基本思路是，对于相同行的更新，在进入引擎之前排队。<br>或者，可以考虑通过将一行改成逻辑上的多行来减少锁冲突。  </li>
+</ul>
+<h1 id="六、事务隔离"><a href="#六、事务隔离" class="headerlink" title="六、事务隔离"></a>六、事务隔离</h1><p>一个数据版本，对于一个事务视图来说，除了自己的更新总是可见以外，有三种情况：   </p>
+<ol>
+<li>版本未提交，不可见；  </li>
+<li>版本已提交，但是是在视图创建后提交的，不可见；  </li>
+<li>版本已提交，而且是在视图创建前提交的，可见。  </li>
+</ol>
+<p>更新数据都是先读后写的，而这个读，只能读当前的值，称为“当前读”（current read）。  </p>
+<p>InnoDB 的行数据有多个版本，每个数据版本有自己的 row trx_id，每个事务或者语句有自己的一致性视图。普通查询语句是一致性读，一致性读会根据 row trx_id 和一致性视图确定数据版本的可见性。<br>对于可重复读，查询只承认在事务启动前就已经提交完成的数据；<br>对于读提交，查询只承认在语句启动前就已经提交完成的数据；<br>而当前读，总是读取已经提交完成的最新版本。   </p>
+<h1 id="七、普通索引和唯一索引"><a href="#七、普通索引和唯一索引" class="headerlink" title="七、普通索引和唯一索引"></a>七、普通索引和唯一索引</h1><p>这两类索引在查询能力上是没差别的，主要考虑的是对更新性能的影响。<br>由于唯一索引用不上 change buffer 的优化机制，因此如果业务可以接受，从性能角度出发建议优先考虑非唯一索引。 </p>
+<h3 id="1-change-buffer："><a href="#1-change-buffer：" class="headerlink" title="1.change buffer："></a>1.change buffer：</h3><p>当需要更新一个数据页时，如果数据页在内存中就直接更新，而如果这个数据页还没有在内存中的话，在不影响数据一致性的前提下，InooDB 会将这些更新操作缓存在 changebuffer 中，这样就不需要从磁盘中读入这个数据页了。在下次查询需要访问这个数据页的时候，将数据页读入内存，然后执行 change buffer 中与这个页有关的操作。通过这种方式就能保证这个数据逻辑的正确性。change buffer会持久化到磁盘。  </p>
+<p><span style="color:red;">唯一索引需要首先保证唯一性，因此必须将数据读到内存查看，所以唯一索引的更新就不能使用 change buffer，实际上也只有普通索引可以使用。</span>      </p>
+<h3 id="2-merge："><a href="#2-merge：" class="headerlink" title="2.merge："></a>2.merge：</h3><p>将 change buffer 中的操作应用到原数据页。。除了访问这个数据页会触发 merge 外，系统有后台线程会定期 merge。在数据库正常关闭<br>（shutdown）的过程中，也会执行 merge 操作。  </p>
+<h3 id="3-change-buffer-的使用场景"><a href="#3-change-buffer-的使用场景" class="headerlink" title="3.change buffer 的使用场景"></a>3.change buffer 的使用场景</h3><p>change buffer 只限于用在普通索引的场景下，而不适用于唯一索引。那么，现在有一个问题就是：普通索引的所有场景，使用 change buffer 都可以起到加速作用吗？  </p>
+<p>因为 merge 的时候是真正进行数据更新的时刻，而 change buffer 的主要目的就是将记录的变更动作缓存下来，所以在一个数据页做 merge 之前，change buffer 记录的变更越多（也就是这个页面上要更新的次数越多），收益就越大。  </p>
+<p>因此，对于写多读少的业务来说，页面在写完以后马上被访问到的概率比较小，此时<br>change buffer 的使用效果最好。这种业务模型常见的就是账单类、日志类的系统。  </p>
+<p>反过来，假设一个业务的更新模式是写入之后马上会做查询，那么即使满足了条件，将更新先记录在 change buffer，但之后由于马上要访问这个数据页，会立即触发 merge 过程。这样随机访问 IO 的次数不会减少，反而增加了 change buffer 的维护代价。所以，对于这种业务模式来说，change buffer 反而起到了副作用。    </p>
+<p>如果所有的更新后面，都马上伴随着对这个记录的查询，那么应该关闭 change buffer。而在其他情况下，change buffer 都能提升更新性能。  </p>
+<p>在实际使用中，你会发现，普通索引和 change buffer 的配合使用，对于数据量大的表的更新优化还是很明显的。  </p>
+<h3 id="4-change-buffer-和-redo-log"><a href="#4-change-buffer-和-redo-log" class="headerlink" title="4.change buffer 和 redo log"></a>4.change buffer 和 redo log</h3><p>简单地对比这两个机制在提升更新性能上的收益的话，redo log 主要节省的是随机写磁盘的 IO 消耗（转成顺序写），而 change buffer 主要节省的则是随机读磁盘<br>的 IO 消耗。</p>
+<pre><code>1. Page 1 在内存中，直接更新内存；
+2. Page 2 没有在内存中，就在内存的 change buffer 区域，记录下“我要往 Page 2 插入一行”这个信息。
+3. 将上述两个动作记入 redo log 中。</code></pre><h1 id="八、MySQL选择索引"><a href="#八、MySQL选择索引" class="headerlink" title="八、MySQL选择索引"></a>八、MySQL选择索引</h1><p>优化器存在选错索引的可能性   </p>
+<p>而优化器选择索引的目的，是找到一个最优的执行方案，并用最小的代价去执行语句。在数据库里面，扫描行数是影响执行代价的因素之一。扫描的行数越少，意味着访问磁盘数据的次数越少，消耗的 CPU 资源越少。当然，扫描行数并不是唯一的判断标准，优化器还会结合是否使用临时表、是否排序等因素进行综合判断。  </p>
+<p>对于由于索引统计信息不准确导致的问题，可以用 analyze table t（重新统计索引信息） 来解决。<br>而对于其他优化器误判的情况，你可以在应用端用 force index 来强行指定索引，也可以通过修改语句来引导优化器，还可以通过增加或者删除索引来绕过这个问题。   </p>
+<h2 id="索引选择异常和处理"><a href="#索引选择异常和处理" class="headerlink" title="索引选择异常和处理"></a>索引选择异常和处理</h2><pre><code>1.采用 force index 强行选择一个索引。  
+2.可以考虑修改语句，引导 MySQL 使用期望的索引。  
+3.在有些场景下，我们可以新建一个更合适的索引，来提供给优化器做选择，或删掉误用的索引。  </code></pre><h1 id="九、字符串字段加索引"><a href="#九、字符串字段加索引" class="headerlink" title="九、字符串字段加索引"></a>九、字符串字段加索引</h1><h2 id="1-前缀索引"><a href="#1-前缀索引" class="headerlink" title="1.前缀索引"></a>1.前缀索引</h2><p>MySQL 是支持前缀索引的，也就是说，你可以定义字符串的一部分作为索引。 使用前缀索引后，可能会导致查询语句读数据的次数变多。<br>alter table SUser add index index2(email(6));   </p>
+<p><span style="color:red;">使用前缀索引，定义好长度，就可以做到既节省空间，又不用额外增加太多的查询成本。</span><br>select count(distinct email) as L from SUser;查看此列有多少个不同的值  </p>
+<h2 id="2-前缀索引对覆盖索引的影响"><a href="#2-前缀索引对覆盖索引的影响" class="headerlink" title="2.前缀索引对覆盖索引的影响"></a>2.前缀索引对覆盖索引的影响</h2><p>使用前缀索引就用不上覆盖索引对查询性能的优化了  </p>
+<h2 id="3-倒序存储和Hash字段索引："><a href="#3-倒序存储和Hash字段索引：" class="headerlink" title="3.倒序存储和Hash字段索引："></a>3.倒序存储和Hash字段索引：</h2><p>使用倒序存储：身份证索引<br>使用 hash 字段   </p>
+<h3 id="相同点："><a href="#相同点：" class="headerlink" title="相同点："></a>相同点：</h3><pre><code>都不支持范围查询，只支持等值查询；   </code></pre><h3 id="区别：-1"><a href="#区别：-1" class="headerlink" title="区别："></a>区别：</h3><pre><code>1. 从占用的额外空间来看，倒序存储方式在主键索引上，不会消耗额外的存储空间，而hash 字段方法需要增加一个字段。当然，倒序存储方式使用 4 个字节的前缀长度应该是不够的，如果再长一点，这个消耗跟额外这个 hash 字段也差不多抵消了。   
+
+2. 在 CPU 消耗方面，倒序方式每次写和读的时候，都需要额外调用一次 reverse 函数，而 hash 字段的方式需要额外调用一次 crc32() 函数。如果只从这两个函数的计算复杂度来看的话，reverse 函数额外消耗的 CPU 资源会更小些。   
+
+3. 从查询效率上看，使用 hash 字段方式的查询性能相对更稳定一些。因为 crc32 算出来的值虽然有冲突的概率，但是概率非常小，可以认为每次查询的平均扫描行数接近 1。而倒序存储方式毕竟还是用的前缀索引的方式，也就是说还是会增加扫描行数。</code></pre><p>总结：<br>    1. 直接创建完整索引，这样可能比较占用空间；<br>    2. 创建前缀索引，节省空间，但会增加查询扫描次数，并且不能使用覆盖索引；<br>    3. 倒序存储，再创建前缀索引，用于绕过字符串本身前缀的区分度不够的问题；<br>    4. 创建 hash 字段索引，查询性能稳定，有额外的存储和计算消耗，跟第三种方式一样，都不支持范围扫描。   </p>
+<h1 id="十、SQL语句偶尔变慢的原因"><a href="#十、SQL语句偶尔变慢的原因" class="headerlink" title="十、SQL语句偶尔变慢的原因"></a>十、SQL语句偶尔变慢的原因</h1><p>当内存数据页跟磁盘数据页内容不一致的时候，我们称这个内存页为“脏页”。内存数据<br>写入到磁盘后，内存和磁盘上的数据页的内容就一致了，称为“干净页”。   </p>
+<p>MySQL 偶尔“抖”一下的那个瞬间，可能就是在刷脏页（flush）。  </p>
+<p>flush场景：  </p>
+<pre><code>- InnoDB 的 redo log 写满了。这时候系统会停止所有更新操作，把 checkpoint 往前推进，redo log 留出空间可以继续写。（nnoDB 要尽量避免）   
+- 系统内存不足。当需要新的内存页，而内存不够用的时候，就要淘汰一些数据页，空出内存给别的数据页使用。如果淘汰的是“脏页”，就要先将脏页写到磁盘。
+- MySQL 认为系统“空闲”的时候。
+- MySQL 正常关闭的情况。   </code></pre><p>刷脏页虽然是常态，但是出现以下这两种情况，都是会明显影响性能的：  </p>
+<pre><code>1. 一个查询要淘汰的脏页个数太多，会导致查询的响应时间明显变长；
+2. 日志写满，更新全部堵住，写性能跌为 0，这种情况对敏感业务来说，是不能接受的。</code></pre><p>所以，InnoDB 需要有控制脏页比例的机制，来尽量避免上面的这两种情况。  </p>
+<h2 id="InnoDB-刷脏页的控制策略"><a href="#InnoDB-刷脏页的控制策略" class="headerlink" title="InnoDB 刷脏页的控制策略"></a>InnoDB 刷脏页的控制策略</h2><p>正确地告诉 InnoDB 所在主机的 IO 能力，这样 InnoDB 才能知道需要全力刷脏页的时候，可以刷多快。innodb_io_capacity 这个参数，它会告诉 InnoDB 你的磁盘能力。这个值建议设置成磁盘的 IOPS。  </p>
+<h2 id="设计策略控制刷脏页的速度，会参考因素："><a href="#设计策略控制刷脏页的速度，会参考因素：" class="headerlink" title="设计策略控制刷脏页的速度，会参考因素："></a>设计策略控制刷脏页的速度，会参考因素：</h2><p>一个是脏页比例，一个是 redo log 写盘速度。<br>参数 innodb_max_dirty_pages_pct 是脏页比例上限，默认值是 75%。<br>合理地设置 innodb_io_capacity 的值，并且平时要多关注脏页比例，不要让它经常接近 75%。    </p>
+<h3 id="找“邻居”"><a href="#找“邻居”" class="headerlink" title="找“邻居”"></a>找“邻居”</h3><p>而 MySQL 中的一个机制，可能让你的查询会更慢：在准备刷一个脏页的时候，如果<br>这个数据页旁边的数据页刚好是脏页，就会把这个“邻居”也带着一起刷掉；而且这个<br>把“邻居”拖下水的逻辑还可以继续蔓延，也就是对于每个邻居数据页，如果跟它相邻的数据页也还是脏页的话，也会被放到一起刷。<br>在 InnoDB 中，innodb_flush_neighbors 参数就是用来控制这个行为的，值为 1 的时候会有上述的“连坐”机制，值为 0 时表示不找邻居，自己刷自己的。  </p>
+<h1 id="十一、数据库表的空间回收"><a href="#十一、数据库表的空间回收" class="headerlink" title="十一、数据库表的空间回收"></a>十一、数据库表的空间回收</h1><p>表删掉一半，但表文件大小还是没变  </p>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+    
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/19/mysql-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            
+            <a href="/2019/12/19/mysql-1/" class="post-title-link" itemprop="url">mysql-1</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-12-19 11:11:37" itemprop="dateCreated datePublished" datetime="2019-12-19T11:11:37+08:00">2019-12-19</time>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+    
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/19/数据结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            
+            <a href="/2019/12/19/数据结构/" class="post-title-link" itemprop="url">Untitled</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-12-19 10:55:26 / Modified: 16:03:09" itemprop="dateCreated datePublished" datetime="2019-12-19T10:55:26+08:00">2019-12-19</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>##<a href="https://naotu.baidu.com/file/b832f043e2ead159d584cca4efb19703?token=7a6a56eb2630548c" target="_blank" rel="noopener">数据结构脑图</a></p>
+<h2 id="算法脑图"><a href="#算法脑图" class="headerlink" title="算法脑图"></a><a href="https://naotu.baidu.com/file/0a53d3a5343bd86375f348b2831d3610?token=5ab1de1c90d5f3ec" target="_blank" rel="noopener">算法脑图</a></h2><h2 id="数据结构："><a href="#数据结构：" class="headerlink" title="数据结构："></a>数据结构：</h2><h3 id="一维："><a href="#一维：" class="headerlink" title="一维："></a>一维：</h3><p>数组  链表<br>栈  队列  双端队列  集合  映射</p>
+<h3 id="二维："><a href="#二维：" class="headerlink" title="二维："></a>二维：</h3><p>树  图<br>二叉搜索树  堆  并查集  字典树</p>
+<h3 id="特殊："><a href="#特殊：" class="headerlink" title="特殊："></a>特殊：</h3><p>位运算  布隆过滤器<br>LRU缓存  </p>
+<h2 id="算法："><a href="#算法：" class="headerlink" title="算法："></a>算法：</h2><ul>
+<li>if-else，switch—-branch    </li>
+<li>for，while loop  —–Iteration  </li>
+<li>递归Recursion </li>
+<li>搜索：深度优先，广度优先，启发式搜索  </li>
+<li>动态规划  </li>
+<li>二分查找  </li>
+<li>贪心算法  </li>
+<li>数学、几何  </li>
+<li></li>
+</ul>
+
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+    
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/13/leetcode题解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            
+            <a href="/2019/12/13/leetcode题解/" class="post-title-link" itemprop="url">leetcode题解</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-12-13 11:29:49 / Modified: 22:59:00" itemprop="dateCreated datePublished" datetime="2019-12-13T11:29:49+08:00">2019-12-13</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithms/" itemprop="url" rel="index">
+                    <span itemprop="name">Algorithms</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="leetcode题解"><a href="#leetcode题解" class="headerlink" title="leetcode题解"></a>leetcode题解</h1><h2 id="P1：罗马数字转换（罗马数字转换成数字）"><a href="#P1：罗马数字转换（罗马数字转换成数字）" class="headerlink" title="P1：罗马数字转换（罗马数字转换成数字）"></a>P1：罗马数字转换（罗马数字转换成数字）</h2><p><a href="https://leetcode.com/problems/roman-to-integer/" target="_blank" rel="noopener">https://leetcode.com/problems/roman-to-integer/</a></p>
+<p>Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.</p>
+<pre><code>Symbol       Value
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+
+I can be placed before V (5) and X (10) to make 4 and 9. 
+X can be placed before L (50) and C (100) to make 40 and 90. 
+C can be placed before D (500) and M (1000) to make 400 and 900.  </code></pre><p>Example 5:      </p>
+<pre><code>Input: &quot;MCMXCIV&quot;
+Output: 1994
+Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.</code></pre><h3 id="题解1：（switch）"><a href="#题解1：（switch）" class="headerlink" title="题解1：（switch）"></a>题解1：（switch）</h3><pre><code>class Solution {
+    public int romanToInt(String s) {
+        char[] roman = s.toCharArray();
+        int number = 0, len = roman.length;
+
+        for(int i = 0; i &lt; len; i++){
+            switch(roman[i]){ // Check which roman numeral appears
+                case &apos;M&apos;: // if M add 1000
+                    number += 1000;
+                    break;
+
+                case &apos;D&apos;: // if D add 500
+                    number += 500;
+                    break;
+
+                case &apos;C&apos;: //If C check if there is an M or D after it
+                    if(i != len - 1){ // if no more characters then its 100
+                        switch(roman[i + 1]){ //check next character
+                            case &apos;M&apos;: // if M then it&apos;s CM so you add 900
+                                number += 900;
+                                i++; // move your pointer because CM counts as 1
+                                break;
+
+                            case &apos;D&apos;: // if D then it&apos;s CD so you add 400
+                                number += 400;
+                                i++; // move your pointer because CD counts as 1
+                                break;
+
+                            default: // if next character is not a D or M then add 100
+                                number += 100; 
+                                break;
+                        }
+                    } else{
+                        number += 100;
+                    }
+                    break;
+
+                case &apos;L&apos;: // if L add 50
+                    number += 50;
+                    break;
+
+                case &apos;X&apos;: //If X check if there is an C or L after it
+                    if(i != len - 1){ // if no more characters then its 10
+                        switch(roman[i + 1]){ //check next character
+                            case &apos;C&apos;:// if C then its XC so you add 90
+                                number += 90;
+                                i++; // move your pointer because XC counts as 1
+                                break;
+
+                            case &apos;L&apos;: // if L then it&apos;s XL so you add 40
+                                number += 40;
+                                i++; // move your pointer because XL=L counts as 1
+                                break;
+
+                            default: //if next character is not a L or C then add 10
+                                number += 10;
+                                break;
+                        }
+                    } else{
+                        number += 10;
+                    }
+                    break;
+
+                case &apos;V&apos;: // If V add 5
+                    number += 5;
+                    break;
+
+                case &apos;I&apos;: //if I check if there is a V or X after it
+                    if(i != len - 1){ //If no more characters then its 1
+                        switch(roman[i + 1]){ // check next character
+                            case &apos;X&apos;: // if X then its IX so you add 9
+                                number += 9;
+                                i++; // move your pointer because IX counts as 1
+                                break;
+
+                            case &apos;V&apos;: // if V then its IV so you add 4
+                                number += 4;
+                                i++; // move your pointer because IV counts as 1
+                                break;
+
+                            default: // if next character is not V or X then add 1
+                                number += 1;
+                                break;
+                        }
+                    } else{
+                        number += 1;
+                    }
+                    break;
+            }
+        }
+        return number;
+    }
+}</code></pre><h3 id="题解2：（Map）"><a href="#题解2：（Map）" class="headerlink" title="题解2：（Map）"></a>题解2：（Map）</h3><pre><code>public int romanToInt(String s) {
+        Map&lt;Character,Integer&gt; map = new HashMap();
+        map.put(&apos;I&apos;,1);
+        map.put(&apos;V&apos;,5);
+        map.put(&apos;X&apos;,10);
+        map.put(&apos;L&apos;,50);
+        map.put(&apos;C&apos;,100);
+        map.put(&apos;D&apos;,500);
+        map.put(&apos;M&apos;,1000);
+        int res = 0;
+        for (int i = 0; i &lt; s.length(); i++) {
+            if (i == s.length() - 1) {
+                res += map.get(s.charAt(i));
+                break;
+            }
+            res += map.get(s.charAt(i)) &lt; map.get(s.charAt(i + 1)) ? -1 * map.get(s.charAt(i)) : map.get(s.charAt(i));
+        }
+        return res;
+    }</code></pre><h2 id="P1：数字转换为罗马"><a href="#P1：数字转换为罗马" class="headerlink" title="P1：数字转换为罗马"></a>P1：数字转换为罗马</h2><p><a href="https://leetcode.com/problems/integer-to-roman/" target="_blank" rel="noopener">https://leetcode.com/problems/integer-to-roman/</a></p>
+<h3 id="题解1："><a href="#题解1：" class="headerlink" title="题解1："></a>题解1：</h3><pre><code>class Solution {
+    public String intToRoman(int num) {
+        StringBuilder result = new StringBuilder();
+        int[] div = {1000, 900, 500, 400, 100, 90, 
+                     50, 40, 10, 9, 5, 4, 1};
+        String[] roman = {&quot;M&quot;, &quot;CM&quot;, &quot;D&quot;, &quot;CD&quot;, &quot;C&quot;, &quot;XC&quot;, 
+                          &quot;L&quot;, &quot;XL&quot;, &quot;X&quot;, &quot;IX&quot;, &quot;V&quot;, &quot;IV&quot;, &quot;I&quot;};
+        for (int i = 0; i &lt; div.length;) {
+            if (num &gt;= div[i]) {
+                result.append(roman[i]);
+                num -= div[i];
+            } else {
+                i++;
+            }
+        }
+
+        return result.toString();
+    }
+}  </code></pre><h2 id="P2：Count-and-Say"><a href="#P2：Count-and-Say" class="headerlink" title="P2：Count and Say"></a>P2：Count and Say</h2><p><a href="https://leetcode.com/problems/count-and-say/" target="_blank" rel="noopener">https://leetcode.com/problems/count-and-say/</a><br>The count-and-say sequence is the sequence of integers with the first five terms as following:</p>
+<pre><code>1.     1
+2.     11
+3.     21
+4.     1211
+5.     111221
+1 is read off as &quot;one 1&quot; or 11.
+11 is read off as &quot;two 1s&quot; or 21.
+21 is read off as &quot;one 2, then one 1&quot; or 1211.</code></pre><p>Given an integer n where 1 ≤ n ≤ 30, generate the nth term of the count-and-say sequence. You can do so recursively, in other words from the previous member read off the digits, counting the number of digits in groups of the same digit.   </p>
+<p>Example 1:</p>
+<pre><code>Input: 1
+Output: &quot;1&quot;
+Explanation: This is the base case.</code></pre><h3 id="解决1："><a href="#解决1：" class="headerlink" title="解决1："></a>解决1：</h3><pre><code>public class Solution {
+    public String countAndSay(int n) {
+        String ans = &quot;1&quot;;
+        while (--n &gt; 0) {
+            StringBuilder sb = new StringBuilder();
+            char[] ansChars = ans.toCharArray();
+            for (int i = 0; i &lt; ansChars.length; i++) {
+                int count = 1;
+                while (i + 1 &lt; ansChars.length &amp;&amp; ansChars[i] == ansChars[i + 1]) {
+                    i++;count++;
+                }
+                sb.append(String.valueOf(count) + String.valueOf(ansChars[i]));
+            }
+            ans = sb.toString();
+        }
+        return ans;
+    }
+}</code></pre><h3 id="解决2："><a href="#解决2：" class="headerlink" title="解决2："></a>解决2：</h3><pre><code> public String countAndSay(int n) {
+    String result = &quot;1&quot;;
+
+    while (n &gt; 1) {
+        result = nextSay(result);
+        n--;
+    }
+
+    return result;
+}
+
+private String nextSay(String input) {
+    int windowStart = 0, windowEnd = 0;
+    StringBuilder sb = new StringBuilder();
+
+    for(; windowEnd &lt; input.length(); windowEnd++) {
+
+        if (input.charAt(windowStart) != input.charAt(windowEnd)) {
+
+            sb.append(windowEnd - windowStart);
+            sb.append(input.charAt(windowStart));
+
+            windowStart = windowEnd;
+        }
+    }
+
+    sb.append(windowEnd - windowStart);
+    sb.append(input.charAt(windowStart));
+
+    return sb.toString();
+}  </code></pre><h2 id="P3："><a href="#P3：" class="headerlink" title="P3："></a>P3：</h2><h3 id="二分法查找中位数："><a href="#二分法查找中位数：" class="headerlink" title="二分法查找中位数："></a>二分法查找中位数：</h3><pre><code>public class TestBinarySearch {
+    public static void main(String[] args) {
+        int[] arr= {30,20,50,10,80,9,7,12,100,40,8};
+        Arrays.sort(arr);
+        System.out.println(Arrays.toString(arr));
+        System.out.println(myBinarySearch(arr,40));
+        }
+
+    public static int myBinarySearch(int[] arr,int value) {
+        int low=0;
+        int high=arr.length-1;
+        while(low&lt;=high) {
+            int mid=(low+high)/2;
+            if(value==arr[mid]) {
+                return mid;
+                }
+            if(value&gt;arr[mid]) {
+                low=mid+1;    
+            }
+            if(value&lt;arr[mid]) {
+                high=mid-1;
+            }
+
+        }
+        return -1;//没有找到返回-1
+    }</code></pre><h2 id="P4："><a href="#P4：" class="headerlink" title="P4："></a>P4：</h2><h3 id="题解1：-1"><a href="#题解1：-1" class="headerlink" title="题解1："></a>题解1：</h3><pre><code>class Solution {
+    public int[] twoSum(int[] nums, int target) {
+
+        Map&lt;Integer,Integer&gt; map = new HashMap&lt;&gt;();
+        for (int i = 0;i&lt;nums.length;i++)
+        {
+            if(!map.containsKey(nums[i])) map.put(nums[i],i);
+            int  b= target - nums[i];
+            if(map.containsKey(b)&amp;&amp;map.get(b)!=i){
+                return new int[]{map.get(b),i};
+            }
+        }
+        throw new IllegalArgumentException(&quot;a&quot;);
+    }
+}</code></pre><h3 id="题解2："><a href="#题解2：" class="headerlink" title="题解2："></a>题解2：</h3><pre><code>class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        HashMap&lt;Integer, Integer&gt; numsMap = new HashMap&lt;&gt;();
+        int[] result = new int[2];
+
+        for (int i = 0; i &lt; nums.length; i++) {
+            numsMap.put(nums[i], i);    
+        }
+
+        int diff;
+        for (int i = 0; i &lt; nums.length; i++) {
+            diff = target-nums[i];
+            if (numsMap.containsKey(diff) &amp;&amp; numsMap.get(diff) != i) {
+                result[0] = numsMap.get(diff);
+                result[1] = i;
+                break;
+            }
+        }
+
+        return result; 
+    }
+}</code></pre><h2 id="P5：字符串数组最长子序列"><a href="#P5：字符串数组最长子序列" class="headerlink" title="P5：字符串数组最长子序列"></a>P5：字符串数组最长子序列</h2><h3 id="题解1：-2"><a href="#题解1：-2" class="headerlink" title="题解1："></a>题解1：</h3><pre><code>class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        int len = strs.length;//数组长度
+        if (len == 0) {
+            return &quot;&quot;;
+        }
+        if (len == 1) {
+            return strs[0];
+        }
+        char[] prefix = strs[0].toCharArray(); //数组1转换为字符数组
+        int ei = prefix.length - 1;
+        for (int i = 1; i &lt; len; i++) {  
+            if (ei &lt; 0) {
+                return &quot;&quot;;
+            }
+            char[] next = strs[i].toCharArray();//数组i转换为字符数组
+            for (int j = 0; j &lt;= ei; j++) {
+                if (j &gt;= next.length) {
+                    ei = j - 1;
+                    break;
+                }
+                if (prefix[j] != next[j]) {
+                    ei = j - 1;
+                    break;
+                }
+            }
+        }
+        if (ei &lt; 0) {
+            return &quot;&quot;;
+        }
+        return new String(prefix, 0, ei + 1);
+    }
+ }</code></pre><h2 id="P6：查找数组最大连续子序列"><a href="#P6：查找数组最大连续子序列" class="headerlink" title="P6：查找数组最大连续子序列"></a>P6：查找数组最大连续子序列</h2><p><a href="https://leetcode.com/problems/maximum-subarray/" target="_blank" rel="noopener">https://leetcode.com/problems/maximum-subarray/</a>  </p>
+<h3 id="题解1：-3"><a href="#题解1：-3" class="headerlink" title="题解1："></a>题解1：</h3><p>1)If currentNumber is greater than the current running sum(sumSoFar) then we can drop all the values we have seen before and reset the sumSoFar to currentNumber.<br>2）Check max at each step.  </p>
+<pre><code>public int maxSubArray(int[] nums) {
+        if(nums==null || nums.length==0) return 0;
+        int sumSoFar = 0;
+        int max = Integer.MIN_VALUE;
+        for(int num:nums){
+            sumSoFar+=num;
+            if(num&gt;sumSoFar){
+                sumSoFar = num;
+            }
+            max = Math.max(max,sumSoFar);
+        }
+        return max;
+    }</code></pre><h2 id="P7：加一"><a href="#P7：加一" class="headerlink" title="P7：加一"></a>P7：加一</h2><p><a href="https://leetcode.com/problems/plus-one/" target="_blank" rel="noopener">https://leetcode.com/problems/plus-one/</a></p>
+<h3 id="题解1：-4"><a href="#题解1：-4" class="headerlink" title="题解1："></a>题解1：</h3><pre><code>public int[] plusOne(int[] digits) {
+        if(digits == null || digits.length==0) return digits;
+        int carryOver = 0;
+        for(int i=digits.length-1; i&gt;=0; i--) {
+            int currentNum = digits[i];
+
+            if(currentNum &lt; 9) {
+                digits[i] = ++currentNum;
+                break;
+            } else {
+                carryOver = 1;
+                digits[i]=0;
+                continue;
+            }
+        }
+        if(digits[0]==0 &amp;&amp; carryOver == 1) {
+            int[] result = new int[digits.length+1];
+            result[0] = 1;
+            for(int i=0; i&lt;digits.length; i++) {
+                result[i+1] = digits[i];
+            }
+            digits=result;
+        }
+        return digits;
+    }</code></pre><h2 id="P8-查找短字符串在长字符串中的位置"><a href="#P8-查找短字符串在长字符串中的位置" class="headerlink" title="P8:查找短字符串在长字符串中的位置"></a>P8:查找短字符串在长字符串中的位置</h2><h3 id="解法1："><a href="#解法1：" class="headerlink" title="解法1："></a>解法1：</h3><pre><code>class Solution {
+    public int strStr(String haystack, String needle) {
+        if(needle.length()&gt;haystack.length())
+            return -1;
+        if(needle.length()==0)
+            return 0;
+        try {
+            return haystack.indexOf(needle);
+        }
+        catch (Exception e)
+        {
+            return -1;
+        }
+    }
+}</code></pre><h3 id="解法2："><a href="#解法2：" class="headerlink" title="解法2："></a>解法2：</h3><pre><code>class Solution {
+    public int strStr(String haystack, String needle) {
+        if(needle.isEmpty() || haystack.equals(needle)){
+            return 0;
+        }
+        int n = needle.length();
+        String str;
+        for(int i=0;i&lt;(haystack.length()-n+1);i++){
+            str = haystack.substring(i,i+n);
+            if(str.equals(needle)){
+                return i;
+            }
+        }
+        return -1;
+    }
+}</code></pre><h2 id="P9：寻找两个有序数组的中位数（二分查找）"><a href="#P9：寻找两个有序数组的中位数（二分查找）" class="headerlink" title="P9：寻找两个有序数组的中位数（二分查找）"></a>P9：寻找两个有序数组的中位数（二分查找）</h2><p><a href="https://leetcode-cn.com/problems/median-of-two-sorted-arrays/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/median-of-two-sorted-arrays/</a></p>
+<h3 id="解法1：（二分法）"><a href="#解法1：（二分法）" class="headerlink" title="解法1：（二分法）"></a>解法1：（二分法）</h3><p> /*<br>    * 1.首先，让我们在任一位置 i 将 A(长度为m) 划分成两个部分：<br>    *            leftA            |                rightA<br>    *   A[0],A[1],…      A[i-1] |  A[i],A[i+1],…A[m - 1]<br>    *<br>    * 由于A有m个元素，所以有m + 1中划分方式(i = 0 ~ m)<br>    *<br>    * 我们知道len(leftA) = i, len(rightA) = m - i;<br>    * 注意：当i = 0时，leftA是空集，而当i = m时，rightA为空集。<br>    *<br>    * 2.采用同样的方式，将B也划分为两部分：<br>    *            leftB            |                rightB<br>    *   B[0],B[1],…      B[j-1] |   B[j],B[j+1],…B[n - 1]<br>    *  我们知道len(leftA) = j, len(rightA) = n - j;<br>    *<br>    *  将leftA和leftB放入一个集合，将rightA和rightB放入一个集合。再把这两个集合分别命名为leftPart和rightPart。<br>    *<br>    *            leftPart         |                rightPart<br>    *   A[0],A[1],…      A[i-1] |  A[i],A[i+1],…A[m - 1]<br>    *   B[0],B[1],…      B[j-1] |  B[j],B[j+1],…B[n - 1]<br>    *<br>    *   如果我们可以确认：<br>    *   1.len(leftPart) = len(rightPart); =====&gt; 该条件在m+n为奇数时，该推理不成立<br>    *   2.max(leftPart) &lt;= min(rightPart);<br>    *<br>    *   median = (max(leftPart) + min(rightPart)) / 2;  目标结果<br>    *<br>    *   要确保这两个条件满足：<br>    *   1.i + j = m - i + n - j(或m - i + n - j + 1)  如果n &gt;= m。只需要使i = 0 ~ m，j = (m+n+1)/2-i =====&gt; 该条件在m+n为奇数/偶数时，该推理都成立<br>    *   2.B[j] &gt;= A[i-1] 并且 A[i] &gt;= B[j-1]<br>    *<br>    *   注意:<br>    *   1.临界条件：i=0,j=0,i=m,j=n。需要考虑<br>    *   2.为什么n &gt;= m ? 由于0 &lt;= i &lt;= m且j = (m+n+1)/2-i,必须确保j不能为负数。<br>    *<br>    *   按照以下步骤进行二叉树搜索<br>    *   1.设imin = 0,imax = m，然后开始在[imin,imax]中进行搜索<br>    *   2.令i = (imin+imax) / 2, j = (m+n+1)/2-i<br>    *   3.现在我们有len(leftPart) = len(rightPart)。而我们只会遇到三种情况：<br>    *<br>    *      ①.B[j] &gt;= A[i-1] 并且 A[i] &gt;= B[j-1]  满足条件<br>    *      ②.B[j-1] &gt; A[i]。此时应该把i增大。 即imin = i + 1;<br>    *      ③.A[i-1] &gt; B[j]。此时应该把i减小。 即imax = i - 1;<br>    *<br>    * */  </p>
+<pre><code>public double findMedianSortedArrays(int[] A, int[] B) {
+    int m = A.length;
+    int n = B.length;
+    if (m &gt; n) { // to ensure m&lt;=n
+        int[] temp = A; A = B; B = temp;
+        int tmp = m; m = n; n = tmp;
+    }
+    int iMin = 0, iMax = m, halfLen = (m + n + 1) / 2;
+    while (iMin &lt;= iMax) {
+        int i = (iMin + iMax) / 2;
+        int j = halfLen - i;
+        if (i &lt; iMax &amp;&amp; B[j - 1] &gt; A[i]) {
+            iMin = i + 1; // i is too small
+        } else if (i &gt; iMin &amp;&amp; A[i - 1] &gt; B[j]) {
+            iMax = i - 1; // i is too big
+        } else { // i is perfect
+            int maxLeft;
+            if (i == 0) {//A分成的leftA(空集) 和 rightA(A的全部)  所以leftPart = leftA(空集) + leftB,故maxLeft = B[j-1]。
+                maxLeft = B[j - 1];
+            } else if (j == 0) { //B分成的leftB(空集) 和 rightB(B的全部)  所以leftPart = leftA + leftB(空集),故maxLeft = A[i-1]。
+                maxLeft = A[i - 1];
+            } else { //排除上述两种特殊情况，正常比较
+                maxLeft = Math.max(A[i - 1], B[j - 1]);
+            }
+            if ((m + n) % 2 == 1) { //奇数，中位数正好是maxLeft
+                return maxLeft;
+            }
+            //偶数
+            int minRight;
+            if (i == m) {//A分成的leftA(A的全部) 和 rightA(空集)  所以rightPart = rightA(空集) + rightB,故minRight = B[j]。
+                minRight = B[j];
+            } else if (j == n) {//B分成的leftB(B的全部) 和 rightB(空集)  所以rightPart = rightA + rightB(空集),故minRight = A[i]。
+                minRight = A[i];
+            } else {//排除上述两种特殊情况，正常比较
+                minRight = Math.min(B[j], A[i]);
+            }
+
+            return (maxLeft + minRight) / 2.0;
+        }
+    }
+    return 0.0;
+}</code></pre><p>这道题二分查找不难想，但边界条件处理很难搞，我觉得要把众多条件分清三个层次，第一个层次，首先因为是二分查找，所以循环本身必须符合二分查找的条件，下界小于等于上界，因为中位数必然存在，所以循环必然能够返回，循环外无需任何处理，在这个层次上我们不需要分析i与j如何如何，然后第二个层次，循环内第一步要分析的是分割出来的子数组是否完美，所以这个层次也无需细致考虑i和j的边界。最后第三个层次，就是子数组已经完美，我们只要考虑i和j的边界条件，因为i和j不可能同时为0，两者等级并列，因为n和m有可能为0，所以接下来才考虑n和m，同理，i和j也不可能同时为m和n，所以两者也并列，大致如此，感觉还是要在纸上分析过。</p>
+<h3 id="解法2：（归并排序）（时间复杂度不符合）"><a href="#解法2：（归并排序）（时间复杂度不符合）" class="headerlink" title="解法2：（归并排序）（时间复杂度不符合）"></a>解法2：（归并排序）（时间复杂度不符合）</h3><pre><code>class Solution {  
+        public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int l1 = nums1.length;
+        int l2 = nums2.length;
+        int l = l1+l2;
+        if((l&amp;0x01)==0){//中位数为两数之平均数的情况
+            int index1 = l/2;
+            int index2 = l/2-1;
+            int sum1=0;
+            int sum2=0;
+            int i=0;
+            int j=0;
+            int x=0;
+            while(i&lt;l1||j&lt;l2){
+                if(i&gt;=l1){
+                    if(x==index1)sum1=nums2[j];
+                    if(x==index2)sum2=nums2[j];
+                    j++;
+                }else if(j&gt;=l2){
+                    if(x==index1)sum1=nums1[i];
+                    if(x==index2)sum2=nums1[i];
+                    i++;
+                }
+                else if(nums1[i]&lt;nums2[j]){
+                    if(x==index1)sum1=nums1[i];
+                    if(x==index2)sum2=nums1[i];
+                    i++;
+                }
+                else {
+                    if(x==index1)sum1=nums2[j];
+                    if(x==index2)sum2=nums2[j];
+                    j++;
+                }
+                x++;
+            }
+            return (sum1+sum2)/2.0;
+        }else{中位数为一个数的情况
+            int index = l/2;
+            int sum=0;
+            int i=0;
+            int j=0;
+            int x=0;
+            while(i&lt;l1||j&lt;l2){
+                if(i&gt;=l1){
+
+                    if(x==index){
+                        sum=nums2[j];
+                        break;
+                    }
+                    j++;
+
+                }else if(j&gt;=l2){
+                    if(x==index){
+                        sum = nums1[i];
+                        break;
+                    }
+                    i++;
+                }
+                else if(nums1[i]&lt;nums2[j]){
+
+                    if(x==index){
+                        sum = nums1[i];
+                        break;
+                    }
+                    i++;
+
+                }
+                else {
+
+                    if(x==index){
+                        sum=nums2[j];
+                        break;
+                    }
+                    j++;
+
+                }
+                x++;
+            }
+            return sum;
+
+        }
+    }
+}</code></pre>
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+    
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/04/java/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            
+            <a href="/2019/12/04/java/" class="post-title-link" itemprop="url">Untitled</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-12-04 14:48:41 / Modified: 15:05:52" itemprop="dateCreated datePublished" datetime="2019-12-04T14:48:41+08:00">2019-12-04</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>java<br>int<br>Integer.MAX_VALUE=2的31次方-1<br>Integer.MAX_VALUE + 1 = Integer.MIN_VALUE = -2147483648<br>java的取余运算区别于python    </p>
+<pre><code>C++（G++ 编译）： cout &lt;&lt; (-7) % 3; // 输出 -1    
+Java（1.6）： System.out.println((-7) % 3); // 输出 -1    
+Python 2.6：&gt;&gt;&gt;  (-7) % 3 // 输出 2
+
+
+
+
+public int reverse(int x) {
+        boolean neg = false;
+        if(x&lt;0){
+            neg = true;
+            x = -x;
+        }
+        long ans = 0;
+        int maxPow = (int)Math.log10(x);
+        while(x&gt;0){
+            ans+= (x%10 * Math.pow(10,maxPow--));
+            x=x/10;
+        }
+        if(ans &gt; Integer.MAX_VALUE){
+            return 0;
+        }
+        if(neg){
+            return (int)(-ans);
+        }else{
+           return (int) ans;
+        }
+    }</code></pre><p>1</p>
+<pre><code>class Solution {
+    public int reverse(int x) {
+        int rev = 0;
+        while (x != 0) {
+            int pop = x % 10;
+            x /= 10;
+            if (rev &gt; Integer.MAX_VALUE/10 || (rev == Integer.MAX_VALUE / 10 &amp;&amp; pop &gt; 7)) return 0;
+            if (rev &lt; Integer.MIN_VALUE/10 || (rev == Integer.MIN_VALUE / 10 &amp;&amp; pop &lt; -8)) return 0;
+            rev = rev * 10 + pop;
+        }
+        return rev;
+    }
+}</code></pre>
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+    
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/20/mysql学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            
+            <a href="/2019/11/20/mysql学习/" class="post-title-link" itemprop="url">mysql学习</a>
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-11-20 09:03:23" itemprop="dateCreated datePublished" datetime="2019-11-20T09:03:23+08:00">2019-11-20</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-12-13 23:01:00" itemprop="dateModified" datetime="2019-12-13T23:01:00+08:00">2019-12-13</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">Mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+    
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/03/Redis面试题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -283,13 +1402,42 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">Posted on</span>
 
               
                 
               
 
-              <time title="Erstellt: 2019-11-03 15:43:24" itemprop="dateCreated datePublished" datetime="2019-11-03T15:43:24+08:00">2019-11-03</time>
+              <time title="Created: 2019-11-03 15:43:24" itemprop="dateCreated datePublished" datetime="2019-11-03T15:43:24+08:00">2019-11-03</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-11-20 09:18:20" itemprop="dateModified" datetime="2019-11-20T09:18:20+08:00">2019-11-20</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
             </span>
           
 
@@ -304,7 +1452,139 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <p><a href="https://blog.csdn.net/qq_34337272/article/details/80012284" title="参考链接" target="_blank" rel="noopener">https://blog.csdn.net/qq_34337272/article/details/80012284</a></p>
+<h2 id="【基础】1-Redis的全称是什么？"><a href="#【基础】1-Redis的全称是什么？" class="headerlink" title="【基础】1.Redis的全称是什么？"></a>【基础】1.Redis的全称是什么？</h2><p>Remote Dictionary Server</p>
+<h2 id="【基础】2-什么是Redis？简述它的优缺点？"><a href="#【基础】2-什么是Redis？简述它的优缺点？" class="headerlink" title="【基础】2.什么是Redis？简述它的优缺点？"></a>【基础】2.什么是Redis？简述它的优缺点？</h2><p>简单来说 redis 就是一个数据库，不过与传统数据库不同的是 redis 的数据是存在内存中的，所以读写速度非常快，因此 redis 被广泛应用于缓存方向。另外，redis 也经常用来做分布式锁。redis 提供了多种数据类型来支持不同的业务场景。除此之外，redis 支持事务 、持久化、LUA脚本、LRU驱动事件、多种集群方案。  </p>
+<ul>
+<li><p>Key-Value 性质的内存数据库</p>
+</li>
+<li><p>所有的数据保存在内存中，且定期同步到磁盘中，实现主从同步<br>  定期保存有手动保存和自动保存：手动：通过save-同步,bgsave-异步, 自动：设置n秒内m个key被改动，就触发保存<br>  保存分为快照保存：保存二进制.rdb到磁盘中。 还有一种是AOF写日志的形式。<br>  主从同步，是指通过 xxx从 savleof xxx主 同步两个机器之间的数据    </p>
+</li>
+<li><p>优点<br>  纯内存操作，性能非常出色<br>  支持保存多种数据结构（string，list，set，sorted set，hash），且均支持原子性的push/pop, add/remove<br>  所谓的原子性就是对数据的更改要么全部执行，要么全部不执行  </p>
+</li>
+<li><p>缺点<br>  数据库容量受到物理内存的限制，无法存放大量数据  </p>
+</li>
+</ul>
+<h2 id="【基础】3-为什么要用-redis-为什么要用缓存"><a href="#【基础】3-为什么要用-redis-为什么要用缓存" class="headerlink" title="【基础】3.为什么要用 redis/为什么要用缓存"></a>【基础】3.为什么要用 redis/为什么要用缓存</h2><p>主要从“高性能”和“高并发”这两点来看待这个问题。</p>
+<h3 id="高性能："><a href="#高性能：" class="headerlink" title="高性能："></a>高性能：</h3><p>假如用户第一次访问数据库中的某些数据。这个过程会比较慢，因为是从硬盘上读取的。将该用户访问的数据存在缓存中，这样下一次再访问这些数据的时候就可以直接从缓存中获取了。操作缓存就是直接操作内存，所以速度相当快。如果数据库中的对应数据改变的之后，同步改变缓存中相应的数据即可！</p>
+<h3 id="高并发："><a href="#高并发：" class="headerlink" title="高并发："></a>高并发：</h3><p>直接操作缓存能够承受的请求是远远大于直接访问数据库的，所以我们可以考虑把数据库中的部分数据转移到缓存中去，这样用户的一部分请求会直接到缓存这里而不用经过数据库。</p>
+<h2 id="4-为什么要用-redis-而不用-map-guava-做缓存"><a href="#4-为什么要用-redis-而不用-map-guava-做缓存" class="headerlink" title="4.为什么要用 redis 而不用 map/guava 做缓存?"></a>4.为什么要用 redis 而不用 map/guava 做缓存?</h2><p>下面的内容来自 segmentfault 一位网友的提问，地址：<a href="https://segmentfault.com/q/1010000009106416" target="_blank" rel="noopener">https://segmentfault.com/q/1010000009106416</a></p>
+<p>缓存分为本地缓存和分布式缓存。以 Java 为例，使用自带的 map 或者 guava 实现的是本地缓存，最主要的特点是轻量以及快速，生命周期随着 jvm 的销毁而结束，并且在多实例的情况下，每个实例都需要各自保存一份缓存，缓存不具有一致性。</p>
+<p>使用 redis 或 memcached 之类的称为分布式缓存，在多实例的情况下，各实例共用一份缓存数据，缓存具有一致性。缺点是需要保持 redis 或 memcached服务的高可用，整个程序架构上较为复杂。  </p>
+<h2 id="【基础】3-Redis有哪些适合的场景？"><a href="#【基础】3-Redis有哪些适合的场景？" class="headerlink" title="【基础】3.Redis有哪些适合的场景？"></a>【基础】3.Redis有哪些适合的场景？</h2><h3 id="1）全页面缓存"><a href="#1）全页面缓存" class="headerlink" title="1）全页面缓存"></a>1）全页面缓存</h3><p>如果你使用的是服务器端内容渲染，你又不想为每个请求重新渲染每个页面，就可以使用 Redis 把常被请求的内容缓存起来，能够大大的降低页面请求的延迟，已经有很多框架用Redis来缓存页面，这就是页面静态化的一种方式。     </p>
+<pre><code>//将整个页面放在缓存中
+set key &quot;&lt;html&gt;...&lt;/html&gt;&quot; Ex 60
+
+//在需要的地方
+get key   </code></pre><h3 id="2）排行"><a href="#2）排行" class="headerlink" title="2）排行"></a>2）排行</h3><p>Redis 基于内存，可以非常快速高效的处理增加和减少的操作，相比于使用 SQL 请求的处理方式，性能的提升是非常巨大的。<br>Redis 的有序集合可以轻松实现“从一个大型列表中取得排名最高的N个元素”，毫秒级，而且非常简单。</p>
+<pre><code>//添加一个值，在一个已经排序的集合中
+ZADD sortedSet 1 &apos;one&apos;
+
+//获取所有的值，从一个已经排序的集合中
+ZRANGE sortedSet 0 -1
+
+//从一个已经排序的集合中，获取所有的值，以及他们的分数
+ZRANGE sortedSet 0 -1 WITHSCORES</code></pre><h3 id="3）Session存储"><a href="#3）Session存储" class="headerlink" title="3）Session存储"></a>3）Session存储</h3><p>这可能是应用最广的点了，相比较于类似 memcache 的 session 存储，Redis 具有缓存数据持久化的能力，当缓存因出现问题而重启后，之前的缓存数据还在那儿，这个就比较实用，避免了因为session突然消失带来的用户体验问题。</p>
+<pre><code>//将session保存一分钟
+SET randomHash &quot;{userId}&quot; EX 60
+
+//获取userid
+GET randomHash  </code></pre><h3 id="4）队列"><a href="#4）队列" class="headerlink" title="4）队列"></a>4）队列</h3><p>例如 email 的发送队列、等待被其他应用消费的数据队列，Redis 可以轻松而自然的创建出一个高效的队列。</p>
+<pre><code>//添加一个消息
+HSET messages &lt;id&gt; &lt;message&gt;
+ZADD due &lt;due_timestamp&gt; &lt;id&gt;
+
+//收到一个消息
+ZRANGEBYSCORE due -inf &lt;current_timestamp&gt; LIMIT 0 1
+HGET messages &lt;message_id&gt;
+
+//删除消息
+ZREM due &lt;message_id&gt;
+HDEL messages &lt;message_id&gt;  </code></pre><h3 id="5）发布-订阅"><a href="#5）发布-订阅" class="headerlink" title="5）发布/订阅"></a>5）发布/订阅</h3><p>pub/sub 是 Redis 内置的一个非常强大的特性，例如可以创建一个实时的聊天系统、社交网络中的通知触发器等等。</p>
+<pre><code>//在一个频道中发布一条消息
+PUBLISH channel message
+
+//从一个频道中收到一条消息
+SUBSCRIBE channel</code></pre><h2 id="【基础】4-Redis官方为什么不提供Windows版本？"><a href="#【基础】4-Redis官方为什么不提供Windows版本？" class="headerlink" title="【基础】4.Redis官方为什么不提供Windows版本？"></a>【基础】4.Redis官方为什么不提供Windows版本？</h2><p>因为目前Linux版本已经相当稳定，而且用户量很大，无需开发windows版本，反而会带来兼容性等问题。</p>
+<h2 id="【基础】5-Redis如何设置密码及验证密码？"><a href="#【基础】5-Redis如何设置密码及验证密码？" class="headerlink" title="【基础】5.Redis如何设置密码及验证密码？"></a>【基础】5.Redis如何设置密码及验证密码？</h2><p>在配置文件中设置 requirepass， 重启后不失效<br>config set requirepass xxx 重启后失效</p>
+<h2 id="【基础】6-怎么测试Redis的连通性？"><a href="#【基础】6-怎么测试Redis的连通性？" class="headerlink" title="【基础】6.怎么测试Redis的连通性？"></a>【基础】6.怎么测试Redis的连通性？</h2><p>ping telnet</p>
+<h2 id="【基础】7-Redis如何做大量数据插入？"><a href="#【基础】7-Redis如何做大量数据插入？" class="headerlink" title="【基础】7.Redis如何做大量数据插入？"></a>【基础】7.Redis如何做大量数据插入？</h2><p>这里是官方文档的解释：<br><a href="http://www.redis.cn/topics/mass-insert.html" title="大量数据插入" target="_blank" rel="noopener">http://www.redis.cn/topics/mass-insert.html</a><br>简洁一点就是：使用Redis提供的管道模式 ,可以一次性执行大量数据<br>cat data.txt | redis-cli –pipe</p>
+<h2 id="【基础】8-查看Redis使用情况及状态信息用什么命令？"><a href="#【基础】8-查看Redis使用情况及状态信息用什么命令？" class="headerlink" title="【基础】8.查看Redis使用情况及状态信息用什么命令？"></a>【基础】8.查看Redis使用情况及状态信息用什么命令？</h2><p>info  </p>
+<h2 id="【基础】9-Redis中的管道有什么用？"><a href="#【基础】9-Redis中的管道有什么用？" class="headerlink" title="【基础】9.Redis中的管道有什么用？"></a>【基础】9.Redis中的管道有什么用？</h2><p>一次请求/响应服务器能实现处理新的请求即使旧的请求还未被响应。这样就可以将多个命令发送到服务器，而不用等待回复，最后在一个步骤中读取该答复。   </p>
+<p>这就是管道（pipelining），是一种几十年来广泛使用的技术。例如许多POP3协议已经实现支持这个功能，大大加快了从服务器下载新邮件的过程。</p>
+<p>Redis中的管道</p>
+<h2 id="【基础】10-Redis-key的过期时间和永久有效分别怎么设置？"><a href="#【基础】10-Redis-key的过期时间和永久有效分别怎么设置？" class="headerlink" title="【基础】10.Redis key的过期时间和永久有效分别怎么设置？"></a>【基础】10.Redis key的过期时间和永久有效分别怎么设置？</h2><p>EXPIRE和PERSIST命令。</p>
+<h2 id="【基础】11-修改配置不重启Redis会实时生效吗？"><a href="#【基础】11-修改配置不重启Redis会实时生效吗？" class="headerlink" title="【基础】11.修改配置不重启Redis会实时生效吗？"></a>【基础】11.修改配置不重启Redis会实时生效吗？</h2><p>针对运行实例，有许多配置选项可以通过 CONFIG SET 命令进行修改，而无需执行任何形式的重启。 从 Redis 2.2 开始，可以从 AOF 切换到 RDB 的快照持久性或其他方式而不需要重启 Redis。检索 ‘CONFIG GET *’ 命令获取更多信息。</p>
+<h2 id="【基础】12-Redis与其他key-value存储有什么不同？"><a href="#【基础】12-Redis与其他key-value存储有什么不同？" class="headerlink" title="【基础】12.Redis与其他key-value存储有什么不同？"></a>【基础】12.Redis与其他key-value存储有什么不同？</h2><p>提供了更多的数据类型<br>提供了原子性操作<br>可以持久化到磁盘  </p>
+<h1 id="二、数据"><a href="#二、数据" class="headerlink" title="二、数据"></a>二、数据</h1><h2 id="【数据】1-Redis支持哪几种数据类型？"><a href="#【数据】1-Redis支持哪几种数据类型？" class="headerlink" title="【数据】1.Redis支持哪几种数据类型？"></a>【数据】1.Redis支持哪几种数据类型？</h2><p>string ，list ， set ，sorted set，hash</p>
+<h2 id="【数据】2-一个字符串类型的值能存储最大容量是多少？"><a href="#【数据】2-一个字符串类型的值能存储最大容量是多少？" class="headerlink" title="【数据】2.一个字符串类型的值能存储最大容量是多少？"></a>【数据】2.一个字符串类型的值能存储最大容量是多少？</h2><p>512M</p>
+<h2 id="【数据】3-Redis持久化数据和缓存怎么做扩容？"><a href="#【数据】3-Redis持久化数据和缓存怎么做扩容？" class="headerlink" title="【数据】3.Redis持久化数据和缓存怎么做扩容？"></a>【数据】3.Redis持久化数据和缓存怎么做扩容？</h2><h3 id="Redis持久化数据有两种方法："><a href="#Redis持久化数据有两种方法：" class="headerlink" title="Redis持久化数据有两种方法："></a>Redis持久化数据有两种方法：</h3><h4 id="Snapshoting"><a href="#Snapshoting" class="headerlink" title="Snapshoting"></a>Snapshoting</h4><p>快照：默认的持久化方式，以配置 redis在 n 秒内如果超过 m 个 key 被修改就自动做快照。 保存为.rdb的文件。缺点是redis服务down掉了。最后一次快照就会丢失。</p>
+<h3 id="AOF："><a href="#AOF：" class="headerlink" title="AOF："></a>AOF：</h3><p>就是每调用一次，就保存一次。类似于写日志。然后下次重启，再从这个.aof文件中，恢复redis的数据。缺点是，会造成aof文件越来越大。而且还有很多垃圾数据。<br>例如我们调用 incr test命令 100 次，文件中必须保存全部的 100 条命令，其实有 99 条都是多余的。因为要恢复数据库的状态其实文件中保存一条 set test 100 就够了<br>为了压缩 aof 的持久化文件。 redis 提供了 bgrewriteaof 命令。收到此命令 redis 将使用与快照类似的方式将内存中的数据以命令的方式保存到临时文件中，最后替换原来的文件。<br><a href="https://blog.csdn.net/tr1912/article/details/70197085?foxhandler=RssReadRenderProcessHandler" target="_blank" rel="noopener">https://blog.csdn.net/tr1912/article/details/70197085?foxhandler=RssReadRenderProcessHandler</a></p>
+<p>做扩容，就是用集群就好啦！</p>
+<h2 id="【数据】4-一个Redis实例最多能存放多少的keys？List、Set、Sorted-Set他们最多能存放多少元素？"><a href="#【数据】4-一个Redis实例最多能存放多少的keys？List、Set、Sorted-Set他们最多能存放多少元素？" class="headerlink" title="【数据】4.一个Redis实例最多能存放多少的keys？List、Set、Sorted Set他们最多能存放多少元素？"></a>【数据】4.一个Redis实例最多能存放多少的keys？List、Set、Sorted Set他们最多能存放多少元素？</h2><p>理论上Redis可以处理多达2^32的keys，并且在实际中进行了测试，每个实例至少存放了2亿5千万的keys。我们正在测试一些较大的值。</p>
+<p>任何list、set、和sorted set都可以放2^32个元素。  </p>
+<p>换句话说，Redis的存储极限是系统中的可用内存值。  </p>
+<h1 id="三、内存"><a href="#三、内存" class="headerlink" title="三、内存"></a>三、内存</h1><h2 id="【内存】1-Redis主要消耗什么物理资源？"><a href="#【内存】1-Redis主要消耗什么物理资源？" class="headerlink" title="【内存】1.Redis主要消耗什么物理资源？"></a>【内存】1.Redis主要消耗什么物理资源？</h2><p>内存</p>
+<h2 id="【内存】2-为什么Redis需要把所有数据放到内存中？"><a href="#【内存】2-为什么Redis需要把所有数据放到内存中？" class="headerlink" title="【内存】2.为什么Redis需要把所有数据放到内存中？"></a>【内存】2.为什么Redis需要把所有数据放到内存中？</h2><p>Redis为了达到最快的读写速度将数据都读到内存中，并通过异步的方式将数据写入磁盘。</p>
+<p>所以redis具有快速和数据持久化的特征。如果不将数据放在内存中，磁盘I/O速度为严重影响redis的性能。</p>
+<p>在内存越来越便宜的今天，redis将会越来越受欢迎。 如果设置了最大使用的内存，则数据已有记录数达到内存限值后不能继续插入新值。</p>
+<h2 id="【内存】3-Redis如何做内存优化？"><a href="#【内存】3-Redis如何做内存优化？" class="headerlink" title="【内存】3.Redis如何做内存优化？"></a>【内存】3.Redis如何做内存优化？</h2><p>尽可能使用散列表（hashes），散列表（是说散列表里面存储的数少）使用的内存非常小，所以你应该尽可能的将你的数据模型抽象到一个散列表里面。</p>
+<p>比如你的web系统中有一个用户对象，不要为这个用户的名称，姓氏，邮箱，密码设置单独的key,而是应该把这个用户的所有信息存储到一张散列表里面。</p>
+<h2 id="【内存】4-Redis的内存占用情况怎么样？"><a href="#【内存】4-Redis的内存占用情况怎么样？" class="headerlink" title="【内存】4.Redis的内存占用情况怎么样？"></a>【内存】4.Redis的内存占用情况怎么样？</h2><p>给你举个例子： 100万个键值对（键是0到999999值是字符串“hello world”）在我的32位的Mac笔记本上 用了100MB。同样的数据放到一个key里只需要16MB， 这是因为键值有一个很大的开销。 在Memcached上执行也是类似的结果，但是相对Redis的开销要小一点点，因为Redis会记录类型信息引用计数等等。</p>
+<p>当然，大键值对时两者的比例要好很多。</p>
+<p>64位的系统比32位的需要更多的内存开销，尤其是键值对都较小时，这是因为64位的系统里指针占用了8个字节。 但是，当然，64位系统支持更大的内存，所以为了运行大型的Redis服务器或多或少的需要使用64位的系统。</p>
+<h2 id="【内存】5-都有哪些办法可以降低Redis的内存使用情况呢？"><a href="#【内存】5-都有哪些办法可以降低Redis的内存使用情况呢？" class="headerlink" title="【内存】5.都有哪些办法可以降低Redis的内存使用情况呢？"></a>【内存】5.都有哪些办法可以降低Redis的内存使用情况呢？</h2><p>如果你使用的是32位的Redis实例，可以好好利用Hash,list,sorted set,set等集合类型数据，因为通常情况下很多小的Key-Value可以用更紧凑的方式存放到一起。</p>
+<p>尽量使用集合。而避免使用单个的key-value。 比如一个学生，包含姓名，性别，年龄等。</p>
+<p>我们尽量搞一个hash散列表保存他。而不是创建三个k-y保存他。</p>
+<p>能节省多少？</p>
+<p>100万个键值对，在32位机器上，占用100M内存。如果这一百万个数据，保存在一个key-value中，占用16M。</p>
+<h2 id="【内存】6-Redis的内存用完了会发生什么？"><a href="#【内存】6-Redis的内存用完了会发生什么？" class="headerlink" title="【内存】6.Redis的内存用完了会发生什么？"></a>【内存】6.Redis的内存用完了会发生什么？</h2><p>触发数据淘汰。</p>
+<h1 id="四、数据淘汰"><a href="#四、数据淘汰" class="headerlink" title="四、数据淘汰"></a>四、数据淘汰</h1><h2 id="【数据淘汰】1-Redis有哪几种数据淘汰策略？"><a href="#【数据淘汰】1-Redis有哪几种数据淘汰策略？" class="headerlink" title="【数据淘汰】1.Redis有哪几种数据淘汰策略？"></a>【数据淘汰】1.Redis有哪几种数据淘汰策略？</h2><p>volatile-lru:从设置了过期时间的 数据集 中，选择最近最久未使用的数据释放；<br>allkeys-lru:从 数据集 中(包括设置过期时间以及未设置过期时间的数据集中)，选择最近最久未使用的数据释放；<br>volatile-random:从设置了过期时间的 数据集 中，随机选择一个数据进行释放；<br>allkeys-random:从 数据集 中(包括了设置过期时间以及未设置过期时间)随机选择一个数据进行入释放；<br>volatile-ttl：从设置了过期时间的 数据集 中，选择马上就要过期的数据进行释放操作；<br>[默认]noeviction：不删除任意数据(但redis还会根据引用计数器进行释放),这时如果内存不够时，会直接返回错误。  </p>
+<h2 id="【数据淘汰】2-Redis回收使用的是什么算法？Redis中的LRU算法是什么？"><a href="#【数据淘汰】2-Redis回收使用的是什么算法？Redis中的LRU算法是什么？" class="headerlink" title="【数据淘汰】2.Redis回收使用的是什么算法？Redis中的LRU算法是什么？"></a>【数据淘汰】2.Redis回收使用的是什么算法？Redis中的LRU算法是什么？</h2><p>LRU算法是一个近似算法（LRU是Least Recently Used 的缩写，即最近最少使用，常用于页面置换算法），主要是用于，当redis中的数据，超过内存限制时，所执行的删除key-value的一种策略。这个策略是随机选取n个键值对，（n取决于redis配置文件中所设置的maxmemory-samples的值），然后从n个键值对中，选取最近的最久未使用的键值对，进行淘汰。n越大，越精确，但是耗时也越多。</p>
+<h2 id="具体是怎么实现的？"><a href="#具体是怎么实现的？" class="headerlink" title="具体是怎么实现的？"></a>具体是怎么实现的？</h2><p>是在redisObject的结构体中（Redis是C语言写的），在这个结构体中，存放了一个值：server.lruclock，每次使用key-value的时候，都会更新这个值。如果很久没使用，那么这个值，就比较老了。<br><a href="https://www.cnblogs.com/WJ5888/p/4371647.html" target="_blank" rel="noopener">https://www.cnblogs.com/WJ5888/p/4371647.html</a></p>
+<h2 id="【数据淘汰】3-MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据？"><a href="#【数据淘汰】3-MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据？" class="headerlink" title="【数据淘汰】3.MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据？"></a>【数据淘汰】3.MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据？</h2><p>redis内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略。</p>
+<h2 id="【数据淘汰】4-Redis回收进程如何工作的？"><a href="#【数据淘汰】4-Redis回收进程如何工作的？" class="headerlink" title="【数据淘汰】4.Redis回收进程如何工作的？"></a>【数据淘汰】4.Redis回收进程如何工作的？</h2><p>一个客户端运行了新的命令，添加了新的数据。<br>Redi检查内存使用情况，如果大于maxmemory的限制, 则根据设定好的策略进行回收。   </p>
+<h1 id="五、Redis客户端"><a href="#五、Redis客户端" class="headerlink" title="五、Redis客户端"></a>五、Redis客户端</h1><h2 id="【Redis客户端】1-Redis支持的Java客户端都有哪些？官方推荐用哪个？"><a href="#【Redis客户端】1-Redis支持的Java客户端都有哪些？官方推荐用哪个？" class="headerlink" title="【Redis客户端】1.Redis支持的Java客户端都有哪些？官方推荐用哪个？"></a>【Redis客户端】1.Redis支持的Java客户端都有哪些？官方推荐用哪个？</h2><p>Redisson、Jedis、lettuce等等，官方推荐使用Redisson。   </p>
+<p>我们公司用的是spring提供的RedisTemplate. Jedis是Redis官方推荐的面向Java的操作Redis的客户端，而RedisTemplate是SpringDataRedis中对JedisApi的高度封装。<br>SpringDataRedis相对于Jedis来说可以方便地更换Redis的Java客户端，比Jedis多了自动管理连接池的特性，方便与其他Spring框架进行搭配使用如：SpringCache  </p>
+<h2 id="【Redis客户端】2-Redis和Redisson有什么关系？"><a href="#【Redis客户端】2-Redis和Redisson有什么关系？" class="headerlink" title="【Redis客户端】2.Redis和Redisson有什么关系？"></a>【Redis客户端】2.Redis和Redisson有什么关系？</h2><p>Redisson是一个高级的分布式协调Redis客户端，能帮助用户在分布式环境中轻松实现一些Java的对象 (Bloom filter, BitSet, Set, SetMultimap, ScoredSortedSet, SortedSet, Map, ConcurrentMap, List, ListMultimap, Queue, BlockingQueue, Deque, BlockingDeque, Semaphore, Lock, ReadWriteLock, AtomicLong, CountDownLatch, Publish / Subscribe, HyperLogLog)。</p>
+<h2 id="【Redis客户端】3-Jedis与Redisson对比有什么优缺点？"><a href="#【Redis客户端】3-Jedis与Redisson对比有什么优缺点？" class="headerlink" title="【Redis客户端】3.Jedis与Redisson对比有什么优缺点？"></a>【Redis客户端】3.Jedis与Redisson对比有什么优缺点？</h2><p>Jedis是Redis的Java实现的客户端，其API提供了比较全面的Redis命令的支持；</p>
+<p>Redisson实现了分布式和可扩展的Java数据结构，和Jedis相比，功能较为简单，不支持字符串操作，不支持排序、事务、管道、分区等Redis特性。Redisson的宗旨是促进使用者对Redis的关注分离，从而让使用者能够将精力更集中地放在处理业务逻辑上。</p>
+<h2 id="【Redis客户端】4-支持一致性哈希的客户端有哪些？"><a href="#【Redis客户端】4-支持一致性哈希的客户端有哪些？" class="headerlink" title="【Redis客户端】4.支持一致性哈希的客户端有哪些？"></a>【Redis客户端】4.支持一致性哈希的客户端有哪些？</h2><p>Redis-rb、Predis等。</p>
+<h1 id="六、事务"><a href="#六、事务" class="headerlink" title="六、事务"></a>六、事务</h1><h2 id="【事务】1-怎么理解Redis事务？"><a href="#【事务】1-怎么理解Redis事务？" class="headerlink" title="【事务】1.怎么理解Redis事务？"></a>【事务】1.怎么理解Redis事务？</h2><p>事务是一个单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。</p>
+<p>事务是一个原子操作：事务中的命令要么全部被执行，要么全部都不执行。</p>
+<h2 id="【事务】2-Redis事务相关的命令有哪几个？"><a href="#【事务】2-Redis事务相关的命令有哪几个？" class="headerlink" title="【事务】2.Redis事务相关的命令有哪几个？"></a>【事务】2.Redis事务相关的命令有哪几个？</h2><p>MULTI、EXEC、DISCARD、WATCH。</p>
+<p>MULTI: [创建事务] 用于标记一个事务块的开始。<br>EXEC: [执行事务] 在一个事务中执行所有先前放入队列的命令，然后恢复正常的连接状态。<br>DISCARD: [取消事务] 清除所有先前在一个事务中放入队列的命令，然后恢复正常的连接状态。<br>WATCH: watch命令可以监控一个或多个键，一旦其中有一个键被修改（或删除），之后的事务就不会执行。<br>UNWATCH: 清除所有先前为一个事务监控的键。</p>
+<h1 id="七、集群"><a href="#七、集群" class="headerlink" title="七、集群"></a>七、集群</h1><h2 id="【集群】1-Redis集群方案应该怎么做？都有哪些方案？"><a href="#【集群】1-Redis集群方案应该怎么做？都有哪些方案？" class="headerlink" title="【集群】1.Redis集群方案应该怎么做？都有哪些方案？"></a>【集群】1.Redis集群方案应该怎么做？都有哪些方案？</h2><p>redis的集群方案大致分为四种：</p>
+<h3 id="使用twitter开源的Twemproxy代理"><a href="#使用twitter开源的Twemproxy代理" class="headerlink" title="使用twitter开源的Twemproxy代理"></a>使用twitter开源的Twemproxy代理</h3><p>Twemproxy作为代理，可接受来自多个程序的访问，按照路由规则，转发给后台的各个Redis服务器，再原路返回。缺点就是：无法平滑地扩容/缩容。对运维考验力度比较大。</p>
+<h3 id="使用豌豆荚开源的Codis"><a href="#使用豌豆荚开源的Codis" class="headerlink" title="使用豌豆荚开源的Codis"></a>使用豌豆荚开源的Codis</h3><p>Codis 是一个分布式 Redis 解决方案, 对于上层的应用来说, 连接到 Codis Proxy 和连接原生的 Redis Server 没有明显的区别 (有一些命令不支持), 上层应用可以像使用单机的 Redis 一样使用, Codis 底层会处理请求的转发, 不停机的数据迁移等工作, 所有后边的一切事情, 对于前面的客户端来说是透明的, 可以简单的认为后边连接的是一个内存无限大的 Redis 服务。支持在 节点数量改变情况下，旧节点数据可恢复到新hash节点。</p>
+<h3 id="redis-3-0-自带的集群功能"><a href="#redis-3-0-自带的集群功能" class="headerlink" title="redis 3.0 自带的集群功能"></a>redis 3.0 自带的集群功能</h3><p>和 Codis差不多。特点在于他的分布式算法不是一致性hash，而是hash槽的概念，以及自身支持节点设置从节点。</p>
+<h3 id="客户端处理"><a href="#客户端处理" class="headerlink" title="客户端处理"></a>客户端处理</h3><p>起几个毫无关联的redis实例，在代码层，对key 进行hash计算，然后去对应的redis实例操作数据。对代码层要求很高，需要处理很多异常情况：节点失效后的替代算法方案，数据震荡后的自动脚本恢复，实例的监控，等等。</p>
+<h2 id="【集群】2-redis集群的哈希槽概念是什么？"><a href="#【集群】2-redis集群的哈希槽概念是什么？" class="headerlink" title="【集群】2.redis集群的哈希槽概念是什么？"></a>【集群】2.redis集群的哈希槽概念是什么？</h2><p>Redis 集群中内置了 16384 个哈希槽，当需要在 Redis 集群中放置一个 key-value时，redis 先对 key 使用 crc16 算法算出一个结果，然后把结果对 16384 求余数，这样每个 key 都会对应一个编号在 0-16383 之间的哈希槽，redis 会根据节点数量大致均等的将哈希槽映射到不同的节点。<br><img src="/.com//%E5%93%88%E5%B8%8C%E6%A7%BD.jpg" alt="哈希槽"></p>
+<h2 id="【集群】3-普通哈希，一致性哈希和哈希槽分别是什么？"><a href="#【集群】3-普通哈希，一致性哈希和哈希槽分别是什么？" class="headerlink" title="【集群】3.普通哈希，一致性哈希和哈希槽分别是什么？"></a>【集群】3.普通哈希，一致性哈希和哈希槽分别是什么？</h2><p>参考我的另一篇博客：普通hash和一致性hash和哈希槽的概念和区别</p>
+<h2 id="【集群】4-Redis集群方案什么情况下会导致整个集群不可用？"><a href="#【集群】4-Redis集群方案什么情况下会导致整个集群不可用？" class="headerlink" title="【集群】4.Redis集群方案什么情况下会导致整个集群不可用？"></a>【集群】4.Redis集群方案什么情况下会导致整个集群不可用？</h2><p>某一个节点失效时，会导致确实部分hash槽，导致集群不可用。</p>
+<h2 id="【集群】5-Redis集群的主从复制模型是怎样的？"><a href="#【集群】5-Redis集群的主从复制模型是怎样的？" class="headerlink" title="【集群】5.Redis集群的主从复制模型是怎样的？"></a>【集群】5.Redis集群的主从复制模型是怎样的？</h2><p>为了使在部分节点失败或者大部分节点无法通信的情况下集群仍然可用，所以集群使用了主从复制模型,每个节点都会有N-1个复制品。</p>
+<p>工作原理：从slave服务启动连接master节点，从slave节点发送一个sync命令到master，master节点收到命令后启动后台存盘进程，收集所有的操作命令，收集完之后将整个数据库文件发送给slave节点。来完成一次同步。slave节点收到数据库文件之后存盘加载到内存。此后，master节点继续收集命令依次发送给slave节点，slave节点再依次执行这些命令，从而达到数据同步。</p>
+<h3 id="Redis集群-主从复制模式"><a href="#Redis集群-主从复制模式" class="headerlink" title="Redis集群 -主从复制模式"></a>Redis集群 -主从复制模式</h3><p>配置主节点的配置文件不需要任何改动<br>配置从节点只需要在配置文件中slaveof<br>如果设置了密码，就要设置：masterauth 即可  </p>
+<h2 id="【集群】6-Redis集群会有写操作丢失吗？为什么？"><a href="#【集群】6-Redis集群会有写操作丢失吗？为什么？" class="headerlink" title="【集群】6. Redis集群会有写操作丢失吗？为什么？"></a>【集群】6. Redis集群会有写操作丢失吗？为什么？</h2><p>Redis并不能保证数据的强一致性（使用同步复制），这意味这在实际中集群在特定的条件下可能会丢失写操作。</p>
+<p>Redis集群可能丢失写的第一个原因是因为它用异步复制。<br>写可能是这样发生的：1.客户端写到master B。2.master B回复客户端OK。3.master B将这个写操作广播给它的slaves B1、B2、B3。正如你看到的那样，B没有等到B1、B2、B3确认就回复客户端了，也就是说，B在回复客户端之前没有等待B1、B2、B3的确认，这对应Redis来说是一个潜在的风险。</p>
+<p>也可以设置使用同步复制。 但是会大大降低性能。</p>
+<h2 id="【集群】7-Redis集群之间是如何复制的？"><a href="#【集群】7-Redis集群之间是如何复制的？" class="headerlink" title="【集群】7.Redis集群之间是如何复制的？"></a>【集群】7.Redis集群之间是如何复制的？</h2><p>异步复制的。如果绝对需要的话，Redis集群也是支持同步写的，这是通过WAIT命令实现的。</p>
+<h2 id="【集群】8-Redis集群最大节点个数是多少？"><a href="#【集群】8-Redis集群最大节点个数是多少？" class="headerlink" title="【集群】8.Redis集群最大节点个数是多少？"></a>【集群】8.Redis集群最大节点个数是多少？</h2><p>2的14次方。 16348 个， 因为Hash槽最多只有16348个。</p>
+<h2 id="【集群】9-Redis集群如何选择数据库？"><a href="#【集群】9-Redis集群如何选择数据库？" class="headerlink" title="【集群】9.Redis集群如何选择数据库？"></a>【集群】9.Redis集群如何选择数据库？</h2><p>Redis集群目前无法做数据库选择，默认在0数据库。</p>
+<h2 id="【集群】10-为什么要做Redis分区？"><a href="#【集群】10-为什么要做Redis分区？" class="headerlink" title="【集群】10.为什么要做Redis分区？"></a>【集群】10.为什么要做Redis分区？</h2><p>单台计算机的内存，带宽，CPU是有限的，分区的实现，就允许我们：</p>
+<p>通过利用多台计算机内存的和值，允许我们构造更大的数据库。<br>通过多核和多台计算机，允许我们扩展计算能力；通过多台计算机和网络适配器，允许我们扩展网络带宽。  </p>
+<h2 id="【集群】11-你知道有哪些Redis分区实现方案？"><a href="#【集群】11-你知道有哪些Redis分区实现方案？" class="headerlink" title="【集群】11.你知道有哪些Redis分区实现方案？"></a>【集群】11.你知道有哪些Redis分区实现方案？</h2><p>范围分区：比如，ID从0到10000的用户会保存到实例R0，ID从10001到 20000的用户会保存到R1，以此类推。<br>哈希分区：加入有四个实例，比如，对ID进行hash，然后对4取模，得到0-3的数字，分别保存到对应的实例上。  </p>
+<h2 id="【集群】12-Redis分区有什么缺点？"><a href="#【集群】12-Redis分区有什么缺点？" class="headerlink" title="【集群】12.Redis分区有什么缺点？"></a>【集群】12.Redis分区有什么缺点？</h2><p>涉及多个key的操作通常是不被支持的。举例来说，当两个set映射到不同的redis实例上时，你就不能对这两个set执行交集操作。<br>涉及多个key的redis事务不能使用。<br>当使用分区时，数据处理较为复杂，比如你需要处理多个rdb/aof文件，并且从多个实例和主机备份持久化文件。<br>增加或删除容量也比较复杂。redis集群大多数支持在运行时增加、删除节点的透明数据平衡的能力，但是类似于客户端分区、代理等其他系统则不支持这项特性。然而，一种叫做presharding的技术对此是有帮助的。  </p>
+<h2 id="【集群】13-Redis分区和集群是一样的吗？有什么区别？"><a href="#【集群】13-Redis分区和集群是一样的吗？有什么区别？" class="headerlink" title="【集群】13.Redis分区和集群是一样的吗？有什么区别？"></a>【集群】13.Redis分区和集群是一样的吗？有什么区别？</h2><p>Redis分区，就是集群。 一个东西。</p>
+<p>但是Redis分区，仅仅只是指使用Redis Cluster内置的集群。</p>
+<p>Redis内置集群 == Redis分区。</p>
+<h2 id="【集群】14-分布式Redis是前期做还是后期规模上来了再做好？为什么？"><a href="#【集群】14-分布式Redis是前期做还是后期规模上来了再做好？为什么？" class="headerlink" title="【集群】14.分布式Redis是前期做还是后期规模上来了再做好？为什么？"></a>【集群】14.分布式Redis是前期做还是后期规模上来了再做好？为什么？</h2><p>既然Redis是如此的轻量（单实例只使用1M内存）,为防止以后的扩容，最好的办法就是一开始就启动较多实例。即便你只有一台服务器，你也可以一开始就让Redis以分布式的方式运行，使用分区，在同一台服务器上启动多个实例。</p>
+<p>一开始就多设置几个Redis实例，例如32或者64个实例，对大多数用户来说这操作起来可能比较麻烦，但是从长久来看做这点牺牲是值得的。</p>
+<p>这样的话，当你的数据不断增长，需要更多的Redis服务器时，你需要做的就是仅仅将Redis实例从一台服务迁移到另外一台服务器而已（而不用考虑重新分区的问题）。一旦你添加了另一台服务器，你需要将你一半的Redis实例从第一台机器迁移到第二台机器。</p>
+<h2 id="【集群】15-Twemproxy是什么？"><a href="#【集群】15-Twemproxy是什么？" class="headerlink" title="【集群】15.Twemproxy是什么？"></a>【集群】15.Twemproxy是什么？</h2><p>也是一个集群工具，twitter开源的。</p>
+<p>Twemproxy是Twitter维护的（缓存）代理系统，代理Memcached的ASCII协议和Redis协议。它是单线程程序，使用c语言编写，运行起来非常快。它是采用Apache 2.0 license的开源软件。 Twemproxy支持自动分区，如果其代理的其中一个Redis节点不可用时，会自动将该节点排除（这将改变原来的keys-instances的映射关系，所以你应该仅在把Redis当缓存时使用Twemproxy)。 Twemproxy本身不存在单点问题，因为你可以启动多个Twemproxy实例，然后让你的客户端去连接任意一个Twemproxy实例。 Twemproxy是Redis客户端和服务器端的一个中间层，由它来处理分区功能应该不算复杂，并且应该算比较可靠的。</p>
+<h2 id="【集群】16-Redis是单线程的，如何提高多核CPU的利用率？"><a href="#【集群】16-Redis是单线程的，如何提高多核CPU的利用率？" class="headerlink" title="【集群】16.Redis是单线程的，如何提高多核CPU的利用率？"></a>【集群】16.Redis是单线程的，如何提高多核CPU的利用率？</h2><p>可以在同一个服务器部署多个Redis的实例，并把他们当作不同的服务器来使用，在某些时候，无论如何一个服务器是不够的， 所以，如果你想使用多个CPU，你可以考虑一下分片（shard）。</p>
+
         
       
     </div>
@@ -349,13 +1629,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">Posted on</span>
 
               
                 
               
 
-              <time title="Erstellt: 2019-11-01 18:33:04" itemprop="dateCreated datePublished" datetime="2019-11-01T18:33:04+08:00">2019-11-01</time>
+              <time title="Created: 2019-11-01 18:33:04" itemprop="dateCreated datePublished" datetime="2019-11-01T18:33:04+08:00">2019-11-01</time>
             </span>
           
             
@@ -365,8 +1645,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2019-11-03 15:42:47" itemprop="dateModified" datetime="2019-11-03T15:42:47+08:00">2019-11-03</time>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-11-03 15:42:47" itemprop="dateModified" datetime="2019-11-03T15:42:47+08:00">2019-11-03</time>
               </span>
             
           
@@ -374,7 +1654,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/Redis/" itemprop="url" rel="index">
@@ -474,119 +1754,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/25/Redis学习-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lynn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ALWAYS">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            
-            <a href="/2019/10/25/Redis学习-2/" class="post-title-link" itemprop="url">Unbenannt</a>
-          
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
-
-              
-                
-              
-
-              <time title="Erstellt: 2019-10-25 10:28:00" itemprop="dateCreated datePublished" datetime="2019-10-25T10:28:00+08:00">2019-10-25</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2019-11-01 18:30:53" itemprop="dateModified" datetime="2019-11-01T18:30:53+08:00">2019-11-01</time>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<p>title: Redis学习-2<br>date: 2019-10-25 10:28:00<br>tags: study<br>categories: Redis  </p>
-<hr>
-<p><a href="https://www.cnblogs.com/Zzbj/p/10280363.html" title="哨兵+集群" target="_blank" rel="noopener">https://www.cnblogs.com/Zzbj/p/10280363.html</a></p>
-<h1 id="六、哨兵"><a href="#六、哨兵" class="headerlink" title="六、哨兵"></a>六、哨兵</h1><h2 id="1-Redis的高可用实现方案"><a href="#1-Redis的高可用实现方案" class="headerlink" title="1. Redis的高可用实现方案"></a>1. Redis的高可用实现方案</h2><p>Redis主从复制模式： 将主节点的数据改变同步给从节点<br>作为主节点的一个备份，一旦主节点出现故障，从节点晋升为主节点，保证数据尽量不丢失；<br>从节点可以扩展主节点的读能力。   </p>
-<h3 id="1）主从复制存在问题："><a href="#1）主从复制存在问题：" class="headerlink" title="1）主从复制存在问题："></a>1）主从复制存在问题：</h3><p>1.<span style="color:red;"> 一旦主节点出现故障，需要手动将一个从节点晋升为主节点，同时需要修改应用方的主节点地址，还需要命令其他从节点去复制新的主节点，整个过程都需要人工干预。——高可用问题—通过哨兵来解决。</span><br>2. 主节点的写能力受到单机的限制。——分布式问题<br>3. 主节点的存储能力受到单机的限制。——-分布式问题   </p>
-<p><img src="/.com//redis%E5%93%A8%E5%85%B5.PNG" alt="sentinel"></p>
-<h3 id="2）Redis-Sentinel："><a href="#2）Redis-Sentinel：" class="headerlink" title="2）Redis Sentinel："></a>2）Redis Sentinel：</h3><p>分布式架构—Redis数据节点、Sentinel节点、客户端分布在多个物理节点的架构。<br>包含多个Sentinel节点和Redis数据节点，每个Sentinel节点会对数据节点和其余Sebtinel几点进行监控，当发现节点不可达时，会对节点做下线标识。<br>如果标识的是主节点，还会和其他Sentinel节点进行协商，当大多数Sentinel节点都认为主节点不可达时，会选举出一个Sentinel节点来完成故障转移的工作，同时会将这个变化实时通知给Redis应用方，整个过程自动。  </p>
-<h3 id="3）处理过程："><a href="#3）处理过程：" class="headerlink" title="3）处理过程："></a>3）处理过程：</h3><ul>
-<li>主节点出现故障，从节点与主节点失去连接，主从复制失败；  </li>
-<li>每个Sentinel节点通过定期监控发现主节点出现了故障；  </li>
-<li>多个Sentinel节点最主节点的故障达成一致，选举Sentinel-3节点作为领导者负责故障转移；   </li>
-<li>Sentinel-3节点领导者执行了故障转移。（实现从节点晋升为主节点并维护后续正确的主从关系。  </li>
-</ul>
-<h3 id="4）配置："><a href="#4）配置：" class="headerlink" title="4）配置："></a>4）配置：</h3><p>sentinel monitor mymaster 127.0.0.1 6379 2<br>此sentinel节点需要监控6379这个主节点，2代表判断主节点失败至少需要2个sentinel节点同意。<br>sentinel会找到主节点并发现从节点；<br>sentinel节点能够彼此感知对方，同时能够感知到Redis数据节点。    </p>
-<p>每个sentinel节点需要通过定期发送ping命令来判断Redis数据节点和其余sentinel节点是否可达，如果超过down-after-milliseconds 配置的时间则不可达。<br>parallel-syncs用来限制在一次故障转移之后，每次向新的主节点发起复制操作的从节点的个数。<br>failover-timeout故障转移超时时间，作用于故障转移的各个阶段。</p>
-<h3 id="5）部署技巧："><a href="#5）部署技巧：" class="headerlink" title="5）部署技巧："></a>5）部署技巧：</h3><p>sentinel节点不应该部署在一台物理机器上；<br>部署至少三个且奇数个sentinel节点；<br>sentinel节点集合可以只监控一个主节点，也可以监控多个主节点（维护成本低，但sentinel集合出现异常。可能会对多个数据节点造成影响）。  </p>
-<p>API：Sentinel节点数一个特殊的Redis节点，有自己专属的API。可以显示监控信息等。   </p>
-<h2 id="2-客户端连接"><a href="#2-客户端连接" class="headerlink" title="2. 客户端连接"></a>2. 客户端连接</h2><p>客户端初始化时连接的是sentinel节点集合，不再是具体的Redis节点，但Sentinel只是配置中心不是代理。  </p>
-<h2 id="3-实现原理"><a href="#3-实现原理" class="headerlink" title="3. 实现原理"></a>3. 实现原理</h2><h3 id="1）三个定时监控任务"><a href="#1）三个定时监控任务" class="headerlink" title="1）三个定时监控任务"></a>1）三个定时监控任务</h3><ul>
-<li>每隔10秒，每个sentinel节点会向主节点和从节点发送info命令获取最新的拓扑结构；  </li>
-<li>每隔2秒，sentinel节点回想Redis数据节点的<strong>sentinel</strong>:hello频道发送该sentinel节点对主节点的判断以及当前sentinel节点的信息，同时每个sentinel节点会订阅该频道，了解其他sentinel节点；  </li>
-<li>每隔1秒，每个sentinel节点会向主节点、从节点、其他sentinel节点发送ping命令做心跳检测，确认这些节点是否可达。  </li>
-</ul>
-<h3 id="2）主观下线与客观下线"><a href="#2）主观下线与客观下线" class="headerlink" title="2）主观下线与客观下线"></a>2）主观下线与客观下线</h3><ul>
-<li>主观下线：当前Sentinel节点对节点判定失败，一家之言；  </li>
-<li>客观下线：主观下线的节点是主节点时，该sentinel节点会通过命令向其他sentinel节点询问对主节点的判断，当大部分节点对主节点的下线做了同意的判定，为客观下线。  <h3 id="3）领导者Sentinel节点选举"><a href="#3）领导者Sentinel节点选举" class="headerlink" title="3）领导者Sentinel节点选举"></a>3）领导者Sentinel节点选举</h3><h4 id="Rsft算法："><a href="#Rsft算法：" class="headerlink" title="Rsft算法："></a>Rsft算法：</h4>每个在线的Sentinel节点都有资格称为领导者，当它确认主节点主观下线时，会向其他节点发送命令，要求自己成为领导者；<br>收到命令的Sentinel节点，如果没有同意过其它节点的请求，将同意该请求，否则拒绝。<br>如果该Sentinel节点发现自己的票数已经大于max，将称为领导者。<br>如果此过程没有选举出领导者，将进入下一次选举。   </li>
-</ul>
-<h2 id="4-开发与运维中的问题"><a href="#4-开发与运维中的问题" class="headerlink" title="4. 开发与运维中的问题"></a>4. 开发与运维中的问题</h2><p>七、集群  </p>
-<p>Redis分布式解决方案，解决单机内存、并发、流量等问题。  </p>
-<p>数据分布<br>数据分布理论<br>解决把整个数据集按照分区规则映射到多个节点的问题，把数据集划分到多个节点上，每个节点负责整体数据的一个子集。<br>数据分区规则：哈希分区和顺序分区。<br>Redis Cluster采用哈希分区规则。<br>节点取余分区<br>使用特定的数据，如redis的键或用户ID，再根据节点数量N使用公式：hash(key)%N计算出hash值，用来决定数据映射到哪一个节点上。扩容时通常采用翻倍扩容。<br>一致性哈希分区<br>为系统每个节点分配一个token，范围一般在0-2的32次方，构成一个哈希环。数据读写执行节点查找操作时，先根据key计算hash值，然后顺时针找到第一个大于等于该hash值的token节点。<br>存在问题：加减节点会造成哈希环中部分数据无法命中；使用少量节点时，节点变化将大范围影响哈希环中数据映射；普通的一致性哈希分区在增减节点时需要增加一倍或减去一半节点才能保证数据和负载均衡。<br><span style="color:red;"> 虚拟槽分区</span><br>使用分散度良好的hash函数把所有数据映射到一个固定范围的整数集合中，整数定义为槽。槽是集群内数据管理和迁移的基本单位。每个节点负责一定数量的槽。  </p>
-<p>Redis数据分区<br>虚拟槽分区，每一个节点负责维护一部分槽以及槽所映射的键值数据。<br><img src="/.com//%E8%99%9A%E6%8B%9F%E6%A7%BD%E5%88%86%E9%85%8D.PNG" alt="虚拟槽分配"><br>特点：<br>解耦数据和节点的关系，简化了节点扩容和收缩难度。<br>节点自身维护槽的映射关系，不需要客户端或者代理服务维护槽分区元数据。<br>支持节点、槽、键之间的映射查询。  </p>
-<p>搭建集群<br>准备节点<br>集群节点数量至少为6个。<br>节点配置，集群配置。<br>节点握手<br>一批运行在集群模式下的节点通过Gossip协议彼此进行通信。感知对方。<br>cluster meet 127.0.0.1 6378<br>握手状态会通过消息在集群内传播；<br>节点建立握手之后还不能正常工作，这时集群处于下线状态，所有数据读写都被禁止；<br>由于目前所有的槽没有分配节点，因此集群无法完成槽到节点的映射。<br>分配槽<br>Redis集群把所有数据映射到n个槽中，每个key会映射为一个固定的槽，只有当节点分配了槽，才能相应和这些槽关联的键命令。<br>cluster nodes查看节点和槽的分配关系；<br>每个处理槽的节点应该具有从节点，保证当它出现故障时可以自动进行故障转移；<br>首次启动的节点和被分配的槽的节点都是主节点，cluster replicate{nodeID} 命令让一个节点成为从节点（在从节点执行命令）。  </p>
-<p>使用redis-trib.rb搭建集群<br>节点通信  </p>
-<p>Gossip协议信息交换<br>meet:用于通知新节点加入；<br>ping：检测节点是否在线并交换彼此状态信息；<br>pong：作为响应消息回复确认消息正常通信；<br>fail：判断集群节点下线广播fail消息。  </p>
-
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-    
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/24/Redis学习-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -611,13 +1778,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">Posted on</span>
 
               
                 
               
 
-              <time title="Erstellt: 2019-10-24 21:37:38" itemprop="dateCreated datePublished" datetime="2019-10-24T21:37:38+08:00">2019-10-24</time>
+              <time title="Created: 2019-10-24 21:37:38" itemprop="dateCreated datePublished" datetime="2019-10-24T21:37:38+08:00">2019-10-24</time>
             </span>
           
             
@@ -627,8 +1794,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2019-11-01 18:18:47" itemprop="dateModified" datetime="2019-11-01T18:18:47+08:00">2019-11-01</time>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-11-01 18:18:47" itemprop="dateModified" datetime="2019-11-01T18:18:47+08:00">2019-11-01</time>
               </span>
             
           
@@ -636,7 +1803,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/Redis/" itemprop="url" rel="index">
@@ -935,13 +2102,13 @@ RDB文件使用特定二进制格式保存，Redis版本演进过程中有多个
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">Posted on</span>
 
               
                 
               
 
-              <time title="Erstellt: 2019-10-18 11:29:49" itemprop="dateCreated datePublished" datetime="2019-10-18T11:29:49+08:00">2019-10-18</time>
+              <time title="Created: 2019-10-18 11:29:49" itemprop="dateCreated datePublished" datetime="2019-10-18T11:29:49+08:00">2019-10-18</time>
             </span>
           
             
@@ -951,8 +2118,8 @@ RDB文件使用特定二进制格式保存，Redis版本演进过程中有多个
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2019-10-31 11:08:44" itemprop="dateModified" datetime="2019-10-31T11:08:44+08:00">2019-10-31</time>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-10-31 11:08:44" itemprop="dateModified" datetime="2019-10-31T11:08:44+08:00">2019-10-31</time>
               </span>
             
           
@@ -960,7 +2127,7 @@ RDB文件使用特定二进制格式保存，Redis版本演进过程中有多个
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              <span class="post-meta-item-text">in</span>
+              <span class="post-meta-item-text">In</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/Redis/" itemprop="url" rel="index">
@@ -1126,345 +2293,12 @@ systemctl disable redis.service #开机禁用redis服务器</code></pre><h2 id="
   
 
     
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/17/linux常用命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lynn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ALWAYS">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            
-            <a href="/2019/10/17/linux常用命令/" class="post-title-link" itemprop="url">linux常用命令</a>
-          
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
-
-              
-                
-              
-
-              <time title="Erstellt: 2019-10-17 16:12:50" itemprop="dateCreated datePublished" datetime="2019-10-17T16:12:50+08:00">2019-10-17</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2019-10-31 10:29:52" itemprop="dateModified" datetime="2019-10-31T10:29:52+08:00">2019-10-31</time>
-              </span>
-            
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">in</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Linux常用命令"><a href="#Linux常用命令" class="headerlink" title="Linux常用命令"></a>Linux常用命令</h2><p>du -h //查看目录空间<br>df -h(-m -k)  //查看所有文件系统使用空间</p>
-<p>free -m   //查看内存使用<br>top      //显示进程信息</p>
-<p>rm -rf  file  //删除文件夹  </p>
-<p>useradd  testuser<br>passwd testuser</p>
-
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-    
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/17/scrapy-es-config/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lynn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ALWAYS">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            
-            <a href="/2019/10/17/scrapy-es-config/" class="post-title-link" itemprop="url">scrapy-es_config</a>
-          
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
-
-              
-                
-              
-
-              <time title="Erstellt: 2019-10-17 10:09:22 / Geändert am: 10:11:43" itemprop="dateCreated datePublished" datetime="2019-10-17T10:09:22+08:00">2019-10-17</time>
-            </span>
-          
-            
-
-            
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">in</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ES/" itemprop="url" rel="index">
-                    <span itemprop="name">ES</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Scrapy配置"><a href="#Scrapy配置" class="headerlink" title="Scrapy配置"></a>Scrapy配置</h2>
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-    
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/16/es-踩坑记录/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lynn">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ALWAYS">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            
-            <a href="/2019/10/16/es-踩坑记录/" class="post-title-link" itemprop="url">es 踩坑记录</a>
-          
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
-
-              
-                
-              
-
-              <time title="Erstellt: 2019-10-16 15:58:47" itemprop="dateCreated datePublished" datetime="2019-10-16T15:58:47+08:00">2019-10-16</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Bearbeitet am</span>
-                <time title="Geändert am: 2019-10-17 10:11:05" itemprop="dateModified" datetime="2019-10-17T10:11:05+08:00">2019-10-17</time>
-              </span>
-            
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">in</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ES/" itemprop="url" rel="index">
-                    <span itemprop="name">ES</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="解决es数据表某一字段重复出现的一系列问题（es7-1-1"><a href="#解决es数据表某一字段重复出现的一系列问题（es7-1-1" class="headerlink" title="解决es数据表某一字段重复出现的一系列问题（es7.1.1)"></a>解决es数据表某一字段重复出现的一系列问题（es7.1.1)</h2><h3 id="index-ip-domain-date-flag-domain去重）"><a href="#index-ip-domain-date-flag-domain去重）" class="headerlink" title="index: ip domain date flag (domain去重）"></a>index: ip domain date flag (domain去重）</h3><h3 id="方法：通过es聚合，使用字段聚合-top-hits聚合方式"><a href="#方法：通过es聚合，使用字段聚合-top-hits聚合方式" class="headerlink" title="方法：通过es聚合，使用字段聚合+top_hits聚合方式"></a>方法：通过es聚合，使用字段聚合+top_hits聚合方式</h3><h4 id="es中聚合API调用格式："><a href="#es中聚合API调用格式：" class="headerlink" title="es中聚合API调用格式："></a>es中聚合API调用格式：</h4><pre><code>&quot;aggregations&quot; : {                  // 表示聚合操作，可以使用aggs替代
-    &quot;&lt;aggregation_name&gt;&quot; : {        // 聚合名，可以是任意的字符串。用做响应的key，便于快速取得正确的响应数据。
-        &quot;&lt;aggregation_type&gt;&quot; : {    // 聚合类别，就是各种类型的聚合，如min等
-            &lt;aggregation_body&gt;      // 聚合体，不同的聚合有不同的body
-        }
-        [,&quot;aggregations&quot; : { [&lt;sub_aggregation&gt;]+ } ]? // 嵌套的子聚合，可以有0或多个
-    }
-    [,&quot;&lt;aggregation_name_2&gt;&quot; : { ... } ]* // 另外的聚合，可以有0或多个
-}</code></pre><h3 id="配置："><a href="#配置：" class="headerlink" title="配置："></a>配置：</h3><h4 id="scroll"><a href="#scroll" class="headerlink" title="scroll"></a>scroll</h4><p>虽然搜索请求返回一个结果“页面”，但是滚动API可以用于从一个搜索请求检索大量结果(甚至所有结果)，这与在传统数据库上使用游标的方法非常相似。</p>
-<p>滚动不是为实时用户请求而设计的，而是为处理大量数据而设计的，例如，为了将一个索引的内容重新编入具有不同配置的新索引中。</p>
-<p>注意:滚动请求返回的结果反映了发出初始搜索请求时索引的状态，就像时间快照一样。文档的后续更改(索引、更新或删除)只会影响以后的搜索请求。</p>
-<p>为了使用滚动，初始搜索请求应该在查询字符串中指定滚动参数，该参数告诉Elasticsearch应该保持“搜索上下文”活动多长时间(参见保持搜索上下文活动)，例如?scroll=1m。</p>
-<p>修改最大滚动数： （默认500）</p>
-<pre><code>curl -X PUT http://192.168.1.182:9200/_cluster/settings -H &apos;Content-Type: application/json&apos; -d&apos;{
-    &quot;persistent&quot; : {
-        &quot;search.max_open_scroll_context&quot;: 10000
-    },
-    &quot;transient&quot;: {
-        &quot;search.max_open_scroll_context&quot;: 10000
-    }
-}
-&apos;</code></pre><h4 id="bucketing（桶）聚合：划分不同的“桶”，将数据分配到不同的“桶”里。"><a href="#bucketing（桶）聚合：划分不同的“桶”，将数据分配到不同的“桶”里。" class="headerlink" title="bucketing（桶）聚合：划分不同的“桶”，将数据分配到不同的“桶”里。"></a>bucketing（桶）聚合：划分不同的“桶”，将数据分配到不同的“桶”里。</h4><p>修改桶：(默认值10000）</p>
-<pre><code>curl -X PUT http://192.168.1.182:9200/_cluster/settings -H &apos;Content-Type: application/json&apos; -d&apos;{
-    &quot;persistent&quot; : {
-        &quot;search.max_buckets&quot;: 10000000
-    },
-    &quot;transient&quot;: {
-        &quot;search.max_buckets&quot;: 10000000
-    }
-}
-&apos;</code></pre><h4 id="设置最大返回条数："><a href="#设置最大返回条数：" class="headerlink" title="设置最大返回条数："></a>设置最大返回条数：</h4><pre><code>PUT /ips-domains/_settings
-{
-  &quot;index&quot;:{
-    &quot;max_result_window&quot;:2147483647,
-    &quot;max_inner_result_window&quot;:5200000,
-  }
-}</code></pre><h2 id="聚合："><a href="#聚合：" class="headerlink" title="聚合："></a>聚合：</h2><pre><code>dsl2= {
-    &quot;query&quot;: {
-        &quot;match_all&quot;: {}
-    },
-    &quot;aggs&quot;: {
-        &quot;distinct_domains&quot;: {
-            &quot;terms&quot;: {
-                &quot;field&quot;: &quot;domain&quot;,
-                &quot;size&quot;: 5210000,
-                &quot;order&quot;: {
-                  &quot;_count&quot;: &quot;desc&quot;
-                },
-                &quot;min_doc_count&quot;: 2 //最小重复数
-              }
-    }
-    },
-    &quot;size&quot;: 0
-}</code></pre><p><a href="https://www.cnblogs.com/primadonna/p/11358440.html#%E8%AE%BE%E7%BD%AEcluster_cluster" target="_blank" rel="noopener">聚合教程</a></p>
-<p><a href="https://blog.csdn.net/ZYC88888/article/details/83023143" target="_blank" rel="noopener">es字段折叠详解</a></p>
-
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-    
   </div>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
 
 
 
@@ -1485,10 +2319,10 @@ systemctl disable redis.service #开机禁用redis服务器</code></pre><h2 id="
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          Table of Contents
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          Overview
         </li>
       </ul>
 
@@ -1508,8 +2342,8 @@ systemctl disable redis.service #开机禁用redis服务器</code></pre><h2 id="
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
-          <span class="site-state-item-name">Artikel</span>
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
         </a>
       </div>
     
@@ -1521,8 +2355,8 @@ systemctl disable redis.service #开机禁用redis服务器</code></pre><h2 id="
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">3</span>
-        <span class="site-state-item-name">Kategorien</span>
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span>
         </a>
       </div>
     
@@ -1534,8 +2368,8 @@ systemctl disable redis.service #开机禁用redis服务器</code></pre><h2 id="
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">3</span>
-        <span class="site-state-item-name">schlagwörter</span>
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span>
         </a>
       </div>
     
@@ -1566,10 +2400,10 @@ systemctl disable redis.service #开机禁用redis服务器</code></pre><h2 id="
   </span>
   <span class="author" itemprop="copyrightHolder">Lynn</span>
 </div>
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0
   </div>
   <span class="post-meta-divider">|</span>
-  <div class="theme-info">Design – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.1
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.1
   </div>
 
         

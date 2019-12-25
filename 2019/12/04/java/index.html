@@ -55,15 +55,18 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://yoursite.com/categories/index.html">
+  <meta name="description" content="javaintInteger.MAX_VALUE=2的31次方-1Integer.MAX_VALUE + 1 = Integer.MIN_VALUE = -2147483648java的取余运算区别于python     C++（G++ 编译）： cout &amp;lt;&amp;lt; (-7) % 3; // 输出 -1     Java（1.6）： System.out.println((-7) % 3)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ALWAYS">
+<meta property="og:url" content="http://yoursite.com/2019/12/04/java/index.html">
 <meta property="og:site_name" content="ALWAYS">
+<meta property="og:description" content="javaintInteger.MAX_VALUE=2的31次方-1Integer.MAX_VALUE + 1 = Integer.MIN_VALUE = -2147483648java的取余运算区别于python     C++（G++ 编译）： cout &amp;lt;&amp;lt; (-7) % 3; // 输出 -1     Java（1.6）： System.out.println((-7) % 3)">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-10-16T08:41:56.442Z">
+<meta property="og:updated_time" content="2019-12-04T07:05:52.117Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="categories">
-  <link rel="canonical" href="http://yoursite.com/categories/">
+<meta name="twitter:title" content="ALWAYS">
+<meta name="twitter:description" content="javaintInteger.MAX_VALUE=2的31次方-1Integer.MAX_VALUE + 1 = Integer.MIN_VALUE = -2147483648java的取余运算区别于python     C++（G++ 编译）： cout &amp;lt;&amp;lt; (-7) % 3; // 输出 -1     Java（1.6）： System.out.println((-7) % 3)">
+  <link rel="canonical" href="http://yoursite.com/2019/12/04/java/">
 
 
 <script id="page-configurations">
@@ -71,16 +74,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
-    isPage: true,
+    isPost: true,
+    isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>
-      categories | ALWAYS
-    
-  </title>
+  <title> | ALWAYS</title>
   
 
 
@@ -255,69 +255,145 @@
         <div class="content-wrap">
             
 
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-  
-
           <div class="content">
             
 
   <div class="posts-expand">
-    
-    
-    
-    <div class="post-block" lang="zh-Hans">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/04/java/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lynn">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ALWAYS">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            
+            
 
-<h1 class="post-title" itemprop="name headline">categories
-  
+          
+        </h1>
 
-</h1>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
 
-<div class="post-meta">
-  
+              
+                
+              
 
-</div>
+              <time title="Created: 2019-12-04 14:48:41 / Modified: 15:05:52" itemprop="dateCreated datePublished" datetime="2019-12-04T14:48:41+08:00">2019-12-04</time>
+            </span>
+          
+            
 
-</header>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+        <p>java<br>int<br>Integer.MAX_VALUE=2的31次方-1<br>Integer.MAX_VALUE + 1 = Integer.MIN_VALUE = -2147483648<br>java的取余运算区别于python    </p>
+<pre><code>C++（G++ 编译）： cout &lt;&lt; (-7) % 3; // 输出 -1    
+Java（1.6）： System.out.println((-7) % 3); // 输出 -1    
+Python 2.6：&gt;&gt;&gt;  (-7) % 3 // 输出 2
+
+
+
+
+public int reverse(int x) {
+        boolean neg = false;
+        if(x&lt;0){
+            neg = true;
+            x = -x;
+        }
+        long ans = 0;
+        int maxPow = (int)Math.log10(x);
+        while(x&gt;0){
+            ans+= (x%10 * Math.pow(10,maxPow--));
+            x=x/10;
+        }
+        if(ans &gt; Integer.MAX_VALUE){
+            return 0;
+        }
+        if(neg){
+            return (int)(-ans);
+        }else{
+           return (int) ans;
+        }
+    }</code></pre><p>1</p>
+<pre><code>class Solution {
+    public int reverse(int x) {
+        int rev = 0;
+        while (x != 0) {
+            int pop = x % 10;
+            x /= 10;
+            if (rev &gt; Integer.MAX_VALUE/10 || (rev == Integer.MAX_VALUE / 10 &amp;&amp; pop &gt; 7)) return 0;
+            if (rev &lt; Integer.MIN_VALUE/10 || (rev == Integer.MIN_VALUE / 10 &amp;&amp; pop &lt; -8)) return 0;
+            rev = rev * 10 + pop;
+        }
+        return rev;
+    }
+}</code></pre>
+    </div>
+
+    
+    
+    
+        
       
-      
-      <div class="post-body">
-          <div class="category-all-page">
-            <div class="category-all-title">
-              5 categories in total
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/20/mysql学习/" rel="next" title="mysql学习">
+                  <i class="fa fa-chevron-left"></i> mysql学习
+                </a>
+              
             </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithms/">Algorithms</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ES/">ES</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mysql/">Mysql</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Redis/">Redis</a><span class="category-list-count">4</span></li></ul>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/12/13/leetcode题解/" rel="prev" title="leetcode题解">
+                  leetcode题解 <i class="fa fa-chevron-right"></i>
+                </a>
+              
             </div>
           </div>
         
-      </div>
-      
-      
-      
-    </div>
+      </footer>
     
+  </article>
+  
+  
+  
 
-    
-    
-    
   </div>
 
 

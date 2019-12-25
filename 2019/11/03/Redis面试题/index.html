@@ -47,22 +47,28 @@
     path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     translation: {
-      copy_button: 'Kopieren',
-      copy_success: 'Kopiert',
-      copy_failure: 'Kopieren fehlgeschlagen'
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
     },
     sidebarPadding: 40
   };
 </script>
 
-  <meta property="og:type" content="article">
+  <meta name="description" content="https://blog.csdn.net/qq_34337272/article/details/80012284 【基础】1.Redis的全称是什么？Remote Dictionary Server 【基础】2.什么是Redis？简述它的优缺点？简单来说 redis 就是一个数据库，不过与传统数据库不同的是 redis 的数据是存在内存中的，所以读写速度非常快，因此 redis 被广泛应用于缓">
+<meta name="keywords" content="面试">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Redis面试题">
 <meta property="og:url" content="http://yoursite.com/2019/11/03/Redis面试题/index.html">
 <meta property="og:site_name" content="ALWAYS">
+<meta property="og:description" content="https://blog.csdn.net/qq_34337272/article/details/80012284 【基础】1.Redis的全称是什么？Remote Dictionary Server 【基础】2.什么是Redis？简述它的优缺点？简单来说 redis 就是一个数据库，不过与传统数据库不同的是 redis 的数据是存在内存中的，所以读写速度非常快，因此 redis 被广泛应用于缓">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-11-03T07:43:24.235Z">
+<meta property="og:image" content="http://yoursite.com/.com//%E5%93%88%E5%B8%8C%E6%A7%BD.jpg">
+<meta property="og:updated_time" content="2019-11-20T01:18:20.333Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis面试题">
+<meta name="twitter:description" content="https://blog.csdn.net/qq_34337272/article/details/80012284 【基础】1.Redis的全称是什么？Remote Dictionary Server 【基础】2.什么是Redis？简述它的优缺点？简单来说 redis 就是一个数据库，不过与传统数据库不同的是 redis 的数据是存在内存中的，所以读写速度非常快，因此 redis 被广泛应用于缓">
+<meta name="twitter:image" content="http://yoursite.com/.com//%E5%93%88%E5%B8%8C%E6%A7%BD.jpg">
   <link rel="canonical" href="http://yoursite.com/2019/11/03/Redis面试题/">
 
 
@@ -130,7 +136,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -150,7 +156,7 @@
       
     
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Startseite</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
 
   </li>
       
@@ -163,7 +169,7 @@
       
     
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>Über</a>
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
 
   </li>
       
@@ -176,7 +182,7 @@
       
     
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Schlagwörter</a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
 
   </li>
       
@@ -189,7 +195,7 @@
       
     
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Kategorien</a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
 
   </li>
       
@@ -202,14 +208,14 @@
       
     
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archiv</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
       
     
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger">
-          <i class="fa fa-search fa-fw"></i>Suche
+          <i class="fa fa-search fa-fw"></i>Search
         </a>
       </li>
     
@@ -224,7 +230,7 @@
   </span>
   <div class="search-input-container">
     <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Suche..." spellcheck="false"
+           placeholder="Searching..." spellcheck="false"
            type="text" id="search-input">
   </div>
   <span class="popup-btn-close">
@@ -285,13 +291,42 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">Posted on</span>
 
               
                 
               
 
-              <time title="Erstellt: 2019-11-03 15:43:24" itemprop="dateCreated datePublished" datetime="2019-11-03T15:43:24+08:00">2019-11-03</time>
+              <time title="Created: 2019-11-03 15:43:24" itemprop="dateCreated datePublished" datetime="2019-11-03T15:43:24+08:00">2019-11-03</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-11-20 09:18:20" itemprop="dateModified" datetime="2019-11-20T09:18:20+08:00">2019-11-20</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
             </span>
           
 
@@ -306,7 +341,139 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <p><a href="https://blog.csdn.net/qq_34337272/article/details/80012284" title="参考链接" target="_blank" rel="noopener">https://blog.csdn.net/qq_34337272/article/details/80012284</a></p>
+<h2 id="【基础】1-Redis的全称是什么？"><a href="#【基础】1-Redis的全称是什么？" class="headerlink" title="【基础】1.Redis的全称是什么？"></a>【基础】1.Redis的全称是什么？</h2><p>Remote Dictionary Server</p>
+<h2 id="【基础】2-什么是Redis？简述它的优缺点？"><a href="#【基础】2-什么是Redis？简述它的优缺点？" class="headerlink" title="【基础】2.什么是Redis？简述它的优缺点？"></a>【基础】2.什么是Redis？简述它的优缺点？</h2><p>简单来说 redis 就是一个数据库，不过与传统数据库不同的是 redis 的数据是存在内存中的，所以读写速度非常快，因此 redis 被广泛应用于缓存方向。另外，redis 也经常用来做分布式锁。redis 提供了多种数据类型来支持不同的业务场景。除此之外，redis 支持事务 、持久化、LUA脚本、LRU驱动事件、多种集群方案。  </p>
+<ul>
+<li><p>Key-Value 性质的内存数据库</p>
+</li>
+<li><p>所有的数据保存在内存中，且定期同步到磁盘中，实现主从同步<br>  定期保存有手动保存和自动保存：手动：通过save-同步,bgsave-异步, 自动：设置n秒内m个key被改动，就触发保存<br>  保存分为快照保存：保存二进制.rdb到磁盘中。 还有一种是AOF写日志的形式。<br>  主从同步，是指通过 xxx从 savleof xxx主 同步两个机器之间的数据    </p>
+</li>
+<li><p>优点<br>  纯内存操作，性能非常出色<br>  支持保存多种数据结构（string，list，set，sorted set，hash），且均支持原子性的push/pop, add/remove<br>  所谓的原子性就是对数据的更改要么全部执行，要么全部不执行  </p>
+</li>
+<li><p>缺点<br>  数据库容量受到物理内存的限制，无法存放大量数据  </p>
+</li>
+</ul>
+<h2 id="【基础】3-为什么要用-redis-为什么要用缓存"><a href="#【基础】3-为什么要用-redis-为什么要用缓存" class="headerlink" title="【基础】3.为什么要用 redis/为什么要用缓存"></a>【基础】3.为什么要用 redis/为什么要用缓存</h2><p>主要从“高性能”和“高并发”这两点来看待这个问题。</p>
+<h3 id="高性能："><a href="#高性能：" class="headerlink" title="高性能："></a>高性能：</h3><p>假如用户第一次访问数据库中的某些数据。这个过程会比较慢，因为是从硬盘上读取的。将该用户访问的数据存在缓存中，这样下一次再访问这些数据的时候就可以直接从缓存中获取了。操作缓存就是直接操作内存，所以速度相当快。如果数据库中的对应数据改变的之后，同步改变缓存中相应的数据即可！</p>
+<h3 id="高并发："><a href="#高并发：" class="headerlink" title="高并发："></a>高并发：</h3><p>直接操作缓存能够承受的请求是远远大于直接访问数据库的，所以我们可以考虑把数据库中的部分数据转移到缓存中去，这样用户的一部分请求会直接到缓存这里而不用经过数据库。</p>
+<h2 id="4-为什么要用-redis-而不用-map-guava-做缓存"><a href="#4-为什么要用-redis-而不用-map-guava-做缓存" class="headerlink" title="4.为什么要用 redis 而不用 map/guava 做缓存?"></a>4.为什么要用 redis 而不用 map/guava 做缓存?</h2><p>下面的内容来自 segmentfault 一位网友的提问，地址：<a href="https://segmentfault.com/q/1010000009106416" target="_blank" rel="noopener">https://segmentfault.com/q/1010000009106416</a></p>
+<p>缓存分为本地缓存和分布式缓存。以 Java 为例，使用自带的 map 或者 guava 实现的是本地缓存，最主要的特点是轻量以及快速，生命周期随着 jvm 的销毁而结束，并且在多实例的情况下，每个实例都需要各自保存一份缓存，缓存不具有一致性。</p>
+<p>使用 redis 或 memcached 之类的称为分布式缓存，在多实例的情况下，各实例共用一份缓存数据，缓存具有一致性。缺点是需要保持 redis 或 memcached服务的高可用，整个程序架构上较为复杂。  </p>
+<h2 id="【基础】3-Redis有哪些适合的场景？"><a href="#【基础】3-Redis有哪些适合的场景？" class="headerlink" title="【基础】3.Redis有哪些适合的场景？"></a>【基础】3.Redis有哪些适合的场景？</h2><h3 id="1）全页面缓存"><a href="#1）全页面缓存" class="headerlink" title="1）全页面缓存"></a>1）全页面缓存</h3><p>如果你使用的是服务器端内容渲染，你又不想为每个请求重新渲染每个页面，就可以使用 Redis 把常被请求的内容缓存起来，能够大大的降低页面请求的延迟，已经有很多框架用Redis来缓存页面，这就是页面静态化的一种方式。     </p>
+<pre><code>//将整个页面放在缓存中
+set key &quot;&lt;html&gt;...&lt;/html&gt;&quot; Ex 60
+
+//在需要的地方
+get key   </code></pre><h3 id="2）排行"><a href="#2）排行" class="headerlink" title="2）排行"></a>2）排行</h3><p>Redis 基于内存，可以非常快速高效的处理增加和减少的操作，相比于使用 SQL 请求的处理方式，性能的提升是非常巨大的。<br>Redis 的有序集合可以轻松实现“从一个大型列表中取得排名最高的N个元素”，毫秒级，而且非常简单。</p>
+<pre><code>//添加一个值，在一个已经排序的集合中
+ZADD sortedSet 1 &apos;one&apos;
+
+//获取所有的值，从一个已经排序的集合中
+ZRANGE sortedSet 0 -1
+
+//从一个已经排序的集合中，获取所有的值，以及他们的分数
+ZRANGE sortedSet 0 -1 WITHSCORES</code></pre><h3 id="3）Session存储"><a href="#3）Session存储" class="headerlink" title="3）Session存储"></a>3）Session存储</h3><p>这可能是应用最广的点了，相比较于类似 memcache 的 session 存储，Redis 具有缓存数据持久化的能力，当缓存因出现问题而重启后，之前的缓存数据还在那儿，这个就比较实用，避免了因为session突然消失带来的用户体验问题。</p>
+<pre><code>//将session保存一分钟
+SET randomHash &quot;{userId}&quot; EX 60
+
+//获取userid
+GET randomHash  </code></pre><h3 id="4）队列"><a href="#4）队列" class="headerlink" title="4）队列"></a>4）队列</h3><p>例如 email 的发送队列、等待被其他应用消费的数据队列，Redis 可以轻松而自然的创建出一个高效的队列。</p>
+<pre><code>//添加一个消息
+HSET messages &lt;id&gt; &lt;message&gt;
+ZADD due &lt;due_timestamp&gt; &lt;id&gt;
+
+//收到一个消息
+ZRANGEBYSCORE due -inf &lt;current_timestamp&gt; LIMIT 0 1
+HGET messages &lt;message_id&gt;
+
+//删除消息
+ZREM due &lt;message_id&gt;
+HDEL messages &lt;message_id&gt;  </code></pre><h3 id="5）发布-订阅"><a href="#5）发布-订阅" class="headerlink" title="5）发布/订阅"></a>5）发布/订阅</h3><p>pub/sub 是 Redis 内置的一个非常强大的特性，例如可以创建一个实时的聊天系统、社交网络中的通知触发器等等。</p>
+<pre><code>//在一个频道中发布一条消息
+PUBLISH channel message
+
+//从一个频道中收到一条消息
+SUBSCRIBE channel</code></pre><h2 id="【基础】4-Redis官方为什么不提供Windows版本？"><a href="#【基础】4-Redis官方为什么不提供Windows版本？" class="headerlink" title="【基础】4.Redis官方为什么不提供Windows版本？"></a>【基础】4.Redis官方为什么不提供Windows版本？</h2><p>因为目前Linux版本已经相当稳定，而且用户量很大，无需开发windows版本，反而会带来兼容性等问题。</p>
+<h2 id="【基础】5-Redis如何设置密码及验证密码？"><a href="#【基础】5-Redis如何设置密码及验证密码？" class="headerlink" title="【基础】5.Redis如何设置密码及验证密码？"></a>【基础】5.Redis如何设置密码及验证密码？</h2><p>在配置文件中设置 requirepass， 重启后不失效<br>config set requirepass xxx 重启后失效</p>
+<h2 id="【基础】6-怎么测试Redis的连通性？"><a href="#【基础】6-怎么测试Redis的连通性？" class="headerlink" title="【基础】6.怎么测试Redis的连通性？"></a>【基础】6.怎么测试Redis的连通性？</h2><p>ping telnet</p>
+<h2 id="【基础】7-Redis如何做大量数据插入？"><a href="#【基础】7-Redis如何做大量数据插入？" class="headerlink" title="【基础】7.Redis如何做大量数据插入？"></a>【基础】7.Redis如何做大量数据插入？</h2><p>这里是官方文档的解释：<br><a href="http://www.redis.cn/topics/mass-insert.html" title="大量数据插入" target="_blank" rel="noopener">http://www.redis.cn/topics/mass-insert.html</a><br>简洁一点就是：使用Redis提供的管道模式 ,可以一次性执行大量数据<br>cat data.txt | redis-cli –pipe</p>
+<h2 id="【基础】8-查看Redis使用情况及状态信息用什么命令？"><a href="#【基础】8-查看Redis使用情况及状态信息用什么命令？" class="headerlink" title="【基础】8.查看Redis使用情况及状态信息用什么命令？"></a>【基础】8.查看Redis使用情况及状态信息用什么命令？</h2><p>info  </p>
+<h2 id="【基础】9-Redis中的管道有什么用？"><a href="#【基础】9-Redis中的管道有什么用？" class="headerlink" title="【基础】9.Redis中的管道有什么用？"></a>【基础】9.Redis中的管道有什么用？</h2><p>一次请求/响应服务器能实现处理新的请求即使旧的请求还未被响应。这样就可以将多个命令发送到服务器，而不用等待回复，最后在一个步骤中读取该答复。   </p>
+<p>这就是管道（pipelining），是一种几十年来广泛使用的技术。例如许多POP3协议已经实现支持这个功能，大大加快了从服务器下载新邮件的过程。</p>
+<p>Redis中的管道</p>
+<h2 id="【基础】10-Redis-key的过期时间和永久有效分别怎么设置？"><a href="#【基础】10-Redis-key的过期时间和永久有效分别怎么设置？" class="headerlink" title="【基础】10.Redis key的过期时间和永久有效分别怎么设置？"></a>【基础】10.Redis key的过期时间和永久有效分别怎么设置？</h2><p>EXPIRE和PERSIST命令。</p>
+<h2 id="【基础】11-修改配置不重启Redis会实时生效吗？"><a href="#【基础】11-修改配置不重启Redis会实时生效吗？" class="headerlink" title="【基础】11.修改配置不重启Redis会实时生效吗？"></a>【基础】11.修改配置不重启Redis会实时生效吗？</h2><p>针对运行实例，有许多配置选项可以通过 CONFIG SET 命令进行修改，而无需执行任何形式的重启。 从 Redis 2.2 开始，可以从 AOF 切换到 RDB 的快照持久性或其他方式而不需要重启 Redis。检索 ‘CONFIG GET *’ 命令获取更多信息。</p>
+<h2 id="【基础】12-Redis与其他key-value存储有什么不同？"><a href="#【基础】12-Redis与其他key-value存储有什么不同？" class="headerlink" title="【基础】12.Redis与其他key-value存储有什么不同？"></a>【基础】12.Redis与其他key-value存储有什么不同？</h2><p>提供了更多的数据类型<br>提供了原子性操作<br>可以持久化到磁盘  </p>
+<h1 id="二、数据"><a href="#二、数据" class="headerlink" title="二、数据"></a>二、数据</h1><h2 id="【数据】1-Redis支持哪几种数据类型？"><a href="#【数据】1-Redis支持哪几种数据类型？" class="headerlink" title="【数据】1.Redis支持哪几种数据类型？"></a>【数据】1.Redis支持哪几种数据类型？</h2><p>string ，list ， set ，sorted set，hash</p>
+<h2 id="【数据】2-一个字符串类型的值能存储最大容量是多少？"><a href="#【数据】2-一个字符串类型的值能存储最大容量是多少？" class="headerlink" title="【数据】2.一个字符串类型的值能存储最大容量是多少？"></a>【数据】2.一个字符串类型的值能存储最大容量是多少？</h2><p>512M</p>
+<h2 id="【数据】3-Redis持久化数据和缓存怎么做扩容？"><a href="#【数据】3-Redis持久化数据和缓存怎么做扩容？" class="headerlink" title="【数据】3.Redis持久化数据和缓存怎么做扩容？"></a>【数据】3.Redis持久化数据和缓存怎么做扩容？</h2><h3 id="Redis持久化数据有两种方法："><a href="#Redis持久化数据有两种方法：" class="headerlink" title="Redis持久化数据有两种方法："></a>Redis持久化数据有两种方法：</h3><h4 id="Snapshoting"><a href="#Snapshoting" class="headerlink" title="Snapshoting"></a>Snapshoting</h4><p>快照：默认的持久化方式，以配置 redis在 n 秒内如果超过 m 个 key 被修改就自动做快照。 保存为.rdb的文件。缺点是redis服务down掉了。最后一次快照就会丢失。</p>
+<h3 id="AOF："><a href="#AOF：" class="headerlink" title="AOF："></a>AOF：</h3><p>就是每调用一次，就保存一次。类似于写日志。然后下次重启，再从这个.aof文件中，恢复redis的数据。缺点是，会造成aof文件越来越大。而且还有很多垃圾数据。<br>例如我们调用 incr test命令 100 次，文件中必须保存全部的 100 条命令，其实有 99 条都是多余的。因为要恢复数据库的状态其实文件中保存一条 set test 100 就够了<br>为了压缩 aof 的持久化文件。 redis 提供了 bgrewriteaof 命令。收到此命令 redis 将使用与快照类似的方式将内存中的数据以命令的方式保存到临时文件中，最后替换原来的文件。<br><a href="https://blog.csdn.net/tr1912/article/details/70197085?foxhandler=RssReadRenderProcessHandler" target="_blank" rel="noopener">https://blog.csdn.net/tr1912/article/details/70197085?foxhandler=RssReadRenderProcessHandler</a></p>
+<p>做扩容，就是用集群就好啦！</p>
+<h2 id="【数据】4-一个Redis实例最多能存放多少的keys？List、Set、Sorted-Set他们最多能存放多少元素？"><a href="#【数据】4-一个Redis实例最多能存放多少的keys？List、Set、Sorted-Set他们最多能存放多少元素？" class="headerlink" title="【数据】4.一个Redis实例最多能存放多少的keys？List、Set、Sorted Set他们最多能存放多少元素？"></a>【数据】4.一个Redis实例最多能存放多少的keys？List、Set、Sorted Set他们最多能存放多少元素？</h2><p>理论上Redis可以处理多达2^32的keys，并且在实际中进行了测试，每个实例至少存放了2亿5千万的keys。我们正在测试一些较大的值。</p>
+<p>任何list、set、和sorted set都可以放2^32个元素。  </p>
+<p>换句话说，Redis的存储极限是系统中的可用内存值。  </p>
+<h1 id="三、内存"><a href="#三、内存" class="headerlink" title="三、内存"></a>三、内存</h1><h2 id="【内存】1-Redis主要消耗什么物理资源？"><a href="#【内存】1-Redis主要消耗什么物理资源？" class="headerlink" title="【内存】1.Redis主要消耗什么物理资源？"></a>【内存】1.Redis主要消耗什么物理资源？</h2><p>内存</p>
+<h2 id="【内存】2-为什么Redis需要把所有数据放到内存中？"><a href="#【内存】2-为什么Redis需要把所有数据放到内存中？" class="headerlink" title="【内存】2.为什么Redis需要把所有数据放到内存中？"></a>【内存】2.为什么Redis需要把所有数据放到内存中？</h2><p>Redis为了达到最快的读写速度将数据都读到内存中，并通过异步的方式将数据写入磁盘。</p>
+<p>所以redis具有快速和数据持久化的特征。如果不将数据放在内存中，磁盘I/O速度为严重影响redis的性能。</p>
+<p>在内存越来越便宜的今天，redis将会越来越受欢迎。 如果设置了最大使用的内存，则数据已有记录数达到内存限值后不能继续插入新值。</p>
+<h2 id="【内存】3-Redis如何做内存优化？"><a href="#【内存】3-Redis如何做内存优化？" class="headerlink" title="【内存】3.Redis如何做内存优化？"></a>【内存】3.Redis如何做内存优化？</h2><p>尽可能使用散列表（hashes），散列表（是说散列表里面存储的数少）使用的内存非常小，所以你应该尽可能的将你的数据模型抽象到一个散列表里面。</p>
+<p>比如你的web系统中有一个用户对象，不要为这个用户的名称，姓氏，邮箱，密码设置单独的key,而是应该把这个用户的所有信息存储到一张散列表里面。</p>
+<h2 id="【内存】4-Redis的内存占用情况怎么样？"><a href="#【内存】4-Redis的内存占用情况怎么样？" class="headerlink" title="【内存】4.Redis的内存占用情况怎么样？"></a>【内存】4.Redis的内存占用情况怎么样？</h2><p>给你举个例子： 100万个键值对（键是0到999999值是字符串“hello world”）在我的32位的Mac笔记本上 用了100MB。同样的数据放到一个key里只需要16MB， 这是因为键值有一个很大的开销。 在Memcached上执行也是类似的结果，但是相对Redis的开销要小一点点，因为Redis会记录类型信息引用计数等等。</p>
+<p>当然，大键值对时两者的比例要好很多。</p>
+<p>64位的系统比32位的需要更多的内存开销，尤其是键值对都较小时，这是因为64位的系统里指针占用了8个字节。 但是，当然，64位系统支持更大的内存，所以为了运行大型的Redis服务器或多或少的需要使用64位的系统。</p>
+<h2 id="【内存】5-都有哪些办法可以降低Redis的内存使用情况呢？"><a href="#【内存】5-都有哪些办法可以降低Redis的内存使用情况呢？" class="headerlink" title="【内存】5.都有哪些办法可以降低Redis的内存使用情况呢？"></a>【内存】5.都有哪些办法可以降低Redis的内存使用情况呢？</h2><p>如果你使用的是32位的Redis实例，可以好好利用Hash,list,sorted set,set等集合类型数据，因为通常情况下很多小的Key-Value可以用更紧凑的方式存放到一起。</p>
+<p>尽量使用集合。而避免使用单个的key-value。 比如一个学生，包含姓名，性别，年龄等。</p>
+<p>我们尽量搞一个hash散列表保存他。而不是创建三个k-y保存他。</p>
+<p>能节省多少？</p>
+<p>100万个键值对，在32位机器上，占用100M内存。如果这一百万个数据，保存在一个key-value中，占用16M。</p>
+<h2 id="【内存】6-Redis的内存用完了会发生什么？"><a href="#【内存】6-Redis的内存用完了会发生什么？" class="headerlink" title="【内存】6.Redis的内存用完了会发生什么？"></a>【内存】6.Redis的内存用完了会发生什么？</h2><p>触发数据淘汰。</p>
+<h1 id="四、数据淘汰"><a href="#四、数据淘汰" class="headerlink" title="四、数据淘汰"></a>四、数据淘汰</h1><h2 id="【数据淘汰】1-Redis有哪几种数据淘汰策略？"><a href="#【数据淘汰】1-Redis有哪几种数据淘汰策略？" class="headerlink" title="【数据淘汰】1.Redis有哪几种数据淘汰策略？"></a>【数据淘汰】1.Redis有哪几种数据淘汰策略？</h2><p>volatile-lru:从设置了过期时间的 数据集 中，选择最近最久未使用的数据释放；<br>allkeys-lru:从 数据集 中(包括设置过期时间以及未设置过期时间的数据集中)，选择最近最久未使用的数据释放；<br>volatile-random:从设置了过期时间的 数据集 中，随机选择一个数据进行释放；<br>allkeys-random:从 数据集 中(包括了设置过期时间以及未设置过期时间)随机选择一个数据进行入释放；<br>volatile-ttl：从设置了过期时间的 数据集 中，选择马上就要过期的数据进行释放操作；<br>[默认]noeviction：不删除任意数据(但redis还会根据引用计数器进行释放),这时如果内存不够时，会直接返回错误。  </p>
+<h2 id="【数据淘汰】2-Redis回收使用的是什么算法？Redis中的LRU算法是什么？"><a href="#【数据淘汰】2-Redis回收使用的是什么算法？Redis中的LRU算法是什么？" class="headerlink" title="【数据淘汰】2.Redis回收使用的是什么算法？Redis中的LRU算法是什么？"></a>【数据淘汰】2.Redis回收使用的是什么算法？Redis中的LRU算法是什么？</h2><p>LRU算法是一个近似算法（LRU是Least Recently Used 的缩写，即最近最少使用，常用于页面置换算法），主要是用于，当redis中的数据，超过内存限制时，所执行的删除key-value的一种策略。这个策略是随机选取n个键值对，（n取决于redis配置文件中所设置的maxmemory-samples的值），然后从n个键值对中，选取最近的最久未使用的键值对，进行淘汰。n越大，越精确，但是耗时也越多。</p>
+<h2 id="具体是怎么实现的？"><a href="#具体是怎么实现的？" class="headerlink" title="具体是怎么实现的？"></a>具体是怎么实现的？</h2><p>是在redisObject的结构体中（Redis是C语言写的），在这个结构体中，存放了一个值：server.lruclock，每次使用key-value的时候，都会更新这个值。如果很久没使用，那么这个值，就比较老了。<br><a href="https://www.cnblogs.com/WJ5888/p/4371647.html" target="_blank" rel="noopener">https://www.cnblogs.com/WJ5888/p/4371647.html</a></p>
+<h2 id="【数据淘汰】3-MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据？"><a href="#【数据淘汰】3-MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据？" class="headerlink" title="【数据淘汰】3.MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据？"></a>【数据淘汰】3.MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据？</h2><p>redis内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略。</p>
+<h2 id="【数据淘汰】4-Redis回收进程如何工作的？"><a href="#【数据淘汰】4-Redis回收进程如何工作的？" class="headerlink" title="【数据淘汰】4.Redis回收进程如何工作的？"></a>【数据淘汰】4.Redis回收进程如何工作的？</h2><p>一个客户端运行了新的命令，添加了新的数据。<br>Redi检查内存使用情况，如果大于maxmemory的限制, 则根据设定好的策略进行回收。   </p>
+<h1 id="五、Redis客户端"><a href="#五、Redis客户端" class="headerlink" title="五、Redis客户端"></a>五、Redis客户端</h1><h2 id="【Redis客户端】1-Redis支持的Java客户端都有哪些？官方推荐用哪个？"><a href="#【Redis客户端】1-Redis支持的Java客户端都有哪些？官方推荐用哪个？" class="headerlink" title="【Redis客户端】1.Redis支持的Java客户端都有哪些？官方推荐用哪个？"></a>【Redis客户端】1.Redis支持的Java客户端都有哪些？官方推荐用哪个？</h2><p>Redisson、Jedis、lettuce等等，官方推荐使用Redisson。   </p>
+<p>我们公司用的是spring提供的RedisTemplate. Jedis是Redis官方推荐的面向Java的操作Redis的客户端，而RedisTemplate是SpringDataRedis中对JedisApi的高度封装。<br>SpringDataRedis相对于Jedis来说可以方便地更换Redis的Java客户端，比Jedis多了自动管理连接池的特性，方便与其他Spring框架进行搭配使用如：SpringCache  </p>
+<h2 id="【Redis客户端】2-Redis和Redisson有什么关系？"><a href="#【Redis客户端】2-Redis和Redisson有什么关系？" class="headerlink" title="【Redis客户端】2.Redis和Redisson有什么关系？"></a>【Redis客户端】2.Redis和Redisson有什么关系？</h2><p>Redisson是一个高级的分布式协调Redis客户端，能帮助用户在分布式环境中轻松实现一些Java的对象 (Bloom filter, BitSet, Set, SetMultimap, ScoredSortedSet, SortedSet, Map, ConcurrentMap, List, ListMultimap, Queue, BlockingQueue, Deque, BlockingDeque, Semaphore, Lock, ReadWriteLock, AtomicLong, CountDownLatch, Publish / Subscribe, HyperLogLog)。</p>
+<h2 id="【Redis客户端】3-Jedis与Redisson对比有什么优缺点？"><a href="#【Redis客户端】3-Jedis与Redisson对比有什么优缺点？" class="headerlink" title="【Redis客户端】3.Jedis与Redisson对比有什么优缺点？"></a>【Redis客户端】3.Jedis与Redisson对比有什么优缺点？</h2><p>Jedis是Redis的Java实现的客户端，其API提供了比较全面的Redis命令的支持；</p>
+<p>Redisson实现了分布式和可扩展的Java数据结构，和Jedis相比，功能较为简单，不支持字符串操作，不支持排序、事务、管道、分区等Redis特性。Redisson的宗旨是促进使用者对Redis的关注分离，从而让使用者能够将精力更集中地放在处理业务逻辑上。</p>
+<h2 id="【Redis客户端】4-支持一致性哈希的客户端有哪些？"><a href="#【Redis客户端】4-支持一致性哈希的客户端有哪些？" class="headerlink" title="【Redis客户端】4.支持一致性哈希的客户端有哪些？"></a>【Redis客户端】4.支持一致性哈希的客户端有哪些？</h2><p>Redis-rb、Predis等。</p>
+<h1 id="六、事务"><a href="#六、事务" class="headerlink" title="六、事务"></a>六、事务</h1><h2 id="【事务】1-怎么理解Redis事务？"><a href="#【事务】1-怎么理解Redis事务？" class="headerlink" title="【事务】1.怎么理解Redis事务？"></a>【事务】1.怎么理解Redis事务？</h2><p>事务是一个单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。</p>
+<p>事务是一个原子操作：事务中的命令要么全部被执行，要么全部都不执行。</p>
+<h2 id="【事务】2-Redis事务相关的命令有哪几个？"><a href="#【事务】2-Redis事务相关的命令有哪几个？" class="headerlink" title="【事务】2.Redis事务相关的命令有哪几个？"></a>【事务】2.Redis事务相关的命令有哪几个？</h2><p>MULTI、EXEC、DISCARD、WATCH。</p>
+<p>MULTI: [创建事务] 用于标记一个事务块的开始。<br>EXEC: [执行事务] 在一个事务中执行所有先前放入队列的命令，然后恢复正常的连接状态。<br>DISCARD: [取消事务] 清除所有先前在一个事务中放入队列的命令，然后恢复正常的连接状态。<br>WATCH: watch命令可以监控一个或多个键，一旦其中有一个键被修改（或删除），之后的事务就不会执行。<br>UNWATCH: 清除所有先前为一个事务监控的键。</p>
+<h1 id="七、集群"><a href="#七、集群" class="headerlink" title="七、集群"></a>七、集群</h1><h2 id="【集群】1-Redis集群方案应该怎么做？都有哪些方案？"><a href="#【集群】1-Redis集群方案应该怎么做？都有哪些方案？" class="headerlink" title="【集群】1.Redis集群方案应该怎么做？都有哪些方案？"></a>【集群】1.Redis集群方案应该怎么做？都有哪些方案？</h2><p>redis的集群方案大致分为四种：</p>
+<h3 id="使用twitter开源的Twemproxy代理"><a href="#使用twitter开源的Twemproxy代理" class="headerlink" title="使用twitter开源的Twemproxy代理"></a>使用twitter开源的Twemproxy代理</h3><p>Twemproxy作为代理，可接受来自多个程序的访问，按照路由规则，转发给后台的各个Redis服务器，再原路返回。缺点就是：无法平滑地扩容/缩容。对运维考验力度比较大。</p>
+<h3 id="使用豌豆荚开源的Codis"><a href="#使用豌豆荚开源的Codis" class="headerlink" title="使用豌豆荚开源的Codis"></a>使用豌豆荚开源的Codis</h3><p>Codis 是一个分布式 Redis 解决方案, 对于上层的应用来说, 连接到 Codis Proxy 和连接原生的 Redis Server 没有明显的区别 (有一些命令不支持), 上层应用可以像使用单机的 Redis 一样使用, Codis 底层会处理请求的转发, 不停机的数据迁移等工作, 所有后边的一切事情, 对于前面的客户端来说是透明的, 可以简单的认为后边连接的是一个内存无限大的 Redis 服务。支持在 节点数量改变情况下，旧节点数据可恢复到新hash节点。</p>
+<h3 id="redis-3-0-自带的集群功能"><a href="#redis-3-0-自带的集群功能" class="headerlink" title="redis 3.0 自带的集群功能"></a>redis 3.0 自带的集群功能</h3><p>和 Codis差不多。特点在于他的分布式算法不是一致性hash，而是hash槽的概念，以及自身支持节点设置从节点。</p>
+<h3 id="客户端处理"><a href="#客户端处理" class="headerlink" title="客户端处理"></a>客户端处理</h3><p>起几个毫无关联的redis实例，在代码层，对key 进行hash计算，然后去对应的redis实例操作数据。对代码层要求很高，需要处理很多异常情况：节点失效后的替代算法方案，数据震荡后的自动脚本恢复，实例的监控，等等。</p>
+<h2 id="【集群】2-redis集群的哈希槽概念是什么？"><a href="#【集群】2-redis集群的哈希槽概念是什么？" class="headerlink" title="【集群】2.redis集群的哈希槽概念是什么？"></a>【集群】2.redis集群的哈希槽概念是什么？</h2><p>Redis 集群中内置了 16384 个哈希槽，当需要在 Redis 集群中放置一个 key-value时，redis 先对 key 使用 crc16 算法算出一个结果，然后把结果对 16384 求余数，这样每个 key 都会对应一个编号在 0-16383 之间的哈希槽，redis 会根据节点数量大致均等的将哈希槽映射到不同的节点。<br><img src="/.com//%E5%93%88%E5%B8%8C%E6%A7%BD.jpg" alt="哈希槽"></p>
+<h2 id="【集群】3-普通哈希，一致性哈希和哈希槽分别是什么？"><a href="#【集群】3-普通哈希，一致性哈希和哈希槽分别是什么？" class="headerlink" title="【集群】3.普通哈希，一致性哈希和哈希槽分别是什么？"></a>【集群】3.普通哈希，一致性哈希和哈希槽分别是什么？</h2><p>参考我的另一篇博客：普通hash和一致性hash和哈希槽的概念和区别</p>
+<h2 id="【集群】4-Redis集群方案什么情况下会导致整个集群不可用？"><a href="#【集群】4-Redis集群方案什么情况下会导致整个集群不可用？" class="headerlink" title="【集群】4.Redis集群方案什么情况下会导致整个集群不可用？"></a>【集群】4.Redis集群方案什么情况下会导致整个集群不可用？</h2><p>某一个节点失效时，会导致确实部分hash槽，导致集群不可用。</p>
+<h2 id="【集群】5-Redis集群的主从复制模型是怎样的？"><a href="#【集群】5-Redis集群的主从复制模型是怎样的？" class="headerlink" title="【集群】5.Redis集群的主从复制模型是怎样的？"></a>【集群】5.Redis集群的主从复制模型是怎样的？</h2><p>为了使在部分节点失败或者大部分节点无法通信的情况下集群仍然可用，所以集群使用了主从复制模型,每个节点都会有N-1个复制品。</p>
+<p>工作原理：从slave服务启动连接master节点，从slave节点发送一个sync命令到master，master节点收到命令后启动后台存盘进程，收集所有的操作命令，收集完之后将整个数据库文件发送给slave节点。来完成一次同步。slave节点收到数据库文件之后存盘加载到内存。此后，master节点继续收集命令依次发送给slave节点，slave节点再依次执行这些命令，从而达到数据同步。</p>
+<h3 id="Redis集群-主从复制模式"><a href="#Redis集群-主从复制模式" class="headerlink" title="Redis集群 -主从复制模式"></a>Redis集群 -主从复制模式</h3><p>配置主节点的配置文件不需要任何改动<br>配置从节点只需要在配置文件中slaveof<br>如果设置了密码，就要设置：masterauth 即可  </p>
+<h2 id="【集群】6-Redis集群会有写操作丢失吗？为什么？"><a href="#【集群】6-Redis集群会有写操作丢失吗？为什么？" class="headerlink" title="【集群】6. Redis集群会有写操作丢失吗？为什么？"></a>【集群】6. Redis集群会有写操作丢失吗？为什么？</h2><p>Redis并不能保证数据的强一致性（使用同步复制），这意味这在实际中集群在特定的条件下可能会丢失写操作。</p>
+<p>Redis集群可能丢失写的第一个原因是因为它用异步复制。<br>写可能是这样发生的：1.客户端写到master B。2.master B回复客户端OK。3.master B将这个写操作广播给它的slaves B1、B2、B3。正如你看到的那样，B没有等到B1、B2、B3确认就回复客户端了，也就是说，B在回复客户端之前没有等待B1、B2、B3的确认，这对应Redis来说是一个潜在的风险。</p>
+<p>也可以设置使用同步复制。 但是会大大降低性能。</p>
+<h2 id="【集群】7-Redis集群之间是如何复制的？"><a href="#【集群】7-Redis集群之间是如何复制的？" class="headerlink" title="【集群】7.Redis集群之间是如何复制的？"></a>【集群】7.Redis集群之间是如何复制的？</h2><p>异步复制的。如果绝对需要的话，Redis集群也是支持同步写的，这是通过WAIT命令实现的。</p>
+<h2 id="【集群】8-Redis集群最大节点个数是多少？"><a href="#【集群】8-Redis集群最大节点个数是多少？" class="headerlink" title="【集群】8.Redis集群最大节点个数是多少？"></a>【集群】8.Redis集群最大节点个数是多少？</h2><p>2的14次方。 16348 个， 因为Hash槽最多只有16348个。</p>
+<h2 id="【集群】9-Redis集群如何选择数据库？"><a href="#【集群】9-Redis集群如何选择数据库？" class="headerlink" title="【集群】9.Redis集群如何选择数据库？"></a>【集群】9.Redis集群如何选择数据库？</h2><p>Redis集群目前无法做数据库选择，默认在0数据库。</p>
+<h2 id="【集群】10-为什么要做Redis分区？"><a href="#【集群】10-为什么要做Redis分区？" class="headerlink" title="【集群】10.为什么要做Redis分区？"></a>【集群】10.为什么要做Redis分区？</h2><p>单台计算机的内存，带宽，CPU是有限的，分区的实现，就允许我们：</p>
+<p>通过利用多台计算机内存的和值，允许我们构造更大的数据库。<br>通过多核和多台计算机，允许我们扩展计算能力；通过多台计算机和网络适配器，允许我们扩展网络带宽。  </p>
+<h2 id="【集群】11-你知道有哪些Redis分区实现方案？"><a href="#【集群】11-你知道有哪些Redis分区实现方案？" class="headerlink" title="【集群】11.你知道有哪些Redis分区实现方案？"></a>【集群】11.你知道有哪些Redis分区实现方案？</h2><p>范围分区：比如，ID从0到10000的用户会保存到实例R0，ID从10001到 20000的用户会保存到R1，以此类推。<br>哈希分区：加入有四个实例，比如，对ID进行hash，然后对4取模，得到0-3的数字，分别保存到对应的实例上。  </p>
+<h2 id="【集群】12-Redis分区有什么缺点？"><a href="#【集群】12-Redis分区有什么缺点？" class="headerlink" title="【集群】12.Redis分区有什么缺点？"></a>【集群】12.Redis分区有什么缺点？</h2><p>涉及多个key的操作通常是不被支持的。举例来说，当两个set映射到不同的redis实例上时，你就不能对这两个set执行交集操作。<br>涉及多个key的redis事务不能使用。<br>当使用分区时，数据处理较为复杂，比如你需要处理多个rdb/aof文件，并且从多个实例和主机备份持久化文件。<br>增加或删除容量也比较复杂。redis集群大多数支持在运行时增加、删除节点的透明数据平衡的能力，但是类似于客户端分区、代理等其他系统则不支持这项特性。然而，一种叫做presharding的技术对此是有帮助的。  </p>
+<h2 id="【集群】13-Redis分区和集群是一样的吗？有什么区别？"><a href="#【集群】13-Redis分区和集群是一样的吗？有什么区别？" class="headerlink" title="【集群】13.Redis分区和集群是一样的吗？有什么区别？"></a>【集群】13.Redis分区和集群是一样的吗？有什么区别？</h2><p>Redis分区，就是集群。 一个东西。</p>
+<p>但是Redis分区，仅仅只是指使用Redis Cluster内置的集群。</p>
+<p>Redis内置集群 == Redis分区。</p>
+<h2 id="【集群】14-分布式Redis是前期做还是后期规模上来了再做好？为什么？"><a href="#【集群】14-分布式Redis是前期做还是后期规模上来了再做好？为什么？" class="headerlink" title="【集群】14.分布式Redis是前期做还是后期规模上来了再做好？为什么？"></a>【集群】14.分布式Redis是前期做还是后期规模上来了再做好？为什么？</h2><p>既然Redis是如此的轻量（单实例只使用1M内存）,为防止以后的扩容，最好的办法就是一开始就启动较多实例。即便你只有一台服务器，你也可以一开始就让Redis以分布式的方式运行，使用分区，在同一台服务器上启动多个实例。</p>
+<p>一开始就多设置几个Redis实例，例如32或者64个实例，对大多数用户来说这操作起来可能比较麻烦，但是从长久来看做这点牺牲是值得的。</p>
+<p>这样的话，当你的数据不断增长，需要更多的Redis服务器时，你需要做的就是仅仅将Redis实例从一台服务迁移到另外一台服务器而已（而不用考虑重新分区的问题）。一旦你添加了另一台服务器，你需要将你一半的Redis实例从第一台机器迁移到第二台机器。</p>
+<h2 id="【集群】15-Twemproxy是什么？"><a href="#【集群】15-Twemproxy是什么？" class="headerlink" title="【集群】15.Twemproxy是什么？"></a>【集群】15.Twemproxy是什么？</h2><p>也是一个集群工具，twitter开源的。</p>
+<p>Twemproxy是Twitter维护的（缓存）代理系统，代理Memcached的ASCII协议和Redis协议。它是单线程程序，使用c语言编写，运行起来非常快。它是采用Apache 2.0 license的开源软件。 Twemproxy支持自动分区，如果其代理的其中一个Redis节点不可用时，会自动将该节点排除（这将改变原来的keys-instances的映射关系，所以你应该仅在把Redis当缓存时使用Twemproxy)。 Twemproxy本身不存在单点问题，因为你可以启动多个Twemproxy实例，然后让你的客户端去连接任意一个Twemproxy实例。 Twemproxy是Redis客户端和服务器端的一个中间层，由它来处理分区功能应该不算复杂，并且应该算比较可靠的。</p>
+<h2 id="【集群】16-Redis是单线程的，如何提高多核CPU的利用率？"><a href="#【集群】16-Redis是单线程的，如何提高多核CPU的利用率？" class="headerlink" title="【集群】16.Redis是单线程的，如何提高多核CPU的利用率？"></a>【集群】16.Redis是单线程的，如何提高多核CPU的利用率？</h2><p>可以在同一个服务器部署多个Redis的实例，并把他们当作不同的服务器来使用，在某些时候，无论如何一个服务器是不够的， 所以，如果你想使用多个CPU，你可以考虑一下分片（shard）。</p>
+
     </div>
 
     
@@ -316,6 +483,15 @@
       
 
       <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/面试/" rel="tag"># 面试</a>
+            
+          </div>
+        
 
         
 
@@ -331,6 +507,10 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/20/mysql学习/" rel="prev" title="mysql学习">
+                  mysql学习 <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -367,15 +547,17 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          Table of Contents
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          Overview
         </li>
       </ul>
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】1-Redis的全称是什么？"><span class="nav-number">1.</span> <span class="nav-text">【基础】1.Redis的全称是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】2-什么是Redis？简述它的优缺点？"><span class="nav-number">2.</span> <span class="nav-text">【基础】2.什么是Redis？简述它的优缺点？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】3-为什么要用-redis-为什么要用缓存"><span class="nav-number">3.</span> <span class="nav-text">【基础】3.为什么要用 redis/为什么要用缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#高性能："><span class="nav-number">3.1.</span> <span class="nav-text">高性能：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高并发："><span class="nav-number">3.2.</span> <span class="nav-text">高并发：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-为什么要用-redis-而不用-map-guava-做缓存"><span class="nav-number">4.</span> <span class="nav-text">4.为什么要用 redis 而不用 map/guava 做缓存?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】3-Redis有哪些适合的场景？"><span class="nav-number">5.</span> <span class="nav-text">【基础】3.Redis有哪些适合的场景？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）全页面缓存"><span class="nav-number">5.1.</span> <span class="nav-text">1）全页面缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）排行"><span class="nav-number">5.2.</span> <span class="nav-text">2）排行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3）Session存储"><span class="nav-number">5.3.</span> <span class="nav-text">3）Session存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4）队列"><span class="nav-number">5.4.</span> <span class="nav-text">4）队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5）发布-订阅"><span class="nav-number">5.5.</span> <span class="nav-text">5）发布/订阅</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】4-Redis官方为什么不提供Windows版本？"><span class="nav-number">6.</span> <span class="nav-text">【基础】4.Redis官方为什么不提供Windows版本？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】5-Redis如何设置密码及验证密码？"><span class="nav-number">7.</span> <span class="nav-text">【基础】5.Redis如何设置密码及验证密码？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】6-怎么测试Redis的连通性？"><span class="nav-number">8.</span> <span class="nav-text">【基础】6.怎么测试Redis的连通性？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】7-Redis如何做大量数据插入？"><span class="nav-number">9.</span> <span class="nav-text">【基础】7.Redis如何做大量数据插入？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】8-查看Redis使用情况及状态信息用什么命令？"><span class="nav-number">10.</span> <span class="nav-text">【基础】8.查看Redis使用情况及状态信息用什么命令？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】9-Redis中的管道有什么用？"><span class="nav-number">11.</span> <span class="nav-text">【基础】9.Redis中的管道有什么用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】10-Redis-key的过期时间和永久有效分别怎么设置？"><span class="nav-number">12.</span> <span class="nav-text">【基础】10.Redis key的过期时间和永久有效分别怎么设置？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】11-修改配置不重启Redis会实时生效吗？"><span class="nav-number">13.</span> <span class="nav-text">【基础】11.修改配置不重启Redis会实时生效吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【基础】12-Redis与其他key-value存储有什么不同？"><span class="nav-number">14.</span> <span class="nav-text">【基础】12.Redis与其他key-value存储有什么不同？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、数据"><span class="nav-number"></span> <span class="nav-text">二、数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#【数据】1-Redis支持哪几种数据类型？"><span class="nav-number">1.</span> <span class="nav-text">【数据】1.Redis支持哪几种数据类型？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【数据】2-一个字符串类型的值能存储最大容量是多少？"><span class="nav-number">2.</span> <span class="nav-text">【数据】2.一个字符串类型的值能存储最大容量是多少？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【数据】3-Redis持久化数据和缓存怎么做扩容？"><span class="nav-number">3.</span> <span class="nav-text">【数据】3.Redis持久化数据和缓存怎么做扩容？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis持久化数据有两种方法："><span class="nav-number">3.1.</span> <span class="nav-text">Redis持久化数据有两种方法：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Snapshoting"><span class="nav-number">3.1.1.</span> <span class="nav-text">Snapshoting</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF："><span class="nav-number">3.2.</span> <span class="nav-text">AOF：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【数据】4-一个Redis实例最多能存放多少的keys？List、Set、Sorted-Set他们最多能存放多少元素？"><span class="nav-number">4.</span> <span class="nav-text">【数据】4.一个Redis实例最多能存放多少的keys？List、Set、Sorted Set他们最多能存放多少元素？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、内存"><span class="nav-number"></span> <span class="nav-text">三、内存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#【内存】1-Redis主要消耗什么物理资源？"><span class="nav-number">1.</span> <span class="nav-text">【内存】1.Redis主要消耗什么物理资源？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【内存】2-为什么Redis需要把所有数据放到内存中？"><span class="nav-number">2.</span> <span class="nav-text">【内存】2.为什么Redis需要把所有数据放到内存中？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【内存】3-Redis如何做内存优化？"><span class="nav-number">3.</span> <span class="nav-text">【内存】3.Redis如何做内存优化？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【内存】4-Redis的内存占用情况怎么样？"><span class="nav-number">4.</span> <span class="nav-text">【内存】4.Redis的内存占用情况怎么样？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【内存】5-都有哪些办法可以降低Redis的内存使用情况呢？"><span class="nav-number">5.</span> <span class="nav-text">【内存】5.都有哪些办法可以降低Redis的内存使用情况呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【内存】6-Redis的内存用完了会发生什么？"><span class="nav-number">6.</span> <span class="nav-text">【内存】6.Redis的内存用完了会发生什么？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、数据淘汰"><span class="nav-number"></span> <span class="nav-text">四、数据淘汰</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#【数据淘汰】1-Redis有哪几种数据淘汰策略？"><span class="nav-number">1.</span> <span class="nav-text">【数据淘汰】1.Redis有哪几种数据淘汰策略？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【数据淘汰】2-Redis回收使用的是什么算法？Redis中的LRU算法是什么？"><span class="nav-number">2.</span> <span class="nav-text">【数据淘汰】2.Redis回收使用的是什么算法？Redis中的LRU算法是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体是怎么实现的？"><span class="nav-number">3.</span> <span class="nav-text">具体是怎么实现的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【数据淘汰】3-MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据？"><span class="nav-number">4.</span> <span class="nav-text">【数据淘汰】3.MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【数据淘汰】4-Redis回收进程如何工作的？"><span class="nav-number">5.</span> <span class="nav-text">【数据淘汰】4.Redis回收进程如何工作的？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、Redis客户端"><span class="nav-number"></span> <span class="nav-text">五、Redis客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#【Redis客户端】1-Redis支持的Java客户端都有哪些？官方推荐用哪个？"><span class="nav-number">1.</span> <span class="nav-text">【Redis客户端】1.Redis支持的Java客户端都有哪些？官方推荐用哪个？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【Redis客户端】2-Redis和Redisson有什么关系？"><span class="nav-number">2.</span> <span class="nav-text">【Redis客户端】2.Redis和Redisson有什么关系？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【Redis客户端】3-Jedis与Redisson对比有什么优缺点？"><span class="nav-number">3.</span> <span class="nav-text">【Redis客户端】3.Jedis与Redisson对比有什么优缺点？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【Redis客户端】4-支持一致性哈希的客户端有哪些？"><span class="nav-number">4.</span> <span class="nav-text">【Redis客户端】4.支持一致性哈希的客户端有哪些？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六、事务"><span class="nav-number"></span> <span class="nav-text">六、事务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#【事务】1-怎么理解Redis事务？"><span class="nav-number">1.</span> <span class="nav-text">【事务】1.怎么理解Redis事务？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【事务】2-Redis事务相关的命令有哪几个？"><span class="nav-number">2.</span> <span class="nav-text">【事务】2.Redis事务相关的命令有哪几个？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#七、集群"><span class="nav-number"></span> <span class="nav-text">七、集群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】1-Redis集群方案应该怎么做？都有哪些方案？"><span class="nav-number">1.</span> <span class="nav-text">【集群】1.Redis集群方案应该怎么做？都有哪些方案？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用twitter开源的Twemproxy代理"><span class="nav-number">1.1.</span> <span class="nav-text">使用twitter开源的Twemproxy代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用豌豆荚开源的Codis"><span class="nav-number">1.2.</span> <span class="nav-text">使用豌豆荚开源的Codis</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-3-0-自带的集群功能"><span class="nav-number">1.3.</span> <span class="nav-text">redis 3.0 自带的集群功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端处理"><span class="nav-number">1.4.</span> <span class="nav-text">客户端处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】2-redis集群的哈希槽概念是什么？"><span class="nav-number">2.</span> <span class="nav-text">【集群】2.redis集群的哈希槽概念是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】3-普通哈希，一致性哈希和哈希槽分别是什么？"><span class="nav-number">3.</span> <span class="nav-text">【集群】3.普通哈希，一致性哈希和哈希槽分别是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】4-Redis集群方案什么情况下会导致整个集群不可用？"><span class="nav-number">4.</span> <span class="nav-text">【集群】4.Redis集群方案什么情况下会导致整个集群不可用？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】5-Redis集群的主从复制模型是怎样的？"><span class="nav-number">5.</span> <span class="nav-text">【集群】5.Redis集群的主从复制模型是怎样的？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis集群-主从复制模式"><span class="nav-number">5.1.</span> <span class="nav-text">Redis集群 -主从复制模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】6-Redis集群会有写操作丢失吗？为什么？"><span class="nav-number">6.</span> <span class="nav-text">【集群】6. Redis集群会有写操作丢失吗？为什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】7-Redis集群之间是如何复制的？"><span class="nav-number">7.</span> <span class="nav-text">【集群】7.Redis集群之间是如何复制的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】8-Redis集群最大节点个数是多少？"><span class="nav-number">8.</span> <span class="nav-text">【集群】8.Redis集群最大节点个数是多少？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】9-Redis集群如何选择数据库？"><span class="nav-number">9.</span> <span class="nav-text">【集群】9.Redis集群如何选择数据库？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】10-为什么要做Redis分区？"><span class="nav-number">10.</span> <span class="nav-text">【集群】10.为什么要做Redis分区？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】11-你知道有哪些Redis分区实现方案？"><span class="nav-number">11.</span> <span class="nav-text">【集群】11.你知道有哪些Redis分区实现方案？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】12-Redis分区有什么缺点？"><span class="nav-number">12.</span> <span class="nav-text">【集群】12.Redis分区有什么缺点？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】13-Redis分区和集群是一样的吗？有什么区别？"><span class="nav-number">13.</span> <span class="nav-text">【集群】13.Redis分区和集群是一样的吗？有什么区别？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】14-分布式Redis是前期做还是后期规模上来了再做好？为什么？"><span class="nav-number">14.</span> <span class="nav-text">【集群】14.分布式Redis是前期做还是后期规模上来了再做好？为什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】15-Twemproxy是什么？"><span class="nav-number">15.</span> <span class="nav-text">【集群】15.Twemproxy是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【集群】16-Redis是单线程的，如何提高多核CPU的利用率？"><span class="nav-number">16.</span> <span class="nav-text">【集群】16.Redis是单线程的，如何提高多核CPU的利用率？</span></a></li></ol></div>
+        
       </div>
       <!--/noindex-->
 
@@ -390,8 +572,8 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
-          <span class="site-state-item-name">Artikel</span>
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
         </a>
       </div>
     
@@ -403,8 +585,8 @@
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">3</span>
-        <span class="site-state-item-name">Kategorien</span>
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span>
         </a>
       </div>
     
@@ -416,8 +598,8 @@
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">3</span>
-        <span class="site-state-item-name">schlagwörter</span>
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span>
         </a>
       </div>
     
@@ -448,10 +630,10 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Lynn</span>
 </div>
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0
   </div>
   <span class="post-meta-divider">|</span>
-  <div class="theme-info">Design – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.1
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.1
   </div>
 
         
